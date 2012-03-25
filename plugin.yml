@@ -1,0 +1,13 @@
+name: GriefLog
+version: 2.4.1
+main: blackwolf12333.maatcraft.grieflog.GriefLog
+commands:
+    glog:
+        description: Main command, type glog help for more info.
+        usage: /glog <option> <arguments>
+    gpos:
+        description: Get your current position.
+        usage: /gpos
+    report:
+        description: Report A Player!
+        usage: /report <position>
