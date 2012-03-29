@@ -48,6 +48,16 @@ public class GLog implements CommandExecutor {
 			{
 				if(args[0].equalsIgnoreCase("get"))
 				{
+					String coord = args[1];
+					
+					sender.sendMessage(searchText(coord));
+				}
+			}
+			
+			if(args.length == 2)
+			{
+				if(args[0].equalsIgnoreCase("get"))
+				{
 					if(args[1].equalsIgnoreCase("currentpos"))
 					{
 						String pos = p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ();
