@@ -5,9 +5,13 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import blackwolf12333.maatcraft.grieflog.commands.GDelReport;
 import blackwolf12333.maatcraft.grieflog.commands.GLog;
 import blackwolf12333.maatcraft.grieflog.commands.GPos;
+import blackwolf12333.maatcraft.grieflog.commands.GRDReport;
 import blackwolf12333.maatcraft.grieflog.commands.GReport;
+
+import blackwolf12333.maatcraft.grieflog.utils.*;
 
 public class GriefLog extends JavaPlugin {
 
@@ -16,6 +20,7 @@ public class GriefLog extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
+	FileUtils fu = new FileUtils();
 
 	@Override
 	public void onDisable() {
@@ -24,7 +29,7 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
+		
 		// register events
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(bListener, this);
@@ -38,8 +43,10 @@ public class GriefLog extends JavaPlugin {
 		getCommand("glog").setExecutor(new GLog(this));
 		getCommand("gpos").setExecutor(new GPos(this));
 		getCommand("report").setExecutor(new GReport(this));
+		getCommand("rdreports").setExecutor(new GRDReport(this));
+		getCommand("delreports").setExecutor(new GDelReport(this));
 		
-		log.info("BlockLog Enabled");
+		log.info("GriefLog Enabled");
 		
 		
 	}	

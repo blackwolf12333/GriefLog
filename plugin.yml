@@ -1,5 +1,5 @@
 name: GriefLog
-version: 2.4.1
+version: 2.5.2
 main: blackwolf12333.maatcraft.grieflog.GriefLog
 commands:
     glog:
@@ -11,3 +11,9 @@ commands:
     report:
         description: Report A Player!
         usage: /report <position>
+    rdreports:
+        description: Read the reports of players.
+        usage: /rdreports
+    delreports:
+        description: Delete the reports.
+        usage: /delreports

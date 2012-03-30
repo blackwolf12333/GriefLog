@@ -18,6 +18,7 @@ public class GPos implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
+		// inside this if statement all the magic happens
 		if(cmd.getName().equalsIgnoreCase("gpos"))
 		{
 			if (!(sender instanceof Player)) return true;

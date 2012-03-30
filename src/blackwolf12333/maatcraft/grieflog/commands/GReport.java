@@ -1,13 +1,8 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,10 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import blackwolf12333.maatcraft.grieflog.GriefLog;
+import blackwolf12333.maatcraft.grieflog.utils.*;
 
 public class GReport implements CommandExecutor {
 
 	public GriefLog gl;
+	FileUtils st = new FileUtils();
 	
 	public GReport(GriefLog plugin) {
 		gl = plugin;
@@ -27,11 +24,12 @@ public class GReport implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
+		// inside this if statement all the magic happens
 		if(cmd.getName().equalsIgnoreCase("report"))
 		{
 			BufferedWriter writer;
 			
-			if(args[0] == "currentpos")
+			if(args[0] == "here")
 			{
 				Player p = (Player) sender;
 				
@@ -39,9 +37,11 @@ public class GReport implements CommandExecutor {
 				int y = p.getLocation().getBlockY();
 				int z = p.getLocation().getBlockZ();
 				
+				st.searchText(x + ", " + y + ", " + z);
+				
 				try {
 					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					writer.write(searchText(x + ", " + y + ", " + z));
+					writer.write(FileUtils.foundLine);
 					writer.newLine();
 					writer.write("Reported by: " + p.getName());
 					writer.newLine();
@@ -61,7 +61,7 @@ public class GReport implements CommandExecutor {
 				
 				try {
 					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					writer.write(searchText(x + ", " + y + ", " + z));
+					writer.write(st.searchText(x + ", " + y + ", " + z));
 					writer.newLine();
 					writer.write("Reported by: " + p.getName());
 					writer.newLine();
@@ -73,83 +73,5 @@ public class GReport implements CommandExecutor {
 		}
 		
 		return false;
-	}
-
-	public void createFile()
-	{
-		if(GriefLog.reportFile.exists())
-		{
-			return;
-		}
-		else
-		{
-			try {
-				GriefLog.reportFile.createNewFile();
-			} catch (IOException e) {
-				GriefLog.log.warning(e.getMessage());
-			}
-		}
-	}
-	
-	public String searchText(String text)
-	{
-		try {
-			int line = grepLineNumber(text);
-			return showLines(line, line++);
-		} catch (Exception e) {
-			GriefLog.log.warning(e.getMessage());			
-		}
-		return "Not found!";
-	}
-	
-	public int grepLineNumber(String word) throws Exception {
-	    BufferedReader buf = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(GriefLog.file.getAbsolutePath()))));
-
-	    String line;
-	    int lineNumber = 0;
-	    while ((line = buf.readLine()) != null)   {
-	        lineNumber++;
-	        if (word.equals(line)) {
-	            return lineNumber;
-	        }
-	    }
-	    return -1;
-	}
-	
-	public String showLines(int startLine, int endLine)  {
-		String line = null;
-		int currentLineNo = 0;
-
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader (new FileReader(GriefLog.file));
-			
-			//read to startLine
-			while(currentLineNo<startLine) {
-				if (in.readLine()==null) {
-					// oops, early end of file
-					throw new IOException("File too small");
-				}
-				currentLineNo++;
-			}
-			
-			//read until endLine
-			while(currentLineNo<=endLine) {
-				line = in.readLine();
-				if (line==null) {
-					// here, we'll forgive a short file
-					// note finally still cleans up
-					return null;
-				}
-				currentLineNo++;
-				return line;
-			}
-			
-		} catch (IOException ex) {
-			return "Problem reading file.\n" + ex.getMessage();
-		} finally {
-			try { if (in!=null) in.close(); } catch(IOException ignore) {}
-		}
-		return "Lines Not Found!";
 	}
 }
