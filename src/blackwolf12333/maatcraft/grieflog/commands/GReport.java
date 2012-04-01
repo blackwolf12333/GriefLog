@@ -1,6 +1,7 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -29,25 +30,32 @@ public class GReport implements CommandExecutor {
 		{
 			BufferedWriter writer;
 			
-			if(args[0] == "here")
+			if(args.length == 1)
 			{
-				Player p = (Player) sender;
+				if(args[0] == "here")
+				{
+					Player p = (Player) sender;
+					
+					// get the x, y, z coordinates
+					int x = p.getLocation().getBlockX();
+					int y = p.getLocation().getBlockY();
+					int z = p.getLocation().getBlockZ();
 				
-				int x = p.getLocation().getBlockX();
-				int y = p.getLocation().getBlockY();
-				int z = p.getLocation().getBlockZ();
+					File file = new File("temp.txt");
+					String result = st.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
+					FileUtils.writeFile(file, result);
 				
-				st.searchText(x + ", " + y + ", " + z);
-				
-				try {
-					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					writer.write(FileUtils.foundLine);
-					writer.newLine();
-					writer.write("Reported by: " + p.getName());
-					writer.newLine();
-					writer.close();
-				} catch (IOException e) {
-					GriefLog.log.warning(e.getMessage());
+					try {
+						writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
+						writer.write(FileUtils.readFile(file, GriefLog.reportFile));
+						writer.newLine();
+						writer.write("Reported by: " + p.getName());
+						writer.newLine();
+						writer.close();
+					} catch (IOException e) {
+						GriefLog.log.warning(e.getMessage());
+					}
+					return false;
 				}
 			}
 			
@@ -59,9 +67,11 @@ public class GReport implements CommandExecutor {
 				String y = args[1];
 				String z = args[2];
 				
+				String result = st.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
+				
 				try {
 					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					writer.write(st.searchText(x + ", " + y + ", " + z));
+					FileUtils.writeFile(GriefLog.file, result);
 					writer.newLine();
 					writer.write("Reported by: " + p.getName());
 					writer.newLine();
@@ -69,6 +79,7 @@ public class GReport implements CommandExecutor {
 				} catch (IOException e) {
 					GriefLog.log.warning(e.getMessage());
 				}
+				return false;
 			}
 		}
 		

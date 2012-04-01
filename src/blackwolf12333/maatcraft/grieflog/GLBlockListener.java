@@ -39,7 +39,7 @@ public class GLBlockListener implements Listener{
 		String worldName = player.getWorld().getName();
 		
 		try{
-			String data = now() + " [BLOCK_BREAK] " + " By: " + namePlayer + "What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+			String data = now() + " [BLOCK_BREAK] " + " By: " + namePlayer + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -69,7 +69,7 @@ public class GLBlockListener implements Listener{
 		String worldName = player.getWorld().getName();
 		
 		try{
-			String data = now() + " [BLOCK_PLACE] " + " Who: " + namePlayer + "What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+			String data = now() + " [BLOCK_PLACE] " + " Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){

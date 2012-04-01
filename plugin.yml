@@ -1,5 +1,5 @@
 name: GriefLog
-version: 2.5.2
+version: 2.6
 main: blackwolf12333.maatcraft.grieflog.GriefLog
 commands:
     glog:
