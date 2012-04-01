@@ -122,8 +122,8 @@ public class GLPlayerListener implements Listener{
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoinEvent(PlayerJoinEvent event)
 	{
-		String name = event.getPlayer().getName();
-		if(name.equalsIgnoreCase("blackwolf12333") || name.equalsIgnoreCase("knightmareDM") || name.equalsIgnoreCase("Luuk_The_Buunk"))
+		Player p = event.getPlayer();
+		if(p.isOp())
 		{
 			if(GriefLog.reportFile.exists())
 			{
@@ -134,6 +134,10 @@ public class GLPlayerListener implements Listener{
 			{
 				return;
 			}
+		}
+		else
+		{
+			p.sendMessage("You are not an OP so you can't use this command");
 		}
 	}
 }
