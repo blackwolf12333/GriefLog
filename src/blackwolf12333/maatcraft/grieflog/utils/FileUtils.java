@@ -64,6 +64,39 @@ public class FileUtils {
 		}
 	}
 	
+	public String searchText(String text, File file)
+	{
+		boolean success = false;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = null;
+			
+			while((line = br.readLine()) != null)
+			{
+				if(line.indexOf(text) >= 0)
+				{
+					writeFile(GriefLog.reportFile, line);
+					success = true;
+				}
+				while(line.indexOf(text) < 0)
+				{
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		if(success)
+		{
+			return "";
+		}
+		else
+		{
+			return "Not Found!";
+		}
+	}
+	
 	public String searchText(String text, String file, Player p)
 	{
 		boolean success = false;
@@ -98,7 +131,7 @@ public class FileUtils {
 		}
 	}
 	
-	public double getFileSize(File file)
+	public static double getFileSize(File file)
 	{
 		double bytes = file.length();
 		double kilobytes = (bytes / 1024);
@@ -178,6 +211,18 @@ public class FileUtils {
 	}
 	
 	public static void writeFile(File file, String text)
+	{
+		try{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			bw.write(text);
+			bw.newLine();
+			bw.close();
+		}catch (Exception e){//Catch exception if any
+			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
+		}
+	}
+	
+	public static void writeFile(String file, String text)
 	{
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));

@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import blackwolf12333.maatcraft.grieflog.Listeners.GLBlockListener;
+import blackwolf12333.maatcraft.grieflog.Listeners.GLPlayerListener;
 import blackwolf12333.maatcraft.grieflog.commands.GDelReport;
 import blackwolf12333.maatcraft.grieflog.commands.GLog;
 import blackwolf12333.maatcraft.grieflog.commands.GPos;
@@ -21,6 +23,7 @@ public class GriefLog extends JavaPlugin {
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
 	FileUtils fu = new FileUtils();
+	Time t = new Time();
 
 	@Override
 	public void onDisable() {

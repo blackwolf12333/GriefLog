@@ -1,10 +1,9 @@
-package blackwolf12333.maatcraft.grieflog;
+package blackwolf12333.maatcraft.grieflog.Listeners;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Logger;
 
 import org.bukkit.GameMode;
@@ -18,21 +17,32 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import blackwolf12333.maatcraft.grieflog.GriefLog;
+import blackwolf12333.maatcraft.grieflog.utils.FileUtils;
+import blackwolf12333.maatcraft.grieflog.utils.Time;
+
 public class GLPlayerListener implements Listener{
 	
 	Logger log = Logger.getLogger("Minecraft");
-	
-	public static final String DATE_FORMAT_NOW = "dd-MM-yyyy HH:mm:ss";
-
-	public static String now() {
-	    Calendar cal = Calendar.getInstance();
-	    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-	    return sdf.format(cal.getTime());
-
-	}
+	Time t = new Time();
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+		
+		// check if the logfile is to large
+		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
+		{
+			// Destination directory
+			File dir = new File("logs/");
+			
+			dir.mkdir();
+			// Move file to new directory
+			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
+			if (!success) {
+				log.warning("Failed to move the old logfile to the logs directory!");
+			}
+		}
+		
 		Player player = event.getPlayer();
 		String p = player.getName();
 		GameMode gm = event.getNewGameMode();
@@ -41,7 +51,7 @@ public class GLPlayerListener implements Listener{
 		String playerWorld = world.getName();		
 		
 		try{
-			String data = now() + " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + "\n";
+			String data = t.now() + " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + "\n";
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -61,13 +71,28 @@ public class GLPlayerListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		
+		// check if the logfile is to large
+		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
+		{
+			// Destination directory
+			File dir = new File("logs/");
+			
+			dir.mkdir();
+			// Move file to new directory
+			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
+			if (!success) {
+				log.warning("Failed to move the old logfile to the logs directory!");
+			}
+		}
+		
 		Player player = event.getPlayer();
 		String playerName = player.getName();
 		World where = event.getFrom();
 		String from = where.getName();
 		
 		try{
-			String data = now() + " [WORLD_CHANGE] Who: " + playerName + " From: " + from + "\n";
+			String data = t.now() + " [WORLD_CHANGE] Who: " + playerName + " From: " + from + "\n";
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -87,6 +112,21 @@ public class GLPlayerListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		
+		// check if the logfile is to large
+		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
+		{
+			// Destination directory
+			File dir = new File("logs/");
+			
+			dir.mkdir();
+			// Move file to new directory
+			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
+			if (!success) {
+				log.warning("Failed to move the old logfile to the logs directory!");
+			}
+		}
+		
 		String cmd = event.getMessage();
 		String namePlayer = event.getPlayer().getName();
 		
@@ -101,7 +141,7 @@ public class GLPlayerListener implements Listener{
 		
 		try{
 			
-			String data = now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + "\n";
+			String data = t.now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + "\n";
 
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -128,16 +168,12 @@ public class GLPlayerListener implements Listener{
 			if(GriefLog.reportFile.exists())
 			{
 				event.getPlayer().sendMessage("There Are New Player Reports!\n");
-				event.getPlayer().sendMessage("Type /rdreport to read the reports");
+				event.getPlayer().sendMessage("Type /rdreports to read the reports");
 			}
 			else
 			{
 				return;
 			}
-		}
-		else
-		{
-			p.sendMessage("You are not an OP so you can't use this command");
 		}
 	}
 }

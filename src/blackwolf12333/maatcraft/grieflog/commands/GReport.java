@@ -1,7 +1,6 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -40,14 +39,14 @@ public class GReport implements CommandExecutor {
 					int x = p.getLocation().getBlockX();
 					int y = p.getLocation().getBlockY();
 					int z = p.getLocation().getBlockZ();
-				
-					File file = new File("temp.txt");
+					
 					String result = st.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
-					FileUtils.writeFile(file, result);
-				
+					StringBuffer resultsb = new StringBuffer();
+					resultsb.append(result);
+					
 					try {
 						writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-						writer.write(FileUtils.readFile(file, GriefLog.reportFile));
+						writer.write(resultsb.toString());
 						writer.newLine();
 						writer.write("Reported by: " + p.getName());
 						writer.newLine();
@@ -71,7 +70,7 @@ public class GReport implements CommandExecutor {
 				
 				try {
 					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					FileUtils.writeFile(GriefLog.file, result);
+					FileUtils.writeFile(GriefLog.reportFile, result);
 					writer.newLine();
 					writer.write("Reported by: " + p.getName());
 					writer.newLine();
