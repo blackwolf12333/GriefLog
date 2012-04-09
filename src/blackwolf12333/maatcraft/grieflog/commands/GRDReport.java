@@ -29,7 +29,7 @@ public class GRDReport implements CommandExecutor {
 			if(!p.isOp())
 			{
 				p.sendMessage("You cannot use this command because you aren't Op");
-				return false;
+				return true;
 			}
 			
 			try {
@@ -40,7 +40,7 @@ public class GRDReport implements CommandExecutor {
 				{
 					p.sendMessage(line);
 				}
-				return false;
+				return true;
 			} catch (Exception e) {
 				GriefLog.log.warning("File Not Found Exception, the file: " + GriefLog.reportFile.getName() + " could not be found.");			
 			}

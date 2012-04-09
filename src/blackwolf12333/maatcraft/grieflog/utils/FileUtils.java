@@ -2,13 +2,10 @@ package blackwolf12333.maatcraft.grieflog.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.bukkit.entity.Player;
 
@@ -21,6 +18,11 @@ import blackwolf12333.maatcraft.grieflog.GriefLog;
 
 public class FileUtils {
 
+	
+	/**
+	 * Default constructor
+	 * Doesn't do that much as you can see:)
+	 */
 	public FileUtils() {
 		
 	}
@@ -34,6 +36,7 @@ public class FileUtils {
 	public String searchText(String text, String file)
 	{
 		boolean success = false;
+		StringBuffer sb = new StringBuffer();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -43,7 +46,7 @@ public class FileUtils {
 			{
 				if(line.indexOf(text) >= 0)
 				{
-					writeFile(GriefLog.reportFile, line);
+					sb.append(line);
 					success = true;
 				}
 				while(line.indexOf(text) < 0)
@@ -56,7 +59,7 @@ public class FileUtils {
 		}
 		if(success)
 		{
-			return "";
+			return sb.toString();
 		}
 		else
 		{
@@ -67,6 +70,7 @@ public class FileUtils {
 	public String searchText(String text, File file)
 	{
 		boolean success = false;
+		StringBuffer sb = new StringBuffer();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -76,7 +80,7 @@ public class FileUtils {
 			{
 				if(line.indexOf(text) >= 0)
 				{
-					writeFile(GriefLog.reportFile, line);
+					sb.append(line);
 					success = true;
 				}
 				while(line.indexOf(text) < 0)
@@ -89,7 +93,7 @@ public class FileUtils {
 		}
 		if(success)
 		{
-			return "";
+			return sb.toString();
 		}
 		else
 		{
@@ -110,7 +114,7 @@ public class FileUtils {
 				if(line.indexOf(text)>= 0)
 				{
 					p.sendMessage(line);
-					success = true;
+					return "";
 				}
 				while(line.indexOf(text) < 0)
 				{
@@ -131,7 +135,7 @@ public class FileUtils {
 		}
 	}
 	
-	public static double getFileSize(File file)
+	public double getFileSize(File file)
 	{
 		double bytes = file.length();
 		double kilobytes = (bytes / 1024);
@@ -140,31 +144,35 @@ public class FileUtils {
 		return megabytes;
 	}
 	
-	public static String readFile(String filename) throws IOException {
-	   String lineSep = System.getProperty("line.separator");
-	   BufferedReader br = new BufferedReader(new FileReader(filename));
-	   String nextLine = "";
-	   StringBuffer sb = new StringBuffer();
-	   while ((nextLine = br.readLine()) != null) {
-		   for(int i = 0; i < nextLine.length(); i++)
-		   {
-			   sb.append(nextLine);
-			   //
-			   // note:
-			   //   BufferedReader strips the EOL character
-			   //   so we add a new one!
-			   //
-			   sb.append(lineSep);
-		   }
-	   }
-	   return sb.toString();
+	public String readFile(String filename) throws IOException {
+		
+		String lineSep = System.getProperty("line.separator");
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		String nextLine = "";
+		StringBuffer sb = new StringBuffer();
+		
+		while ((nextLine = br.readLine()) != null) {
+			for(int i = 0; i < nextLine.length(); i++)
+			{
+				sb.append(nextLine);
+				//
+				// note:
+				//   BufferedReader strips the EOL character
+				//   so we add a new one!
+				//
+				sb.append(lineSep);
+			}
+		}
+		return sb.toString();
 	}
 	
-	public static String readFile(File file) throws IOException {
+	public String readFile(File file) throws IOException {
+		
 		String lineSep = System.getProperty("line.separator");
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String nextLine = "";
 		StringBuffer sb = new StringBuffer();
+		
 		while ((nextLine = br.readLine()) != null) {
 			for(int i = 0; i < nextLine.length(); i++)
 			{
@@ -180,57 +188,139 @@ public class FileUtils {
 		return sb.toString();
 	}
 	
-	public static String readFile(File inFile, File outFile) throws IOException {
-		boolean success = false;
-		
-		try{
-			// Open inFile
-			FileInputStream fstream = new FileInputStream(inFile);
-			// Get the object of DataInputStream
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			//Read File Line By Line
-			while ((strLine = br.readLine()) != null)   {
-				// Print the content on the console
-				writeFile(outFile,strLine);
-				success = true;
-			}
-			//Close the input stream
-			in.close();
-		}catch (Exception e){//Catch exception if any
-			GriefLog.log.warning("Something went wrong in: GriefLog:FileUtils:readFile(File, File)");
-		}
-		if(success) {
-			return "";
-		}
-		else
-		{
-			return "Something went wrong:(";
-		}
-	}
-	
-	public static void writeFile(File file, String text)
+	public void writeFile(File file, String text)
 	{
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
 			bw.write(text);
-			bw.newLine();
 			bw.close();
 		}catch (Exception e){//Catch exception if any
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
 	}
 	
-	public static void writeFile(String file, String text)
+	public void writeFile(String file, String text)
 	{
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
 			bw.write(text);
-			bw.newLine();
 			bw.close();
 		}catch (Exception e){//Catch exception if any
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
+	}
+	
+	public void writeFile(String file, String text, boolean newLine)
+	{
+		try{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			bw.write(text);
+			if(newLine)
+				bw.newLine();
+			bw.close();
+		}catch (Exception e){//Catch exception if any
+			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
+		}
+	}
+	
+	public void writeFile(File file, String text, boolean newLine)
+	{
+		try{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			bw.write(text);
+			if(newLine)
+				bw.newLine();
+			bw.close();
+		}catch (Exception e){//Catch exception if any
+			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
+		}
+	}
+	
+	public String getLastLines(File file, int lines) {
+	    try {
+	        java.io.RandomAccessFile fileHandler = new java.io.RandomAccessFile( file, "r" );
+	        long fileLength = file.length() - 1;
+	        StringBuilder sb = new StringBuilder();
+	        int line = 0;
+
+	        for( long filePointer = fileLength; filePointer != -1; filePointer-- ) {
+	            fileHandler.seek( filePointer );
+	            int readByte = fileHandler.readByte();
+
+	            if( readByte == 0xA ) {
+	                if (line == lines) {
+	                    if (filePointer == fileLength) {
+	                        continue;
+	                    } else {
+	                        break;
+	                    }
+	                }
+	            } else if( readByte == 0xD ) {
+	                line = line + 1;
+	                if (line == lines) {
+	                    if (filePointer == fileLength - 1) {
+	                        continue;
+	                    } else {
+	                        break;
+	                    }
+	                }
+	            }
+	           sb.append( ( char ) readByte );
+	        }
+
+	        sb.deleteCharAt(sb.length()-1);
+	        String lastLine = sb.reverse().toString();
+	        return lastLine;
+	    } catch( java.io.FileNotFoundException e ) {
+	        e.printStackTrace();
+	        return null;
+	    } catch( java.io.IOException e ) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
+	public String getLastLines(String file, int lines) {
+	    try {
+	        java.io.RandomAccessFile fileHandler = new java.io.RandomAccessFile(file, "r");
+	        long fileLength = file.length() - 1;
+	        StringBuilder sb = new StringBuilder();
+	        int line = 0;
+
+	        for(long filePointer = fileLength; filePointer != -1; filePointer--) {
+	            fileHandler.seek(filePointer);
+	            int readByte = fileHandler.readByte();
+
+	            if(readByte == 0xA) {
+	                if (line == lines) {
+	                    if (filePointer == fileLength) {
+	                        continue;
+	                    } else {
+	                        break;
+	                    }
+	                }
+	            } else if(readByte == 0xD) {
+	                line = line + 1;
+	                if (line == lines) {
+	                    if (filePointer == fileLength - 1) {
+	                        continue;
+	                    } else {
+	                        break;
+	                    }
+	                }
+	            }
+	           sb.append((char) readByte);
+	        }
+
+	        sb.deleteCharAt(sb.length()-1);
+	        String lastLine = sb.reverse().toString();
+	        return lastLine;
+	    } catch(java.io.FileNotFoundException e) {
+	        e.printStackTrace();
+	        return null;
+	    } catch(java.io.IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 }

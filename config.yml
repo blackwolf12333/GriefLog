@@ -1,0 +1,4 @@
+# Set the selection tool here:
+SelectionTool: 32
+# when should the log file be moved to logs/
+mb: 5

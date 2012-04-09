@@ -1,20 +1,20 @@
 package blackwolf12333.maatcraft.grieflog.Listeners;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import blackwolf12333.maatcraft.grieflog.GriefLog;
@@ -24,24 +24,35 @@ import blackwolf12333.maatcraft.grieflog.utils.Time;
 public class GLPlayerListener implements Listener{
 	
 	Logger log = Logger.getLogger("Minecraft");
+	GriefLog gl;
 	Time t = new Time();
+	FileUtils fu = new FileUtils();
+	
+	String playerName;
+	int address;
+	
+	public GLPlayerListener(GriefLog plugin) {
+		gl = plugin;
+	}
+	
+	public String getPlayerName() {
+		return playerName;
+	}
+	
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+	
+	public int getAddress() {
+		return address;
+	}
+	
+	public void setAddress(int address) {
+		this.address = address;
+	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		
-		// check if the logfile is to large
-		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
-		{
-			// Destination directory
-			File dir = new File("logs/");
-			
-			dir.mkdir();
-			// Move file to new directory
-			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
-			if (!success) {
-				log.warning("Failed to move the old logfile to the logs directory!");
-			}
-		}
 		
 		Player player = event.getPlayer();
 		String p = player.getName();
@@ -58,11 +69,7 @@ public class GLPlayerListener implements Listener{
     			GriefLog.file.createNewFile();
     		}
  
-    		//true = append file
-    		FileWriter fileWritter = new FileWriter(GriefLog.file.getName(),true);
-    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-    		bufferWritter.write(data);
-    		bufferWritter.close();
+    		fu.writeFile(GriefLog.file, data);
 
 		}catch(IOException e){
 			log.warning(e.toString());
@@ -71,20 +78,6 @@ public class GLPlayerListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-		
-		// check if the logfile is to large
-		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
-		{
-			// Destination directory
-			File dir = new File("logs/");
-			
-			dir.mkdir();
-			// Move file to new directory
-			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
-			if (!success) {
-				log.warning("Failed to move the old logfile to the logs directory!");
-			}
-		}
 		
 		Player player = event.getPlayer();
 		String playerName = player.getName();
@@ -99,11 +92,7 @@ public class GLPlayerListener implements Listener{
     			GriefLog.file.createNewFile();
     		}
  
-    		//true = append file
-    		FileWriter fileWritter = new FileWriter(GriefLog.file.getName(),true);
-    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-    		bufferWritter.write(data);
-    		bufferWritter.close();
+    		fu.writeFile(GriefLog.file, data);
 
 		}catch(IOException e){
 			log.warning(e.toString());
@@ -112,20 +101,6 @@ public class GLPlayerListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		
-		// check if the logfile is to large
-		if(FileUtils.getFileSize(GriefLog.reportFile) > 10)
-		{
-			// Destination directory
-			File dir = new File("logs/");
-			
-			dir.mkdir();
-			// Move file to new directory
-			boolean success = GriefLog.file.renameTo(new File(dir, GriefLog.file.getName()+t.Date()));
-			if (!success) {
-				log.warning("Failed to move the old logfile to the logs directory!");
-			}
-		}
 		
 		String cmd = event.getMessage();
 		String namePlayer = event.getPlayer().getName();
@@ -148,11 +123,7 @@ public class GLPlayerListener implements Listener{
     			GriefLog.file.createNewFile();
     		}
  
-    		//true = append file
-    		FileWriter fileWritter = new FileWriter(GriefLog.file.getName(),true);
-    		BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-    		bufferWritter.write(data);
-    		bufferWritter.close();
+    		fu.writeFile(GriefLog.file, data);
 
 		}catch(IOException e){
 			log.warning(e.toString());
@@ -175,5 +146,43 @@ public class GLPlayerListener implements Listener{
 				return;
 			}
 		}
+		
+		String address = event.getPlayer().getAddress().getHostName();
+		int gm = event.getPlayer().getGameMode().getValue();
+		String name = event.getPlayer().getName();
+		
+		try {
+			String data = t.now() + " " + name + " On: " + address + " With GameMode: " + gm;
+			
+			//if file doesnt exists, then create it
+    		if(!GriefLog.file.exists()){
+    			GriefLog.file.createNewFile();
+    		}
+ 
+    		fu.writeFile(GriefLog.file, data);
+    		
+		}catch(IOException e) {
+			log.warning(e.toString());
+    	}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		Action a = event.getAction();
+		Player p = event.getPlayer();		
+		if(a == Action.RIGHT_CLICK_BLOCK)
+		{
+			if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
+			{
+				Block b = event.getClickedBlock();
+			
+				int x = b.getX();
+				int y = b.getY();
+				int z = b.getZ();
+			
+				fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath(), p);
+			}
+		}		
 	}
 }

@@ -1,5 +1,5 @@
 name: GriefLog
-version: 2.6.2
+version: 2.7
 main: blackwolf12333.maatcraft.grieflog.GriefLog
 commands:
     glog:
@@ -17,3 +17,6 @@ commands:
     delreports:
         description: Delete the reports.
         usage: /delreports
+    gltool:
+        description: Tool to use to see what events have occurred on the block you click.
+        usage: /gltool

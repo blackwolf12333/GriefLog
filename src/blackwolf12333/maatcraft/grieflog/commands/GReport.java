@@ -15,7 +15,7 @@ import blackwolf12333.maatcraft.grieflog.utils.*;
 public class GReport implements CommandExecutor {
 
 	public GriefLog gl;
-	FileUtils st = new FileUtils();
+	FileUtils fu = new FileUtils();
 	
 	public GReport(GriefLog plugin) {
 		gl = plugin;
@@ -33,27 +33,22 @@ public class GReport implements CommandExecutor {
 			{
 				if(args[0] == "here")
 				{
-					Player p = (Player) sender;
+					Player p = (Player) sender;					
 					
 					// get the x, y, z coordinates
 					int x = p.getLocation().getBlockX();
 					int y = p.getLocation().getBlockY();
 					int z = p.getLocation().getBlockZ();
 					
-					String result = st.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
+					String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
 					StringBuffer resultsb = new StringBuffer();
 					resultsb.append(result);
 					
-					try {
-						writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-						writer.write(resultsb.toString());
-						writer.newLine();
-						writer.write("Reported by: " + p.getName());
-						writer.newLine();
-						writer.close();
-					} catch (IOException e) {
-						GriefLog.log.warning(e.getMessage());
-					}
+					fu.writeFile(GriefLog.reportFile, resultsb.toString(), false);
+					fu.writeFile(GriefLog.reportFile, "", true);
+					fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+					fu.writeFile(GriefLog.reportFile, "", true);
+					
 					return false;
 				}
 			}
@@ -66,11 +61,11 @@ public class GReport implements CommandExecutor {
 				String y = args[1];
 				String z = args[2];
 				
-				String result = st.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
+				String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
 				
 				try {
 					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					FileUtils.writeFile(GriefLog.reportFile, result);
+					fu.writeFile(GriefLog.reportFile, result);
 					writer.newLine();
 					writer.write("Reported by: " + p.getName());
 					writer.newLine();

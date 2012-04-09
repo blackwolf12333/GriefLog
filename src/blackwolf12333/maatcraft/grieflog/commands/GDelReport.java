@@ -35,7 +35,7 @@ public class GDelReport implements CommandExecutor {
 			{
 				GriefLog.reportFile.delete();
 				p.sendMessage("Report file is deleted");
-				return false;
+				return true;
 			}
 		
 		} catch (CommandException e) {
