@@ -18,7 +18,6 @@ public class GDelReport implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
-		
 		try {
 			Player p = (Player) sender;
 		

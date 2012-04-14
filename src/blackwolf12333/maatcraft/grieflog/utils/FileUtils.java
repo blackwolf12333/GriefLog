@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
@@ -35,7 +36,6 @@ public class FileUtils {
 	 */
 	public String searchText(String text, String file)
 	{
-		boolean success = false;
 		StringBuffer sb = new StringBuffer();
 		
 		try {
@@ -44,33 +44,50 @@ public class FileUtils {
 			
 			while((line = br.readLine()) != null)
 			{
-				if(line.indexOf(text) >= 0)
+				if(line.indexOf(text) > 0)
 				{
 					sb.append(line);
-					success = true;
-				}
-				while(line.indexOf(text) < 0)
-				{
-					break;
+					sb.append(System.getProperty("line.separator"));
 				}
 			}
+			
+			br.close();
 		} catch (Exception e) {
-			e.printStackTrace();			
+			e.printStackTrace();		
 		}
-		if(success)
-		{
-			return sb.toString();
-		}
-		else
-		{
-			return "Not Found!";
-		}
+		return sb.toString();
 	}
 	
 	public String searchText(String text, File file)
 	{
-		boolean success = false;
 		StringBuffer sb = new StringBuffer();
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = null;
+			
+			while((line = br.readLine()) != null)
+			{
+				if(line.indexOf(text) > 0)
+				{
+					sb.append(line);
+					sb.append(System.getProperty("line.separator"));
+				}
+			}
+			
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		return sb.toString();
+	}
+	
+	public String searchText(String text, String file, Player p)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(text);
+		
+		ArrayList<String> als = new ArrayList<String>();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -80,30 +97,26 @@ public class FileUtils {
 			{
 				if(line.indexOf(text) >= 0)
 				{
-					sb.append(line);
-					success = true;
-				}
-				while(line.indexOf(text) < 0)
-				{
-					break;
+					als.add(line);					
 				}
 			}
+			
+			br.close();
+			
+			p.sendMessage(als.toString());
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
-		if(success)
-		{
-			return sb.toString();
-		}
-		else
-		{
-			return "Not Found!";
-		}
+		
+		return "";
 	}
 	
-	public String searchText(String text, String file, Player p)
+	public String searchText(String text, File file, Player p)
 	{
-		boolean success = false;
+		StringBuffer sb = new StringBuffer();
+		sb.append(text);
+		
+		ArrayList<String> als = new ArrayList<String>();
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -111,28 +124,22 @@ public class FileUtils {
 			
 			while((line = br.readLine()) != null)
 			{
-				if(line.indexOf(text)>= 0)
+				if(line.indexOf(text) >= 0)
 				{
-					p.sendMessage(line);
-					return "";
-				}
-				while(line.indexOf(text) < 0)
-				{
-					break;
+					als.add(line);
+					als.add("\n");
 				}
 			}
+			
+			br.close();
+			
+			p.sendMessage(als.toString());
+			
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
 		
-		if(success)
-		{
-			return "";
-		}
-		else
-		{
-			return "Not Found!";
-		}
+		return "";
 	}
 	
 	public double getFileSize(File file)
@@ -144,16 +151,16 @@ public class FileUtils {
 		return megabytes;
 	}
 	
-	public String readFile(String filename) throws IOException {
+	public String readFile(String filename) {
 		
-		String lineSep = System.getProperty("line.separator");
-		BufferedReader br = new BufferedReader(new FileReader(filename));
-		String nextLine = "";
 		StringBuffer sb = new StringBuffer();
 		
-		while ((nextLine = br.readLine()) != null) {
-			for(int i = 0; i < nextLine.length(); i++)
-			{
+		try {
+			String lineSep = System.getProperty("line.separator");
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			String nextLine = "";
+		
+			while ((nextLine = br.readLine()) != null) {
 				sb.append(nextLine);
 				//
 				// note:
@@ -162,20 +169,24 @@ public class FileUtils {
 				//
 				sb.append(lineSep);
 			}
+			
+			br.close();
+		} catch (IOException e) {
+			
 		}
 		return sb.toString();
 	}
 	
-	public String readFile(File file) throws IOException {
+	public String readFile(File file) {
 		
-		String lineSep = System.getProperty("line.separator");
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String nextLine = "";
 		StringBuffer sb = new StringBuffer();
 		
-		while ((nextLine = br.readLine()) != null) {
-			for(int i = 0; i < nextLine.length(); i++)
-			{
+		try {
+			String lineSep = System.getProperty("line.separator");
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String nextLine = "";
+			
+			while ((nextLine = br.readLine()) != null) {
 				sb.append(nextLine);
 				//
 				// note:
@@ -184,7 +195,11 @@ public class FileUtils {
 				//
 				sb.append(lineSep);
 			}
-		}	
+			
+			br.close();
+		} catch(IOException e) {
+			
+		}
 		return sb.toString();
 	}
 	

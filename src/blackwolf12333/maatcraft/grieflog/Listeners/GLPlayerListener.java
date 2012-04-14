@@ -1,6 +1,7 @@
 package blackwolf12333.maatcraft.grieflog.Listeners;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.logging.Logger;
 
 import org.bukkit.GameMode;
@@ -33,22 +34,6 @@ public class GLPlayerListener implements Listener{
 	
 	public GLPlayerListener(GriefLog plugin) {
 		gl = plugin;
-	}
-	
-	public String getPlayerName() {
-		return playerName;
-	}
-	
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-	}
-	
-	public int getAddress() {
-		return address;
-	}
-	
-	public void setAddress(int address) {
-		this.address = address;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -147,12 +132,12 @@ public class GLPlayerListener implements Listener{
 			}
 		}
 		
-		String address = event.getPlayer().getAddress().getHostName();
+		InetAddress address = event.getPlayer().getAddress().getAddress();
 		int gm = event.getPlayer().getGameMode().getValue();
 		String name = event.getPlayer().getName();
 		
 		try {
-			String data = t.now() + " " + name + " On: " + address + " With GameMode: " + gm;
+			String data = t.now() + " " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + "\n";
 			
 			//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){

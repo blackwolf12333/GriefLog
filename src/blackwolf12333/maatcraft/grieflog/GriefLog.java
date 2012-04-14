@@ -19,13 +19,14 @@ import blackwolf12333.maatcraft.grieflog.utils.*;
 
 public class GriefLog extends JavaPlugin {
 
-	GLBlockListener bListener = new GLBlockListener();
+	GLBlockListener bListener = new GLBlockListener(this);
 	GLPlayerListener pListener = new GLPlayerListener(this);
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
 	FileUtils fu = new FileUtils();
 	Time t = new Time();
+	public String version;
 
 	@Override
 	public void onDisable() {
@@ -39,6 +40,7 @@ public class GriefLog extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(bListener, this);
 		pm.registerEvents(pListener, this);
+		version = this.getDescription().getVersion();
 		
 		if(!file.exists())
 		{

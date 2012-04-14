@@ -1,9 +1,5 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,9 +22,7 @@ public class GReport implements CommandExecutor {
 		
 		// inside this if statement all the magic happens
 		if(cmd.getName().equalsIgnoreCase("report"))
-		{
-			BufferedWriter writer;
-			
+		{			
 			if(args.length == 1)
 			{
 				if(args[0] == "here")
@@ -40,16 +34,16 @@ public class GReport implements CommandExecutor {
 					int y = p.getLocation().getBlockY();
 					int z = p.getLocation().getBlockZ();
 					
-					String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
-					StringBuffer resultsb = new StringBuffer();
-					resultsb.append(result);
+					String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file);
 					
-					fu.writeFile(GriefLog.reportFile, resultsb.toString(), false);
+					p.sendMessage(result);
+					
+					fu.writeFile(GriefLog.reportFile, result, false);
 					fu.writeFile(GriefLog.reportFile, "", true);
 					fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
 					fu.writeFile(GriefLog.reportFile, "", true);
 					
-					return false;
+					return true;
 				}
 			}
 			
@@ -61,19 +55,16 @@ public class GReport implements CommandExecutor {
 				String y = args[1];
 				String z = args[2];
 				
-				String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath());
+				String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file);
 				
-				try {
-					writer = new BufferedWriter(new FileWriter(GriefLog.reportFile.getAbsolutePath(),true));
-					fu.writeFile(GriefLog.reportFile, result);
-					writer.newLine();
-					writer.write("Reported by: " + p.getName());
-					writer.newLine();
-					writer.close();
-				} catch (IOException e) {
-					GriefLog.log.warning(e.getMessage());
-				}
-				return false;
+				p.sendMessage(result);
+				
+				fu.writeFile(GriefLog.reportFile, result, false);
+				fu.writeFile(GriefLog.reportFile, "", true);
+				fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+				fu.writeFile(GriefLog.reportFile, "", true);
+				
+				return true;
 			}
 		}
 		
