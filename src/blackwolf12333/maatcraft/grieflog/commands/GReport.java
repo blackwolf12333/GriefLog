@@ -49,7 +49,6 @@ public class GReport implements CommandExecutor {
 			
 			if(args.length == 3)
 			{
-				Player p = (Player) sender;
 				
 				String x = args[0];
 				String y = args[1];
@@ -57,11 +56,11 @@ public class GReport implements CommandExecutor {
 				
 				String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file);
 				
-				p.sendMessage(result);
+				sender.sendMessage(result);
 				
 				fu.writeFile(GriefLog.reportFile, result, false);
 				fu.writeFile(GriefLog.reportFile, "", true);
-				fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+				fu.writeFile(GriefLog.reportFile, "Reported by: " + sender.getName());
 				fu.writeFile(GriefLog.reportFile, "", true);
 				
 				return true;

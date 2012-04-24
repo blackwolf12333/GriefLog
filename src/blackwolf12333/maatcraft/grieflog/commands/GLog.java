@@ -33,13 +33,10 @@ public class GLog implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel,
 			String[] args) {
 		
-		Player p = (Player) sender;
-		
 		// inside this if statement all the magic happens
 		if(cmd.getName().equalsIgnoreCase("glog"))
 		{
 			try {
-				if (!(sender instanceof Player)) return true;
 				
 				if(args.length == 4) {
 					if(args[0].equalsIgnoreCase("get"))
@@ -48,7 +45,7 @@ public class GLog implements CommandExecutor {
 						String y = args[2];
 						String z = args[3];
 						
-						fu.searchText(x+", "+y+", "+z, GriefLog.file, p);
+						fu.searchText(x+", "+y+", "+z, GriefLog.file, (Player)sender);
 						
 						return true;
 					}
@@ -61,6 +58,8 @@ public class GLog implements CommandExecutor {
 					{
 						if(args[1].equalsIgnoreCase("here"))
 						{
+							Player p = (Player)sender;
+							
 							String pos = p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ();
 							
 							fu.searchText(pos, GriefLog.file, p);
@@ -72,14 +71,14 @@ public class GLog implements CommandExecutor {
 				
 				if(args.length == 0)
 				{
-					p.sendMessage("[GriefLog] " + gl.version);
+					sender.sendMessage("[GriefLog] " + gl.version);
 				}
 				
 				if(args.length == 1)
 				{
 					if(args[0].equalsIgnoreCase("help"))
 					{
-						p.sendMessage(helpTxt);
+						sender.sendMessage(helpTxt);
 					}
 				}
 			} catch(CommandException e) {

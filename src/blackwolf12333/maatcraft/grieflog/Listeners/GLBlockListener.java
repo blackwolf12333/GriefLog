@@ -2,12 +2,13 @@ package blackwolf12333.maatcraft.grieflog.Listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
@@ -19,15 +20,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class GLBlockListener implements Listener{
+public class GLBlockListener implements Listener {
 
 	Logger log = Logger.getLogger("Minecraft");
 	GriefLog gl;
 	FileUtils fu = new FileUtils();
 	Time t = new Time();
+	public String data;
 	
 	public GLBlockListener(GriefLog plugin) {
 		gl = plugin;
+	}
+	
+	public String getData() {
+		return data;
+	}
+	
+	public void setData(String data) {
+		this.data = data;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -42,7 +52,8 @@ public class GLBlockListener implements Listener{
 		String worldName = player.getWorld().getName();
 		
 		String data = t.now() + " [BLOCK_BREAK] " + " By: " + namePlayer + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
-
+		setData(data);
+		
 		try{
 			//if file doesnt exists, then create it
 			if(!GriefLog.file.exists()){
@@ -51,18 +62,7 @@ public class GLBlockListener implements Listener{
  
 			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
 			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
+				autoBackup();
 			}
 			
 			fu.writeFile(GriefLog.file, data);
@@ -82,8 +82,13 @@ public class GLBlockListener implements Listener{
 		String type = event.getBlockPlaced().getType().toString();
 		String namePlayer = player.getName();
 		String worldName = player.getWorld().getName();
+		if(type == "FIRE")
+		{
+			return;
+		}
 		
-		String data = t.now() + " [BLOCK_PLACE] " + " Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+		String data = t.now() + " [BLOCK_PLACE] " + "Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+		setData(data);
 		
 		try{ 
 			//if file doesnt exists, then create it
@@ -93,18 +98,7 @@ public class GLBlockListener implements Listener{
 			
 			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
 			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
+				autoBackup();
 			}
 			
 			fu.writeFile(GriefLog.file, data);
@@ -115,102 +109,33 @@ public class GLBlockListener implements Listener{
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockBurn(BlockBurnEvent event) {
-		
-		Integer blockX = event.getBlock().getLocation().getBlockX();
-		Integer blockY = event.getBlock().getLocation().getBlockY();
-		Integer blockZ = event.getBlock().getLocation().getBlockZ();
-		String worldName = event.getBlock().getWorld().getName();
-		
-		String data = t.now() + " [BLOCK_BURN] " + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
-		
-		try	{
-			
-			//if file doesnt exists, then create it
-			if(!GriefLog.file.exists()){
-				GriefLog.file.createNewFile();
-			}
-			
-			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
-			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
-			}
-			
-			fu.writeFile(GriefLog.file, data);
-				
-		}catch(IOException e){
-			log.warning(e.toString());
-		}
-	}
-	
-	/*@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockIgnite(BlockIgniteEvent event)
+	public void onBlockIgnite(BlockIgniteEvent event) throws EventException
 	{
-		int x = event.getBlock().getX();
-		int y = event.getBlock().getY();
-		int z = event.getBlock().getZ();
-		String playerName = event.getPlayer().getName();
-		String worldName = event.getBlock().getWorld().getName();
-		
-		IgniteCause ic = event.getCause();
-		
-		ic.toString();
-		
-		String data = t.now() + " [BLOCK_IGNITE] By: " + playerName + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + "In: " + worldName + "\n";
-		
-		try	{
-			
-			//if file doesnt exists, then create it
-			if(!GriefLog.file.exists()){
-				GriefLog.file.createNewFile();
-			}
-			
-			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
-			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
-			}
-			
-			fu.writeFile(GriefLog.file, data);
-				
-		}catch(IOException e){
-			log.warning(e.toString());
+		//Block block = event.getBlock();
+		String data = null;
+		Player player = event.getPlayer();
+		if(player == null)
+		{
+			IgniteCause ic = event.getCause();
+			String worldName = event.getBlock().getWorld().getName();
+			int x = event.getBlock().getX();
+			int y = event.getBlock().getY();
+			int z = event.getBlock().getZ();
+			data = t.now() + " [BLOCK_IGNITE] By: Environment" + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + "\n";
+			setData(data);
 		}
-	}*/
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockFade(BlockFadeEvent event)
-	{
-		int x = event.getBlock().getX();
-		int y = event.getBlock().getY();
-		int z = event.getBlock().getZ();
-		String worldName = event.getBlock().getWorld().getName();
-		
-		event.getNewState();
-		
-		String data = t.now() + "[BLOCK_FADE] Where: " + x + ", " + y + ", " + z + " To What: " + event.getNewState().toString() + " In: " + worldName + "\n";
-		
+		else
+		{
+			IgniteCause ic = event.getCause();
+			String playerName = player.getName();
+			String worldName = event.getBlock().getWorld().getName();
+			int x = event.getBlock().getX();
+			int y = event.getBlock().getY();
+			int z = event.getBlock().getZ();
+			
+			data = t.now() + " [BLOCK_IGNITE] By: " + playerName + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + "\n";
+			setData(data);
+		}
 		try	{
 			
 			//if file doesnt exists, then create it
@@ -220,24 +145,13 @@ public class GLBlockListener implements Listener{
 			
 			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
 			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
+				autoBackup();
 			}
 			
 			fu.writeFile(GriefLog.file, data);
 				
-		}catch(IOException e){
-			log.warning(e.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -263,24 +177,34 @@ public class GLBlockListener implements Listener{
 			
 			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
 			{
-				// Destination directory
-				File dir = new File("logs/");
-				if(!dir.exists())
-				{
-					dir.mkdir();
-				}
-
-				// Move file to new directory
-				boolean success = GriefLog.file.renameTo(new File(dir, (GriefLog.file.getName()+t.now())));
-				if (!success) {
-				    GriefLog.log.warning("[GriefLog] The old logfile could not be moved to logs/.");
-				}
+				autoBackup();
 			}
 			
 			fu.writeFile(GriefLog.file, data);
 				
 		}catch(IOException e){
 			log.warning(e.toString());
+		}
+	}
+	
+	private void autoBackup()
+	{
+		File backup = new File("logs\\GriefLog" + t.Date() + ".txt");
+		if(!backup.exists())
+		{
+			try {
+				backup.createNewFile();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			fu.copy(GriefLog.file, backup);
+			GriefLog.log.info("[GriefLog] Log file moved to logs/");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

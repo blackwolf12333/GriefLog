@@ -4,8 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import blackwolf12333.maatcraft.grieflog.GriefLog;
 
 public class GDelReport implements CommandExecutor {
@@ -19,12 +17,11 @@ public class GDelReport implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
 		try {
-			Player p = (Player) sender;
 		
 			// check if the player issuing the command is a Op
-			if(!p.isOp())
+			if(!sender.isOp())
 				{
-				p.sendMessage("You cannot use this command because you aren't Op");
+				sender.sendMessage("You cannot use this command because you aren't Op");
 				return true;
 			}
 		
@@ -33,7 +30,7 @@ public class GDelReport implements CommandExecutor {
 			if(cmd.getName().equalsIgnoreCase("delreports"))
 			{
 				GriefLog.reportFile.delete();
-				p.sendMessage("Report file is deleted");
+				sender.sendMessage("Report file is deleted");
 				return true;
 			}
 		

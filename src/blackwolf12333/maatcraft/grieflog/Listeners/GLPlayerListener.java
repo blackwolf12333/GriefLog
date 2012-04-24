@@ -1,9 +1,11 @@
 package blackwolf12333.maatcraft.grieflog.Listeners;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.logging.Logger;
 
+import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,7 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-
+import org.bukkit.event.player.PlayerTeleportEvent;
 import blackwolf12333.maatcraft.grieflog.GriefLog;
 import blackwolf12333.maatcraft.grieflog.utils.FileUtils;
 import blackwolf12333.maatcraft.grieflog.utils.Time;
@@ -28,7 +30,7 @@ public class GLPlayerListener implements Listener{
 	GriefLog gl;
 	Time t = new Time();
 	FileUtils fu = new FileUtils();
-	
+
 	String playerName;
 	int address;
 	
@@ -53,6 +55,11 @@ public class GLPlayerListener implements Listener{
     		if(!GriefLog.file.exists()){
     			GriefLog.file.createNewFile();
     		}
+    		
+    		if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
  
     		fu.writeFile(GriefLog.file, data);
 
@@ -76,6 +83,11 @@ public class GLPlayerListener implements Listener{
     		if(!GriefLog.file.exists()){
     			GriefLog.file.createNewFile();
     		}
+    		
+    		if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
  
     		fu.writeFile(GriefLog.file, data);
 
@@ -90,15 +102,6 @@ public class GLPlayerListener implements Listener{
 		String cmd = event.getMessage();
 		String namePlayer = event.getPlayer().getName();
 		
-		if(cmd.startsWith("/login"))
-		{
-			cmd = "LOGIN: not showed";
-		}
-		else if(cmd.startsWith("/register"))
-		{
-			cmd = "REGISTER: password not showed";
-		}
-		
 		try{
 			
 			String data = t.now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + "\n";
@@ -108,6 +111,11 @@ public class GLPlayerListener implements Listener{
     			GriefLog.file.createNewFile();
     		}
  
+    		if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
+    		
     		fu.writeFile(GriefLog.file, data);
 
 		}catch(IOException e){
@@ -135,14 +143,20 @@ public class GLPlayerListener implements Listener{
 		InetAddress address = event.getPlayer().getAddress().getAddress();
 		int gm = event.getPlayer().getGameMode().getValue();
 		String name = event.getPlayer().getName();
+		String worldName = event.getPlayer().getWorld().getName();
 		
 		try {
-			String data = t.now() + " " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + "\n";
+			String data = t.now() + " " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + "\n";
 			
 			//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
     			GriefLog.file.createNewFile();
     		}
+    		
+    		if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
  
     		fu.writeFile(GriefLog.file, data);
     		
@@ -166,8 +180,59 @@ public class GLPlayerListener implements Listener{
 				int y = b.getY();
 				int z = b.getZ();
 			
-				fu.searchText(x + ", " + y + ", " + z, GriefLog.file.getAbsolutePath(), p);
+				fu.searchText(x + ", " + y + ", " + z, GriefLog.file, p);
+				event.setCancelled(true);
 			}
-		}		
+		} else if(a == Action.LEFT_CLICK_BLOCK)
+		{
+			 if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
+			 {
+				 Block b = event.getClickedBlock();
+				 
+				 int x = b.getX();
+				 int y = b.getY();
+				 int z = b.getZ();
+				 
+				 fu.searchText(x + ", " + y + ", " + z, GriefLog.file, p);
+				 event.setCancelled(true);
+			 }
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerTeleport(PlayerTeleportEvent event)
+	{
+		Player player = event.getPlayer();
+		World world = player.getWorld();
+		Chunk chunk = event.getTo().getChunk();
+		boolean success = world.refreshChunk(chunk.getX(), chunk.getZ());
+		while(!success)
+		{
+			world.refreshChunk(chunk.getX(), chunk.getZ());
+			if(!world.isChunkLoaded(chunk))
+				success = false;
+			event.setCancelled(true);
+		}
+	}
+	
+	private void autoBackup()
+	{
+		File backup = new File("logs\\GriefLog" + t.Date() + ".txt");
+		if(!backup.exists())
+		{
+			try {
+				backup.createNewFile();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			fu.copy(GriefLog.file, backup);
+			GriefLog.log.info("[GriefLog] Log file moved to logs/");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

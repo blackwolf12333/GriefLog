@@ -63,6 +63,6 @@ public class GriefLog extends JavaPlugin {
 		getCommand("delreports").setExecutor(new GDelReport(this));
 		getCommand("gltool").setExecutor(new GLTool(this));
 		
-		log.info("GriefLog Enabled");	
+		log.info("GriefLog Enabled");
 	}
 }
