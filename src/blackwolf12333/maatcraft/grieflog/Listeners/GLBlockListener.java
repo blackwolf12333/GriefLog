@@ -189,7 +189,7 @@ public class GLBlockListener implements Listener {
 	
 	private void autoBackup()
 	{
-		File backup = new File("logs\\GriefLog" + t.Date() + ".txt");
+		File backup = new File("logs" + File.separator + "GriefLog" + t.Date() + ".txt");
 		if(!backup.exists())
 		{
 			try {
