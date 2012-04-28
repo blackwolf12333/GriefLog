@@ -87,24 +87,39 @@ public class GLBlockListener implements Listener {
 			return;
 		}
 		
-		String data = t.now() + " [BLOCK_PLACE] " + "Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
-		setData(data);
+		if(player.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
+		{
+			Block b = event.getBlock();
 		
-		try{ 
-			//if file doesnt exists, then create it
-			if(!GriefLog.file.exists()){
-				GriefLog.file.createNewFile();
-			}
+			int x = b.getX();
+			int y = b.getY();
+			int z = b.getZ();
+		
+			fu.searchText(x + ", " + y + ", " + z, GriefLog.file, player);
+			event.setCancelled(true);
+		}
+		else
+		{
 			
-			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
-			{
-				autoBackup();
-			}
+			String data = t.now() + " [BLOCK_PLACE] " + "Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+			setData(data);
 			
-			fu.writeFile(GriefLog.file, data);
+			try{ 
+				//if file doesnt exists, then create it
+				if(!GriefLog.file.exists()){
+					GriefLog.file.createNewFile();
+				}
 				
-		}catch(IOException e){
-			log.warning(e.toString());
+				if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+				{
+					autoBackup();
+				}
+				
+				fu.writeFile(GriefLog.file, data);
+				
+			}catch(IOException e){
+				log.warning(e.toString());
+			}
 		}
 	}
 	
@@ -189,6 +204,11 @@ public class GLBlockListener implements Listener {
 	
 	private void autoBackup()
 	{
+		File backupdir = new File("logs/");
+		if(!backupdir.exists())
+		{
+			backupdir.mkdir();
+		}
 		File backup = new File("logs" + File.separator + "GriefLog" + t.Date() + ".txt");
 		if(!backup.exists())
 		{

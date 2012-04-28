@@ -170,20 +170,7 @@ public class GLPlayerListener implements Listener{
 	{
 		Action a = event.getAction();
 		Player p = event.getPlayer();		
-		if(a == Action.RIGHT_CLICK_BLOCK)
-		{
-			if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
-			{
-				Block b = event.getClickedBlock();
-			
-				int x = b.getX();
-				int y = b.getY();
-				int z = b.getZ();
-			
-				fu.searchText(x + ", " + y + ", " + z, GriefLog.file, p);
-				event.setCancelled(true);
-			}
-		} else if(a == Action.LEFT_CLICK_BLOCK)
+		if(a == Action.LEFT_CLICK_BLOCK)
 		{
 			 if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
 			 {
@@ -217,6 +204,11 @@ public class GLPlayerListener implements Listener{
 	
 	private void autoBackup()
 	{
+		File backupdir = new File("logs/");
+		if(!backupdir.exists())
+		{
+			backupdir.mkdir();
+		}
 		File backup = new File("logs" + File.separator + "GriefLog" + t.Date() + ".txt");
 		if(!backup.exists())
 		{
