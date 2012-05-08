@@ -21,7 +21,6 @@ import blackwolf12333.maatcraft.grieflog.GriefLog;
 
 public class FileUtils {
 
-	
 	/**
 	 * Default constructor
 	 * Doesn't do that much as you can see:)
@@ -30,7 +29,6 @@ public class FileUtils {
 		
 	}
 	
-	
 	/**
 	 * @param text: text to search for.
 	 * @param file: filename of the file to search in.
@@ -38,8 +36,7 @@ public class FileUtils {
 	 */
 	public String searchText(String text, String file)
 	{
-		StringBuffer sb = new StringBuffer();
-		
+		String data = "";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
@@ -48,8 +45,7 @@ public class FileUtils {
 			{
 				if(line.indexOf(text) > 0)
 				{
-					sb.append(line);
-					sb.append(System.getProperty("line.separator"));
+					data += System.getProperty("line.separator") + line + System.getProperty("line.separator");
 				}
 			}
 			
@@ -57,13 +53,17 @@ public class FileUtils {
 		} catch (Exception e) {
 			e.printStackTrace();		
 		}
-		return sb.toString();
+		if(data.length() > 0)
+		{
+			return data;
+		}
+		
+		return data;
 	}
 	
 	public String searchText(String text, File file)
 	{
-		StringBuffer sb = new StringBuffer();
-		
+		String data = "";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
@@ -72,8 +72,7 @@ public class FileUtils {
 			{
 				if(line.indexOf(text) > 0)
 				{
-					sb.append(line);
-					sb.append(System.getProperty("line.separator"));
+					data += line + System.getProperty("line.separator");
 				}
 			}
 			
@@ -81,37 +80,40 @@ public class FileUtils {
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
-		return sb.toString();
+		
+		if(data.length() > 0)
+		{
+			return data;
+		}
+		
+		return data;
 	}
 	
-	public String searchText(String text, String file, Player p)
+	public void searchText(String text, String file, Player p)
 	{
-		StringBuffer sb = new StringBuffer();
-		sb.append(text);
-		
-		ArrayList<String> als = new ArrayList<String>();
-		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
 			
+			String data = "";
 			while((line = br.readLine()) != null)
 			{
-				if(line.indexOf(text) >= 0)
-				{
-					als.add(line);
-					als.add("\n");
-				}
+			    if(line.indexOf(text) >= 0)
+			    {
+			        data += line + System.getProperty("line.separator");
+			    }
+			}
+			if (data.length() > 0) {
+			    p.sendMessage("+++++++++++GriefLog+++++++++++");
+			    p.sendMessage(data);
+			    p.sendMessage("++++++++++GriefLogEnd+++++++++");
 			}
 			
 			br.close();
 			
-			p.sendMessage(als.toString());
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
-		
-		return "";
 	}
 	
 	public String searchText(String text, File file, Player p)
@@ -130,7 +132,6 @@ public class FileUtils {
 				if(line.indexOf(text) >= 0)
 				{
 					als.add(line);
-					als.add("\n");
 				}
 			}
 			
@@ -140,8 +141,8 @@ public class FileUtils {
 			{
 				String ret = als.get(i);
 				p.sendMessage(ret);
-				if(i==3 || i == 6)
-					p.sendMessage("\n");
+				if(i==1 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7)
+					p.sendMessage(System.getProperty("line.separator"));
 			}
 			
 		} catch (Exception e) {

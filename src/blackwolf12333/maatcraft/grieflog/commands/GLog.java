@@ -1,5 +1,7 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
+import java.io.File;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
@@ -45,7 +47,13 @@ public class GLog implements CommandExecutor {
 						String y = args[2];
 						String z = args[3];
 						
-						fu.searchText(x+", "+y+", "+z, GriefLog.file, (Player)sender);
+						File file = new File("logs/");
+						String[] list = file.list();
+						for(int i = 0; i < list.length; i++)
+						{
+							fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]), (Player)sender);
+							fu.searchText(x+", "+y+", "+z, GriefLog.file, (Player)sender);
+						}
 						
 						return true;
 					}
@@ -62,7 +70,13 @@ public class GLog implements CommandExecutor {
 							
 							String pos = p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ();
 							
-							fu.searchText(pos, GriefLog.file, p);
+							File file = new File("logs/");
+							String[] list = file.list();
+							for(int i = 0; i < list.length; i++)
+							{
+								fu.searchText(pos, new File("logs" + File.separator + list[i]), p);
+								fu.searchText(pos, GriefLog.file, p);
+							}
 							
 							return true;
 						}

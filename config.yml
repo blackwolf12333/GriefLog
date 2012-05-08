@@ -2,3 +2,5 @@
 SelectionTool: 32
 # when should the log file be moved to logs/
 mb: 5
+# if a player places lava, after how many times do you want to be warned?
+warn-on-lava: 7

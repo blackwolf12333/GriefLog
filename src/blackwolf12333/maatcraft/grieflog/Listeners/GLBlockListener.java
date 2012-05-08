@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+//import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
@@ -51,7 +52,7 @@ public class GLBlockListener implements Listener {
 		String namePlayer = player.getName();
 		String worldName = player.getWorld().getName();
 		
-		String data = t.now() + " [BLOCK_BREAK] " + " By: " + namePlayer + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+		String data = t.now() + " [BLOCK_BREAK] " + " By: " + namePlayer + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 		setData(data);
 		
 		try{
@@ -86,6 +87,26 @@ public class GLBlockListener implements Listener {
 		{
 			return;
 		}
+		if(type == "WATER")
+		{
+			data = t.now() + " [BUCKET_WATER_EMPTY] Who: " + namePlayer + " Where: " + (blockX-1) + ", " + blockY + ", " + blockZ + " In: " + worldName + System.getProperty("line.separator");
+			try{
+				//if file doesnt exists, then create it
+				if(!GriefLog.file.exists()){
+					GriefLog.file.createNewFile();
+				}
+	 
+				if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+				{
+					autoBackup();
+				}
+				
+				fu.writeFile(GriefLog.file, data);
+				
+			}catch(IOException e){
+				log.warning(e.toString());
+			}
+		}
 		
 		if(player.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
 		{
@@ -94,14 +115,25 @@ public class GLBlockListener implements Listener {
 			int x = b.getX();
 			int y = b.getY();
 			int z = b.getZ();
-		
-			fu.searchText(x + ", " + y + ", " + z, GriefLog.file, player);
+			
 			event.setCancelled(true);
+			
+			/*File file = new File("logs/");
+			String[] list = file.list();
+			for(int i = 0; i < list.length; i++)
+			{
+				if(fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]), player) != "")
+				{
+					break;
+				}
+			}*/
+			
+			fu.searchText(x + ", " + y + ", " + z, GriefLog.file, player);
 		}
 		else
 		{
 			
-			String data = t.now() + " [BLOCK_PLACE] " + "Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + "\n";
+			String data = t.now() + " [BLOCK_PLACE] " + "Who: " + namePlayer + " What: " + type +  " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 			setData(data);
 			
 			try{ 
@@ -136,7 +168,7 @@ public class GLBlockListener implements Listener {
 			int x = event.getBlock().getX();
 			int y = event.getBlock().getY();
 			int z = event.getBlock().getZ();
-			data = t.now() + " [BLOCK_IGNITE] By: Environment" + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + "\n";
+			data = t.now() + " [BLOCK_IGNITE] By: Environment" + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 			setData(data);
 		}
 		else
@@ -148,7 +180,7 @@ public class GLBlockListener implements Listener {
 			int y = event.getBlock().getY();
 			int z = event.getBlock().getZ();
 			
-			data = t.now() + " [BLOCK_IGNITE] By: " + playerName + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + "\n";
+			data = t.now() + " [BLOCK_IGNITE] By: " + playerName + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 			setData(data);
 		}
 		try	{
@@ -181,7 +213,7 @@ public class GLBlockListener implements Listener {
 		String worldName = event.getBlock().getWorld().getName();
 		String newTxt = event.getLine(0);
 		
-		String data = t.now() + " [SIGN_CHANGE] By: " + playerName + " NewTxt: " + newTxt + " Where: " + x + ", " +  y + ", " + z + " In: " + worldName + "\n";
+		String data = t.now() + " [SIGN_CHANGE] By: " + playerName + " NewTxt: " + newTxt + " Where: " + x + ", " +  y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 	
 		try	{
 			
@@ -202,6 +234,35 @@ public class GLBlockListener implements Listener {
 		}
 	}
 	
+	/*@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockPiston(BlockPistonEvent event)
+	{
+		int x = event.getBlock().getX();
+		int y = event.getBlock().getY();
+		int z = event.getBlock().getZ();
+		String world = event.getBlock().getWorld().getName();
+		
+		data = t.now() + " [BLOCK_PISTON] Where: " + x + ", " + y + ", " + z + " In: " + world;
+		
+		try	{
+			
+			//if file doesnt exists, then create it
+			if(!GriefLog.file.exists()){
+				GriefLog.file.createNewFile();
+			}
+			
+			if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
+			
+			fu.writeFile(GriefLog.file, data);
+				
+		}catch(IOException e){
+			log.warning(e.toString());
+		}
+	}*/
+	
 	private void autoBackup()
 	{
 		File backupdir = new File("logs/");
@@ -215,7 +276,6 @@ public class GLBlockListener implements Listener {
 			try {
 				backup.createNewFile();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

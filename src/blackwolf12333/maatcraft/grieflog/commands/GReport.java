@@ -1,5 +1,7 @@
 package blackwolf12333.maatcraft.grieflog.commands;
 
+import java.io.File;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,14 +36,32 @@ public class GReport implements CommandExecutor {
 					int y = p.getLocation().getBlockY();
 					int z = p.getLocation().getBlockZ();
 					
+					
 					String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file);
 					
-					p.sendMessage(result);
-					
-					fu.writeFile(GriefLog.reportFile, result, false);
-					fu.writeFile(GriefLog.reportFile, "", true);
-					fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
-					fu.writeFile(GriefLog.reportFile, "", true);
+					if(result == null || result == "")
+					{
+						File file = new File("logs/");
+						String[] list = file.list();
+						for(int i = 0; i < list.length; i++)
+						{
+							result = fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]));
+							p.sendMessage(result);
+							
+							fu.writeFile(GriefLog.reportFile, result, false);
+							fu.writeFile(GriefLog.reportFile, "", true);
+							fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+							fu.writeFile(GriefLog.reportFile, "", true);
+						}
+					}
+					else
+					{
+						p.sendMessage(result);
+						fu.writeFile(GriefLog.reportFile, result, false);
+						fu.writeFile(GriefLog.reportFile, "", true);
+						fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+						fu.writeFile(GriefLog.reportFile, "", true);
+					}
 					
 					return true;
 				}
@@ -49,19 +69,36 @@ public class GReport implements CommandExecutor {
 			
 			if(args.length == 3)
 			{
-				
+				Player p = (Player) sender;
 				String x = args[0];
 				String y = args[1];
 				String z = args[2];
 				
 				String result = fu.searchText(x + ", " + y + ", " + z, GriefLog.file);
 				
-				sender.sendMessage(result);
-				
-				fu.writeFile(GriefLog.reportFile, result, false);
-				fu.writeFile(GriefLog.reportFile, "", true);
-				fu.writeFile(GriefLog.reportFile, "Reported by: " + sender.getName());
-				fu.writeFile(GriefLog.reportFile, "", true);
+				if(result == null || result == "")
+				{
+					File file = new File("logs/");
+					String[] list = file.list();
+					for(int i = 0; i < list.length; i++)
+					{
+						result = fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]));
+						p.sendMessage(result);
+						
+						fu.writeFile(GriefLog.reportFile, result, false);
+						fu.writeFile(GriefLog.reportFile, "", true);
+						fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+						fu.writeFile(GriefLog.reportFile, "", true);
+					}
+				}
+				else
+				{
+					p.sendMessage(result);
+					fu.writeFile(GriefLog.reportFile, result, false);
+					fu.writeFile(GriefLog.reportFile, "", true);
+					fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+					fu.writeFile(GriefLog.reportFile, "", true);
+				}
 				
 				return true;
 			}

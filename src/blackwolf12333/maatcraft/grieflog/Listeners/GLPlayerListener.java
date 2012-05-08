@@ -19,6 +19,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import blackwolf12333.maatcraft.grieflog.GriefLog;
 import blackwolf12333.maatcraft.grieflog.utils.FileUtils;
@@ -49,7 +52,7 @@ public class GLPlayerListener implements Listener{
 		String playerWorld = world.getName();		
 		
 		try{
-			String data = t.now() + " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + "\n";
+			String data = t.now() + " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -77,7 +80,7 @@ public class GLPlayerListener implements Listener{
 		String from = where.getName();
 		
 		try{
-			String data = t.now() + " [WORLD_CHANGE] Who: " + playerName + " From: " + from + "\n";
+			String data = t.now() + " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
  
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -94,6 +97,14 @@ public class GLPlayerListener implements Listener{
 		}catch(IOException e){
 			log.warning(e.toString());
     	}
+		
+		World world = player.getWorld();
+		Chunk chunk = world.getSpawnLocation().getChunk();
+		chunk.load();
+		while(!world.isChunkLoaded(chunk))
+		{
+			chunk.load();
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -104,7 +115,7 @@ public class GLPlayerListener implements Listener{
 		
 		try{
 			
-			String data = t.now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + "\n";
+			String data = t.now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
 
     		//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -146,7 +157,7 @@ public class GLPlayerListener implements Listener{
 		String worldName = event.getPlayer().getWorld().getName();
 		
 		try {
-			String data = t.now() + " " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + "\n";
+			String data = t.now() + " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
 			
 			//if file doesnt exists, then create it
     		if(!GriefLog.file.exists()){
@@ -180,10 +191,49 @@ public class GLPlayerListener implements Listener{
 				 int y = b.getY();
 				 int z = b.getZ();
 				 
-				 fu.searchText(x + ", " + y + ", " + z, GriefLog.file, p);
 				 event.setCancelled(true);
+				 
+				 /*File file = new File("logs/");
+				 String[] list = file.list();
+				 for(int i = 0; i < list.length; i++)
+				 {
+					 if(fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]), p) == "Not Found!")
+					 {
+						 break;
+					 }
+				 }
+				 */
+				 fu.searchText(x + ", " + y + ", " + z, GriefLog.file, p);
 			 }
 		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerQuit(PlayerQuitEvent event)
+	{
+		InetAddress address = event.getPlayer().getAddress().getAddress();
+		int gm = event.getPlayer().getGameMode().getValue();
+		String name = event.getPlayer().getName();
+		String worldName = event.getPlayer().getWorld().getName();
+		
+		try {
+			String data = t.now() + " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
+			
+			//if file doesnt exists, then create it
+    		if(!GriefLog.file.exists()){
+    			GriefLog.file.createNewFile();
+    		}
+    		
+    		if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
+			{
+				autoBackup();
+			}
+ 
+    		fu.writeFile(GriefLog.file, data);
+    		
+		}catch(IOException e) {
+			log.warning(e.toString());
+    	}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -192,13 +242,38 @@ public class GLPlayerListener implements Listener{
 		Player player = event.getPlayer();
 		World world = player.getWorld();
 		Chunk chunk = event.getTo().getChunk();
-		boolean success = world.refreshChunk(chunk.getX(), chunk.getZ());
-		while(!success)
+		chunk.load();
+		while(!world.isChunkLoaded(chunk))
 		{
-			world.refreshChunk(chunk.getX(), chunk.getZ());
-			if(!world.isChunkLoaded(chunk))
-				success = false;
 			event.setCancelled(true);
+			chunk.load();
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerPortal(PlayerPortalEvent event)
+	{
+		Player player = event.getPlayer();
+		World world = player.getWorld();
+		Chunk chunk = event.getTo().getChunk();
+		chunk.load();
+		while(!world.isChunkLoaded(chunk))
+		{
+			event.setCancelled(true);
+			chunk.load();
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerRespawn(PlayerRespawnEvent event)
+	{
+		Player player = event.getPlayer();
+		World world = player.getWorld();
+		Chunk chunk = event.getRespawnLocation().getChunk();
+		chunk.load();
+		while(!world.isChunkLoaded(chunk))
+		{
+			chunk.load();
 		}
 	}
 	
@@ -215,7 +290,6 @@ public class GLPlayerListener implements Listener{
 			try {
 				backup.createNewFile();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -223,7 +297,6 @@ public class GLPlayerListener implements Listener{
 			fu.copy(GriefLog.file, backup);
 			GriefLog.log.info("[GriefLog] Log file moved to logs/");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

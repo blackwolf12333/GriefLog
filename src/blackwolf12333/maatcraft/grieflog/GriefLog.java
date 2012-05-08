@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import blackwolf12333.maatcraft.grieflog.Listeners.GLBlockListener;
+import blackwolf12333.maatcraft.grieflog.Listeners.GLBucketListener;
 import blackwolf12333.maatcraft.grieflog.Listeners.GLPlayerListener;
 import blackwolf12333.maatcraft.grieflog.commands.GDelReport;
 import blackwolf12333.maatcraft.grieflog.commands.GLTool;
@@ -14,13 +16,14 @@ import blackwolf12333.maatcraft.grieflog.commands.GLog;
 import blackwolf12333.maatcraft.grieflog.commands.GPos;
 import blackwolf12333.maatcraft.grieflog.commands.GRDReport;
 import blackwolf12333.maatcraft.grieflog.commands.GReport;
-
-import blackwolf12333.maatcraft.grieflog.utils.*;
+import blackwolf12333.maatcraft.grieflog.utils.FileUtils;
+import blackwolf12333.maatcraft.grieflog.utils.Time;
 
 public class GriefLog extends JavaPlugin {
 
 	GLBlockListener bListener = new GLBlockListener(this);
 	GLPlayerListener pListener = new GLPlayerListener(this);
+	GLBucketListener bucketListener = new GLBucketListener(this);
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
@@ -40,6 +43,7 @@ public class GriefLog extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(bListener, this);
 		pm.registerEvents(pListener, this);
+		pm.registerEvents(bucketListener, this);
 		version = this.getDescription().getVersion();
 		
 		if(!file.exists())
@@ -63,6 +67,6 @@ public class GriefLog extends JavaPlugin {
 		getCommand("delreports").setExecutor(new GDelReport(this));
 		getCommand("gltool").setExecutor(new GLTool(this));
 		
-		log.info("GriefLog Enabled");
+		log.info("[GriefLog] GriefLog " + version + " Enabled");
 	}
 }
