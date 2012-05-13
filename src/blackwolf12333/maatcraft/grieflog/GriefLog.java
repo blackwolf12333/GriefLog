@@ -8,7 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import blackwolf12333.maatcraft.grieflog.Listeners.GLBlockListener;
-import blackwolf12333.maatcraft.grieflog.Listeners.GLBucketListener;
+//import blackwolf12333.maatcraft.grieflog.Listeners.GLBucketListener;
 import blackwolf12333.maatcraft.grieflog.Listeners.GLPlayerListener;
 import blackwolf12333.maatcraft.grieflog.commands.GDelReport;
 import blackwolf12333.maatcraft.grieflog.commands.GLTool;
@@ -23,7 +23,7 @@ public class GriefLog extends JavaPlugin {
 
 	GLBlockListener bListener = new GLBlockListener(this);
 	GLPlayerListener pListener = new GLPlayerListener(this);
-	GLBucketListener bucketListener = new GLBucketListener(this);
+	//GLBucketListener bucketListener = new GLBucketListener(this);
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
@@ -43,7 +43,7 @@ public class GriefLog extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(bListener, this);
 		pm.registerEvents(pListener, this);
-		pm.registerEvents(bucketListener, this);
+		//pm.registerEvents(bucketListener, this);
 		version = this.getDescription().getVersion();
 		
 		if(!file.exists())

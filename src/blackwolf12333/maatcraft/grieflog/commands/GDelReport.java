@@ -29,7 +29,8 @@ public class GDelReport implements CommandExecutor {
 			// in this if statement all the magic happens
 			if(cmd.getName().equalsIgnoreCase("delreports"))
 			{
-				GriefLog.reportFile.delete();
+				if(!GriefLog.reportFile.delete())
+					sender.sendMessage("Report file could not be deleted:(");
 				sender.sendMessage("Report file is deleted");
 				return true;
 			}

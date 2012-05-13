@@ -46,17 +46,18 @@ public class GReport implements CommandExecutor {
 						for(int i = 0; i < list.length; i++)
 						{
 							result = fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]));
-							p.sendMessage(result);
-							
-							fu.writeFile(GriefLog.reportFile, result, false);
-							fu.writeFile(GriefLog.reportFile, "", true);
-							fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
-							fu.writeFile(GriefLog.reportFile, "", true);
+							if(result != null)
+							{
+								fu.writeFile(GriefLog.reportFile, result, false);
+								fu.writeFile(GriefLog.reportFile, "", true);
+								fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+								fu.writeFile(GriefLog.reportFile, "", true);
+								break;
+							}
 						}
 					}
 					else
 					{
-						p.sendMessage(result);
 						fu.writeFile(GriefLog.reportFile, result, false);
 						fu.writeFile(GriefLog.reportFile, "", true);
 						fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
@@ -83,17 +84,18 @@ public class GReport implements CommandExecutor {
 					for(int i = 0; i < list.length; i++)
 					{
 						result = fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]));
-						p.sendMessage(result);
-						
-						fu.writeFile(GriefLog.reportFile, result, false);
-						fu.writeFile(GriefLog.reportFile, "", true);
-						fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
-						fu.writeFile(GriefLog.reportFile, "", true);
+						if(result != null)
+						{
+							fu.writeFile(GriefLog.reportFile, result, false);
+							fu.writeFile(GriefLog.reportFile, "", true);
+							fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());
+							fu.writeFile(GriefLog.reportFile, "", true);
+							break;
+						}
 					}
 				}
 				else
 				{
-					p.sendMessage(result);
 					fu.writeFile(GriefLog.reportFile, result, false);
 					fu.writeFile(GriefLog.reportFile, "", true);
 					fu.writeFile(GriefLog.reportFile, "Reported by: " + p.getName());

@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
@@ -29,17 +29,12 @@ public class FileUtils {
 		
 	}
 	
-	/**
-	 * @param text: text to search for.
-	 * @param file: filename of the file to search in.
-	 * @return Returns the string you searched for.
-	 */
-	public String searchText(String text, String file)
+	public String searchText(String text, File file)
 	{
 		String data = "";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
+			String line = "";
 			
 			while((line = br.readLine()) != null)
 			{
@@ -51,33 +46,6 @@ public class FileUtils {
 			
 			br.close();
 		} catch (Exception e) {
-			e.printStackTrace();		
-		}
-		if(data.length() > 0)
-		{
-			return data;
-		}
-		
-		return data;
-	}
-	
-	public String searchText(String text, File file)
-	{
-		String data = "";
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-			
-			while((line = br.readLine()) != null)
-			{
-				if(line.indexOf(text) > 0)
-				{
-					data += line + System.getProperty("line.separator");
-				}
-			}
-			
-			br.close();
-		} catch (Exception e) {
 			e.printStackTrace();			
 		}
 		
@@ -89,127 +57,56 @@ public class FileUtils {
 		return data;
 	}
 	
-	public void searchText(String text, String file, Player p)
+	public boolean searchText(String text, String file, Player p)
 	{
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
+			String line = "";
 			
-			String data = "";
+			p.sendMessage("+++++++++++GriefLog+++++++++++");
 			while((line = br.readLine()) != null)
 			{
 			    if(line.indexOf(text) >= 0)
 			    {
-			        data += line + System.getProperty("line.separator");
+			    	p.sendMessage(line);
 			    }
 			}
-			if (data.length() > 0) {
-			    p.sendMessage("+++++++++++GriefLog+++++++++++");
-			    p.sendMessage(data);
-			    p.sendMessage("++++++++++GriefLogEnd+++++++++");
-			}
-			
+		    p.sendMessage("++++++++++GriefLogEnd+++++++++");
 			br.close();
+			
+			return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
-	}
-	
-	public String searchText(String text, File file, Player p)
-	{
-		StringBuffer sb = new StringBuffer();
-		sb.append(text);
-		
-		ArrayList<String> als = new ArrayList<String>();
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-			
-			while((line = br.readLine()) != null)
-			{
-				if(line.indexOf(text) >= 0)
-				{
-					als.add(line);
-				}
-			}
-			
-			br.close();
-			
-			for(Integer i = 0; i < als.size(); i++)
-			{
-				String ret = als.get(i);
-				p.sendMessage(ret);
-				if(i==1 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7)
-					p.sendMessage(System.getProperty("line.separator"));
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();			
-		}
-		
-		return "";
-	}
-	
-	
-	
-	/**
-	 * @param text The text to search for in @param file
-	 * @param file The file to search through
-	 * @return Returns true if the text is found on a line in @param file
-	 */
-	public boolean isInFile(String text, File file)
-	{
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-			
-			while((line = br.readLine()) != null)
-			{
-				if(line.indexOf(text) >= 0)
-					return true;
-				else
-					return false;
-			}
-			
-			br.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();			
-		}
-		
 		return false;
 	}
-
-	/**
-	 * @param text The text to search for in @param file
-	 * @param file The file name to search through
-	 * @return Returns true if the text is found on a line in @param file
-	 */
-	public boolean isInFile(String text, String file)
+	
+	public boolean searchText(String text, File file, Player p)
 	{
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
+			String line = "";
 			
+		    p.sendMessage("+++++++++++GriefLog+++++++++++");
 			while((line = br.readLine()) != null)
 			{
-				if(line.indexOf(text) >= 0)
-					return true;
-				else
-					return false;
+			    if(line.indexOf(text) >= 0)
+			    {
+			    	p.sendMessage(line);
+			    }
 			}
+			p.sendMessage("++++++++++GriefLogEnd+++++++++");
 			
 			br.close();
+			
+			return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
-		
 		return false;
 	}
-
 	
 	public double getFileSize(File file)
 	{
@@ -220,62 +117,44 @@ public class FileUtils {
 		return megabytes;
 	}
 	
-	public String readFile(String filename) {
-		
-		StringBuffer sb = new StringBuffer();
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(filename));
-			String nextLine = "";
-		
-			while ((nextLine = br.readLine()) != null) {
-				return nextLine;
-			}
-			
-			br.close();
-		} catch (IOException e) {
-			
-		}
-		return sb.toString();
-	}
-	
-	public String readFile(File file) {
-		
-		StringBuffer sb = new StringBuffer();
-		
+	public void readFile(String file, Player p)
+	{
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String nextLine = "";
+			String line = "";
 			
-			while ((nextLine = br.readLine()) != null) {
-				return nextLine;
+			p.sendMessage("+++++++++ReportStart+++++++++");
+			while((line = br.readLine()) != null)
+			{
+			    	p.sendMessage(line);
 			}
+			p.sendMessage("+++++++++ReportEnd++++++++++");
 			
 			br.close();
-		} catch(IOException e) {
 			
+		} catch (Exception e) {
+			e.printStackTrace();			
 		}
-		return sb.toString();
 	}
 	
-	public String readf(File file)
+	public void readFile(File file, Player p)
 	{
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append(this.readFile(file));
-		sb.append("\n");
-		
-		return sb.toString();
-	}
-	
-	public String readf(String file)
-	{
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append(this.readFile(file));
-		sb.append("\n");
-		
-		return sb.toString();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = "";
+			
+			p.sendMessage("+++++++++ReportStart+++++++++");
+			while((line = br.readLine()) != null)
+			{
+			    	p.sendMessage(line);
+			}
+			p.sendMessage("+++++++++ReportEnd++++++++++");
+			
+			br.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
 	}
 	
 	public void writeFile(File file, String text)

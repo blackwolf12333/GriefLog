@@ -20,14 +20,21 @@ public class GLTool implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
+		// checks if the sender is a player, if not, return false
+		if(!(sender instanceof Player))
+		{
+			return false;
+		}
+		
+		// check if the command == "gltool"
 		if(cmd.getName().equalsIgnoreCase("gltool"))
 		{
 			Player p = (Player) sender;
 			int item = gl.getConfig().getInt("SelectionTool");
 			
-			PlayerInventory tempInv = p.getInventory();
-			ItemStack tempStack = new ItemStack(item,1);
-			tempInv.addItem(tempStack);
+			// add a item to the players inventory
+			PlayerInventory inv = p.getInventory();
+			inv.addItem(new ItemStack(item,1));
 			
 			return true;
 		}

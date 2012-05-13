@@ -41,7 +41,7 @@ public class GLBlockListener implements Listener {
 		this.data = data;
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		
 		Integer blockX = event.getBlock().getLocation().getBlockX();
@@ -53,8 +53,7 @@ public class GLBlockListener implements Listener {
 		String worldName = player.getWorld().getName();
 		
 		String data = t.now() + " [BLOCK_BREAK] " + " By: " + namePlayer + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
-		setData(data);
-		
+				
 		try{
 			//if file doesnt exists, then create it
 			if(!GriefLog.file.exists()){
@@ -87,26 +86,6 @@ public class GLBlockListener implements Listener {
 		{
 			return;
 		}
-		if(type == "WATER")
-		{
-			data = t.now() + " [BUCKET_WATER_EMPTY] Who: " + namePlayer + " Where: " + (blockX-1) + ", " + blockY + ", " + blockZ + " In: " + worldName + System.getProperty("line.separator");
-			try{
-				//if file doesnt exists, then create it
-				if(!GriefLog.file.exists()){
-					GriefLog.file.createNewFile();
-				}
-	 
-				if(fu.getFileSize(GriefLog.file) >= gl.getConfig().getInt("mb"))
-				{
-					autoBackup();
-				}
-				
-				fu.writeFile(GriefLog.file, data);
-				
-			}catch(IOException e){
-				log.warning(e.toString());
-			}
-		}
 		
 		if(player.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool"))
 		{
@@ -118,17 +97,21 @@ public class GLBlockListener implements Listener {
 			
 			event.setCancelled(true);
 			
-			/*File file = new File("logs/");
+			File file = new File("logs/");
 			String[] list = file.list();
+			if(list == null)
+			{
+				fu.searchText(x + ", " + y + ", " + z, GriefLog.file, player);
+				event.setCancelled(true);
+				return;
+			}
 			for(int i = 0; i < list.length; i++)
 			{
-				if(fu.searchText(x+", "+y+", "+z, new File("logs" + File.separator + list[i]), player) != "")
+				if(fu.searchText(x + ", " + y + ", " + z, new File("logs" + File.separator + list[i]), player))
 				{
 					break;
 				}
-			}*/
-			
-			fu.searchText(x + ", " + y + ", " + z, GriefLog.file, player);
+			}
 		}
 		else
 		{
@@ -155,7 +138,7 @@ public class GLBlockListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockIgnite(BlockIgniteEvent event) throws EventException
 	{
 		//Block block = event.getBlock();
@@ -202,7 +185,7 @@ public class GLBlockListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event)
 	{
 		Block b = event.getBlock();
