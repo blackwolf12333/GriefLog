@@ -1,22 +1,7 @@
 name: GriefLog
-version: 2.9
-main: blackwolf12333.maatcraft.grieflog.GriefLog
+version: 2.9.7
+main: tk.blackwolf12333.grieflog.GriefLog
 commands:
     glog:
         description: Main command, type glog help for more info.
         usage: /glog <option> <arguments>
-    gpos:
-        description: Get your current position.
-        usage: /gpos
-    report:
-        description: Report A Player!
-        usage: /report <position>
-    rdreports:
-        description: Read the reports of players.
-        usage: /rdreports
-    delreports:
-        description: Delete the reports.
-        usage: /delreports
-    gltool:
-        description: Tool to use to see what events have occurred on the block you click.
-        usage: /gltool
