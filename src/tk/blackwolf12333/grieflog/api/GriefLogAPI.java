@@ -7,7 +7,7 @@
 
 package tk.blackwolf12333.grieflog.api;
 
-public class GriefLogAPI {
+public interface GriefLogAPI {
 
 	
 }
