@@ -8,7 +8,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
@@ -39,7 +41,8 @@ public class FileUtils {
 	{
 		String data = "";
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			FileReader fileReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(fileReader);
 			String line = "";
 			
 			while((line = br.readLine()) != null)
@@ -51,6 +54,7 @@ public class FileUtils {
 			}
 			
 			br.close();
+			fileReader.close();
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
@@ -72,10 +76,11 @@ public class FileUtils {
 	public boolean searchText(String text, String file, Player p)
 	{
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			FileReader fileReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(fileReader);
 			String line = "";
 			
-			p.sendMessage("+++++++++++GriefLog+++++++++++");
+			p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
 			while((line = br.readLine()) != null)
 			{
 			    if(line.indexOf(text) >= 0)
@@ -83,8 +88,9 @@ public class FileUtils {
 			    	p.sendMessage(line);
 			    }
 			}
-		    p.sendMessage("++++++++++GriefLogEnd+++++++++");
+		    p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 			br.close();
+			fileReader.close();
 			
 			return true;
 			
@@ -103,10 +109,11 @@ public class FileUtils {
 	public boolean searchText(String text, File file, Player p)
 	{
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			FileReader fileReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(fileReader);
 			String line = "";
 			
-		    p.sendMessage("+++++++++++GriefLog+++++++++++");
+		    p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
 			while((line = br.readLine()) != null)
 			{
 			    if(line.indexOf(text) >= 0)
@@ -114,9 +121,10 @@ public class FileUtils {
 			    	p.sendMessage(line);
 			    }
 			}
-			p.sendMessage("++++++++++GriefLogEnd+++++++++");
+			p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 			
 			br.close();
+			fileReader.close();
 			
 			return true;
 			
@@ -143,17 +151,19 @@ public class FileUtils {
 	public void readFile(String file, Player p)
 	{
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			FileReader fileReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(fileReader);
 			String line = "";
 			
-			p.sendMessage("+++++++++ReportStart+++++++++");
+			p.sendMessage(ChatColor.RED + "+++++++++ReportStart+++++++++");
 			while((line = br.readLine()) != null)
 			{
 			    	p.sendMessage(line);
 			}
-			p.sendMessage("++++++++++ReportEnd+++++++++");
+			p.sendMessage(ChatColor.RED + "++++++++++ReportEnd+++++++++");
 			
 			br.close();
+			fileReader.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();			
@@ -167,17 +177,19 @@ public class FileUtils {
 	public void readFile(File file, Player p)
 	{
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			FileReader fileReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(fileReader);
 			String line = "";
 			
-			p.sendMessage("+++++++++ReportStart+++++++++");
+			p.sendMessage(ChatColor.RED + "+++++++++ReportStart+++++++++");
 			while((line = br.readLine()) != null)
 			{
 			    	p.sendMessage(line);
 			}
-			p.sendMessage("++++++++++ReportEnd+++++++++");
+			p.sendMessage(ChatColor.RED + "++++++++++ReportEnd+++++++++");
 			
 			br.close();
+			fileReader.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();			
@@ -188,9 +200,11 @@ public class FileUtils {
 	public void writeFile(File file, String text)
 	{
 		try{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			FileWriter fw = new FileWriter(file, true);
+			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(text);
 			bw.close();
+			fw.close();
 		}catch (Exception e) {
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
@@ -200,9 +214,11 @@ public class FileUtils {
 	public void writeFile(String file, String text)
 	{
 		try{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			FileWriter fw = new FileWriter(file, true);
+			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(text);
 			bw.close();
+			fw.close();
 		}catch (Exception e) {
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
@@ -212,11 +228,13 @@ public class FileUtils {
 	public void writeFile(String file, String text, boolean newLine)
 	{
 		try{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			FileWriter fw = new FileWriter(file, true);
+			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(text);
 			if(newLine)
 				bw.newLine();
 			bw.close();
+			fw.close();
 		}catch (Exception e) {
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
@@ -226,11 +244,13 @@ public class FileUtils {
 	public void writeFile(File file, String text, boolean newLine)
 	{
 		try{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			FileWriter fw = new FileWriter(file, true);
+			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(text);
 			if(newLine)
 				bw.newLine();
 			bw.close();
+			fw.close();
 		}catch (Exception e) {
 			GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
 		}
@@ -272,5 +292,60 @@ public class FileUtils {
 			return;
 		}
 		from.renameTo(to);
+	}
+	
+	public String[] readLines(File file, String text)
+	{
+		String[] lines = new String[count(file)];
+		String currentline = "";
+		
+		if(!file.exists())
+		{
+			GriefLog.log.info("Failed to open file!");
+		}
+		try {
+			FileReader fr = new FileReader(file);
+			BufferedReader in = new BufferedReader(fr);
+			
+			for(int i = 0; (currentline = in.readLine()) != null; i++)
+			{
+				if(currentline.indexOf(text) > 0)
+				{
+					lines[i] = currentline;
+				}
+				else
+				{
+					lines[i] = null;
+				}
+				
+				
+			}
+			
+			in.close();
+			fr.close();
+		} catch(Exception e) {
+			GriefLog.log.warning(e.getMessage());
+		}
+		
+		return lines;
+	}
+	
+	@SuppressWarnings("unused")
+	public int count(File file)
+	{
+		try {
+			FileReader fr = new FileReader(file);
+			LineNumberReader reader = new LineNumberReader(fr);
+			int count = 0;
+			String lineRead = "";
+			while((lineRead = reader.readLine()) != null) {}
+			count = reader.getLineNumber();
+			reader.close();
+			fr.close();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }

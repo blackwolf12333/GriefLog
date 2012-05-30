@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.commands;
 
 import java.io.File;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -21,16 +22,16 @@ public class GLog implements CommandExecutor {
 	FileUtils fu = new FileUtils();
 	Time t = new Time();
 	
-	public String[] helpTxt = {"+++++++++++++ [GriefLog] ++++++++++++++++",
+	public String[] helpTxt = {ChatColor.RED + "+++++++++++++ [GriefLog] ++++++++++++++++",
 							"Commands:",
-							"/glog: This gets the current version of GriefLog.",
-							"/glog get here: This gets the events from the block you are currently standing in.",
-							"/glog get x y z: Here you have to fill in the x y and z coordinates yourself.",
-							"/glog rollback <playername> (Warning, this can't be undone)",
-							"/glog pos: Gets your current position.",
-							"/glog report here: Not functioning yet.",
-							"/glog report x y z: Fill in the x y and z coordinates yourself, this will report the block you point to using the coordinates, it will  tell the admins you reported a griefer so they can look at it.",
-							"/glog tool: Gives you the grieflog tool with what you can check who griefed something."};
+							ChatColor.GOLD + "/glog: " + ChatColor.DARK_GRAY + "This gets the current version of GriefLog.",
+							ChatColor.GOLD + "/glog get here: " + ChatColor.DARK_GRAY + "This gets the events from the block you are currently standing in.",
+							ChatColor.GOLD + "/glog get x y z: " + ChatColor.DARK_GRAY + "Here you have to fill in the x y and z coordinates yourself.",
+							ChatColor.GOLD + "/glog rollback <playername> " + ChatColor.DARK_GRAY + "Rolls the actions of the specified player back " + ChatColor.RED + "(Warning, this can't be undone)",
+							ChatColor.GOLD + "/glog pos:" + ChatColor.DARK_GRAY + " Gets your current position.",
+							ChatColor.GOLD + "/glog report here: " + ChatColor.DARK_GRAY + "Not functioning yet.",
+							ChatColor.GOLD + "/glog report x y z: " + ChatColor.DARK_GRAY + "Fill in the x y and z coordinates yourself, this will report the block you point to using the coordinates, it will  tell the admins you reported a griefer so they can look at it.",
+							ChatColor.GOLD + "/glog tool: " + ChatColor.DARK_GRAY + "Gives you the grieflog tool with what you can check who griefed something."};
 	
 	public GLog(GriefLog plugin) {
 		gl = plugin;
@@ -150,7 +151,7 @@ public class GLog implements CommandExecutor {
 				{
 					if(args[0].equalsIgnoreCase("rollback"))
 					{
-						Player p = (Player)sender;
+						final Player p = (Player)sender;
 						if(!p.isOp())
 						{
 							p.sendMessage("You can't use this command if you aren't OP!");
@@ -158,9 +159,18 @@ public class GLog implements CommandExecutor {
 						}
 						else
 						{
-							Rollback rb = new Rollback(gl);
-							rb.rollback(args[1], p, GriefLog.file);
-							return true;
+							if(args[1].equalsIgnoreCase("creeper"))
+							{
+								final Rollback rb = new Rollback(gl);
+								rb.rollbackEntity(p, GriefLog.file);
+								return true;
+							}
+							else
+							{
+								final Rollback rb = new Rollback(gl);
+								rb.rollback(args[1], p, GriefLog.file);
+								return true;
+							}
 						}
 					}
 				}
@@ -177,10 +187,10 @@ public class GLog implements CommandExecutor {
 						}
 						else
 						{
-							long from = t.getTimeStamp(args[2] + " " + args[3]);
+							/*long from = t.getTimeStamp(args[2] + " " + args[3]);
 							Rollback rb = new Rollback(gl);
 							rb.rollback(args[1], p, GriefLog.file, from);
-							return true;
+							return true;*/
 						}
 					}
 				}
@@ -288,6 +298,8 @@ public class GLog implements CommandExecutor {
 						// add a item to the players inventory
 						PlayerInventory inv = p.getInventory();
 						inv.addItem(new ItemStack(item,1));
+						
+						p.sendMessage("The GriefLog tool was given to you:)");
 						
 						return true;
 					}
