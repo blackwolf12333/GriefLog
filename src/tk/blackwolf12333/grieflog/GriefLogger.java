@@ -1,55 +1,57 @@
 package tk.blackwolf12333.grieflog;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
-import tk.blackwolf12333.grieflog.utils.FileUtils;
 import tk.blackwolf12333.grieflog.utils.Time;
 
 public class GriefLogger implements IGriefLogger {
 
-	FileUtils fu = new FileUtils();
 	Time t = new Time();
 	GriefLog plugin;
-	
+
 	public GriefLogger(GriefLog plugin) {
 		this.plugin = plugin;
 	}
-	
-	public void Log(String data)
-	{
-		try	{
-			//if file doesnt exists, then create it
-			if(!GriefLog.file.exists()){
+
+	@Override
+	public void Log(String data) {
+		try {
+			// if file doesnt exists, then create it
+			if (!GriefLog.file.exists()) {
 				GriefLog.file.createNewFile();
 			}
-			
-			// if the file has reached the max size, set in the config back it up
-			if(fu.getFileSize(GriefLog.file) >= plugin.getConfig().getInt("mb"))
-			{
+
+			// if the file has reached the max size, set in the config back it
+			// up
+			if (plugin.getFileSize(GriefLog.file) >= plugin.getConfig().getInt("mb")) {
 				autoBackup();
 			}
-			
+
 			// log it
-			fu.writeFile(GriefLog.file, data);
-				
-		}catch(IOException e){
-			GriefLog.log.warning(e.toString());
+			Log(data, GriefLog.file);
+
+		} catch (IOException e) {
+			plugin.log.warning(e.toString());
 		}
 	}
 	
-	
-	private void autoBackup()
+	@Override
+	public void Log(String data, File file)
 	{
+		
+	}
+
+	private void autoBackup() {
 		File backupdir = new File("logs/");
-		if(!backupdir.exists())
-		{
+		if (!backupdir.exists()) {
 			backupdir.mkdir();
 		}
 		File backup = new File("logs" + File.separator + "GriefLog" + t.Date() + ".txt");
-		if(!backup.exists())
-		{
+		if (!backup.exists()) {
 			try {
 				backup.createNewFile();
 			} catch (Exception e) {
@@ -57,11 +59,35 @@ public class GriefLogger implements IGriefLogger {
 			}
 		}
 		try {
-			fu.copy(GriefLog.file, backup);
-			GriefLog.log.info("[GriefLog] Log file moved to logs/");
+			copy(GriefLog.file, backup);
+			plugin.log.info("[GriefLog] Log file moved to logs/");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	// pretty self explaining function
+	public void copy(File from, File to) throws IOException {
+		
+		if (!from.exists())
+			return;
+		if (!to.exists()) {
+			System.out.print("File \"" + to.getName() + "\" does not exist!");
+			return;
+		}
+		
+		FileInputStream in = new FileInputStream(from);
+		FileOutputStream out = new FileOutputStream(to);
+		
+		// Transfer bytes from in to out
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
+		in.close();
+		out.close();
+		from.delete();
 	}
 }

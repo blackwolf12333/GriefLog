@@ -1,16 +1,14 @@
 # Set the selection tool here:
-SelectionTool: 32
+SelectionTool: 51
 # when should the log file be moved to logs/
 mb: 5
-
-# if a player places lava, after how many times do you want to be warned?
-warn-on-lava: 7
 
 # Which things would you like to have logged?
 DoCommand: true
 ChangeWorld: true
 ChangeGameMode: true
 BlockIgnite: true
+IgnoreEnvironment: false
 BucketWaterEmpty: true
 BucketLavaEmpty: true
 EnderManPlaceAndPickup: true

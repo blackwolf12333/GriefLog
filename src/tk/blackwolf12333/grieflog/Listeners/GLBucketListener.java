@@ -12,29 +12,23 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.FileUtils;
 import tk.blackwolf12333.grieflog.utils.Time;
-
 
 public class GLBucketListener implements Listener {
 
 	Logger log = Logger.getLogger("Minecraft");
 	GriefLog gl;
 	Time t = new Time();
-	FileUtils fu = new FileUtils();
-	int lava;
 	GriefLogger logger;
-	
+
 	public GLBucketListener(GriefLog plugin) {
 		gl = plugin;
 		logger = new GriefLogger(plugin);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
-	{
-		if(gl.getConfig().getBoolean("BucketWaterEmpty"))
-		{
+	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+		if (gl.getConfig().getBoolean("BucketWaterEmpty")) {
 			Player p = event.getPlayer();
 			String name = p.getName();
 			String world = event.getBlockClicked().getWorld().getName();
@@ -42,18 +36,15 @@ public class GLBucketListener implements Listener {
 			int x = b.getX();
 			int y = b.getY();
 			int z = b.getZ();
-			
+
 			Material bucket = event.getBucket();
 			String data = "";
-			if(bucket == Material.WATER_BUCKET)
-			{
+			if (bucket == Material.WATER_BUCKET) {
 				data = t.now() + " [BUCKET_WATER_EMPTY] Who: " + name + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
 				logger.Log(data);
 			}
 		}
-		
-		if(gl.getConfig().getBoolean("BucketLavaEmpty"))
-		{
+		if (gl.getConfig().getBoolean("BucketLavaEmpty")) {
 			Player p = event.getPlayer();
 			String name = p.getName();
 			String world = event.getBlockClicked().getWorld().getName();
@@ -61,28 +52,14 @@ public class GLBucketListener implements Listener {
 			int x = b.getX();
 			int y = b.getY();
 			int z = b.getZ();
-			
+
 			Material bucket = event.getBucket();
 			String data = "";
-			
-			if(lava >= gl.getConfig().getInt("warn-on-lava"))
-			{
-				Player[] players = gl.getServer().getOnlinePlayers();
-				for(Player player : players)
-				{
-					if(player.isOp()) {
-						player.sendMessage("Player: " + name + " placed " + gl.getConfig().getInt("warn-on-lava") + " or more times lava, possible grief.");
-					}
-				}
-			}
-			
-			if(bucket == Material.LAVA_BUCKET)
-			{
-				data = t.now() + " [BUCKET_LAVA_EMPTY] Who: " + name + " Where: " + x + ", " + y + ", " + z + " In: " + world;
-				
+
+			if (bucket == Material.LAVA_BUCKET) {
+				data = t.now() + " [BUCKET_LAVA_EMPTY] Who: " + name + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
+
 				logger.Log(data);
-				
-				lava++;
 			}
 		}
 	}
