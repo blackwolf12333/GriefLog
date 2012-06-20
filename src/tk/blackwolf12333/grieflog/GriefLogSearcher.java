@@ -2,8 +2,11 @@ package tk.blackwolf12333.grieflog;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
@@ -24,15 +27,18 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 		this.addExtraLines = addExtraLines;
 	}
 
-	public GriefLogSearcher() {
+	public GriefLogSearcher(String ...text) {
 		files.add(GriefLog.file);
 		
 		File file = new File("logs/");
 		String[] list = file.list();
 
-		for (String element : list) {
-			files.add(new File("logs" + File.separator + element));
+		if(file.exists()) {
+			for (String element : list) {
+				files.add(new File("logs" + File.separator + element));
+			}
 		}
+		
 	}
 	
 	private String searchFile(String ...text)
@@ -44,37 +50,23 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
 			
-			FileReader fileReader = null;
-			BufferedReader br = null;
-			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					fileReader = new FileReader(searchFile);
-					br = new BufferedReader(fileReader);
+					FileReader fr = new FileReader(searchFile);
+					BufferedReader br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
-						if (line.indexOf(text[0]) >= 0) {
+						if (line.contains(text[0])) {
 							data += line + System.getProperty("line.separator");
+						} else {
+							continue;
 						}
 					}
-
-					
 
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					if((br != null) && (fileReader != null))
-					{
-						try {
-							br.close();
-							fileReader.close();
-						} catch(Exception e1) {
-							e1.printStackTrace();
-						}
-						
-					}
 				}
 			}
 		}
@@ -82,48 +74,23 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
 			
-			FileReader fileReader = null;
-			BufferedReader br = null;
-			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					fileReader = new FileReader(searchFile);
-					br = new BufferedReader(fileReader);
+					FileReader fr = new FileReader(searchFile);
+					BufferedReader br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
-						if ((line.indexOf(text[0]) >= 0) && (line.indexOf(text[1]) > 0)) {
+						if ((line.contains(text[0])) && (line.contains(text[1]))) {
 							data += line + System.getProperty("line.separator");
+						} else {
+							continue;
 						}
 					}
-
-					br.close();
-					fileReader.close();
 
 				} catch (Exception e) {
-					if((fileReader != null) && (br != null))
-					{
-						try {
-							br.close();
-							fileReader.close();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-					
 					e.printStackTrace();
-				} finally {
-					if((br != null) && (fileReader != null))
-					{
-						try {
-							br.close();
-							fileReader.close();
-						} catch(Exception e1) {
-							e1.printStackTrace();
-						}
-						
-					}
 				}
 			}
 		}
@@ -132,52 +99,26 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
 			
-			FileReader fileReader = null;
-			BufferedReader br = null;
-			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					fileReader = new FileReader(searchFile);
-					br = new BufferedReader(fileReader);
+					FileReader fr = new FileReader(searchFile);
+					BufferedReader br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
-						if ((line.indexOf(text[0]) >= 0) && (line.indexOf(text[1]) > 0) && (line.indexOf(text[2]) > 0)) {
+						if ((line.contains(text[0])) && (line.contains(text[1])) && (line.contains(text[2]))) {
 							data += line + System.getProperty("line.separator");
-						}
-					}
-
-					br.close();
-					fileReader.close();
-
-				} catch (Exception e) {
-					if((fileReader != null) && (br != null))
-					{
-						try {
-							br.close();
-							fileReader.close();
-						} catch (IOException e1) {
-							e1.printStackTrace();
+						} else {
+							continue;
 						}
 					}
 					
+				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					if((br != null) && (fileReader != null))
-					{
-						try {
-							br.close();
-							fileReader.close();
-						} catch(Exception e1) {
-							e1.printStackTrace();
-						}
-						
-					}
 				}
 			}
 		}
-		
 		
 		return data;
 	}
@@ -295,8 +236,68 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 			fileReader.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			sender.sendMessage(ChatColor.DARK_RED + "No Reports have been found!");
 		}
 	}
+	
+	// just dumped this here, i'll need it once
+	public void deleteLine(String line) {
+		
+		BufferedReader br = null;
+		PrintWriter pw = null;
+		
+		File[] searchFiles = new File[files.size()];
+		searchFiles = files.toArray(searchFiles);
+		
+		for(File searchFile : searchFiles) {
+			try {
+				
+				File infile = searchFile;
+				
+				// Construct the new file that will later be renamed to the original
+				// filename.
+				File tempFile = new File(infile.getAbsolutePath() + ".tmp");
+				br = new BufferedReader(new FileReader(infile));
+				pw = new PrintWriter(new FileWriter(tempFile));
+				
+				String currentline = null;
+					
+				// Read from the original file and write to the new
+				// unless content matches data to be removed.
+				while ((currentline = br.readLine()) != null) {
+						
+					if (!currentline.trim().contains(line)) {
+						
+						pw.println(line);
+						pw.flush();
+					}
+				}
+				pw.close();
+				br.close();
 
+				// Delete the original file
+				if (!infile.delete()) {
+					System.out.println("Could not delete file");
+					return;
+				}
+				
+				// Rename the new file to the filename the original file had.
+				if (!tempFile.renameTo(infile))
+					System.out.println("Could not rename file");
+				
+			} catch (FileNotFoundException ex) {
+				ex.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			} finally {
+				pw.close();
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

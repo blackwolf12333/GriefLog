@@ -1,8 +1,10 @@
 package tk.blackwolf12333.grieflog;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
@@ -30,27 +32,63 @@ public class GriefLogger implements IGriefLogger {
 			if (plugin.getFileSize(GriefLog.file) >= plugin.getConfig().getInt("mb")) {
 				autoBackup();
 			}
+			
+			// put the time in front of the data
+			String ret = t.now() + data;
 
 			// log it
-			Log(data, GriefLog.file);
+			Log(ret, GriefLog.file);
 
 		} catch (IOException e) {
-			plugin.log.warning(e.toString());
+			GriefLog.log.warning(e.toString());
 		}
 	}
 	
 	@Override
 	public void Log(String data, File file)
 	{
-		
+		try {
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			// if the file has reached the max size, set in the config back it
+			// up
+			if (plugin.getFileSize(file) >= plugin.getConfig().getInt("mb")) {
+				autoBackup();
+			}
+
+			// log it
+			FileWriter fw = null;
+			BufferedWriter bw = null;
+			try {
+				fw = new FileWriter(file, true);
+				bw = new BufferedWriter(fw);
+				bw.write(data);
+				bw.close();
+				fw.close();
+			} catch (Exception e) {
+				GriefLog.log.warning("FileException! On GriefLog:FileUtils:writeFile(File,String)");
+			} finally {
+				if((fw != null) && (bw != null))
+				{
+					bw.close();
+					fw.close();
+				}
+			}
+
+		} catch (IOException e) {
+			GriefLog.log.warning(e.toString());
+		}
 	}
 
 	private void autoBackup() {
-		File backupdir = new File("logs/");
+		File backupdir = new File("logs" + File.separator);
 		if (!backupdir.exists()) {
 			backupdir.mkdir();
 		}
-		File backup = new File("logs" + File.separator + "GriefLog" + t.Date() + ".txt");
+		File backup = new File("logs" + File.separator + "GriefLog" + t.now() + ".txt");
 		if (!backup.exists()) {
 			try {
 				backup.createNewFile();
@@ -60,9 +98,8 @@ public class GriefLogger implements IGriefLogger {
 		}
 		try {
 			copy(GriefLog.file, backup);
-			plugin.log.info("[GriefLog] Log file moved to logs/");
+			GriefLog.log.info("[GriefLog] Log file moved to logs/");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,21 +23,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogSearcher;
-import tk.blackwolf12333.grieflog.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.Time;
 
 public class GLPlayerListener implements Listener {
 
 	GriefLog gl;
-	Time t = new Time();
-	GriefLogger logger;
 	List<File> files = new ArrayList<File>();
-	GriefLogSearcher searcher;
+	GriefLogSearcher searcher = new GriefLogSearcher();
 
 	public GLPlayerListener(GriefLog plugin) {
 		gl = plugin;
-		logger = new GriefLogger(plugin);
-		searcher = new GriefLogSearcher();
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -49,8 +44,8 @@ public class GLPlayerListener implements Listener {
 			World world = player.getWorld();
 			String playerWorld = world.getName();
 
-			String data = t.now() + " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
-			logger.Log(data);
+			String data = " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
+			GriefLog.logger.Log(data);
 		}
 	}
 
@@ -63,20 +58,20 @@ public class GLPlayerListener implements Listener {
 			World where = event.getFrom();
 			String from = where.getName();
 
-			String data = t.now() + " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
-			logger.Log(data);
+			String data = " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
+			GriefLog.logger.Log(data);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
+		
 		if (gl.getConfig().getBoolean("DoCommand")) {
 			String cmd = event.getMessage();
 			String namePlayer = event.getPlayer().getName();
 
-			String data = t.now() + " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
-			logger.Log(data);
+			String data = " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
+			GriefLog.logger.Log(data);
 		}
 	}
 
@@ -100,8 +95,8 @@ public class GLPlayerListener implements Listener {
 			String name = event.getPlayer().getName();
 			String worldName = event.getPlayer().getWorld().getName();
 
-			String data = t.now() + " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
-			logger.Log(data);
+			String data = " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
+			GriefLog.logger.Log(data);
 		}
 	}
 
@@ -115,6 +110,24 @@ public class GLPlayerListener implements Listener {
 			// specified in the config file
 			if (p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool")) {
 				Block b = event.getClickedBlock();
+				Player player = event.getPlayer();
+
+				Integer x = b.getX();
+				Integer y = b.getY();
+				Integer z = b.getZ();
+
+				event.setCancelled(true);
+
+				player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+				player.sendMessage(searcher.searchPos(x, y, z));
+				player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+			}
+		}
+		
+		if(a == Action.RIGHT_CLICK_BLOCK) {
+			if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool")) {
+				BlockFace face = event.getBlockFace();
+				Block b = event.getClickedBlock().getRelative(face);
 				Player player = event.getPlayer();
 
 				Integer x = b.getX();

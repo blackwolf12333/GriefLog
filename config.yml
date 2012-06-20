@@ -11,8 +11,12 @@ BlockIgnite: true
 IgnoreEnvironment: false
 BucketWaterEmpty: true
 BucketLavaEmpty: true
+ChestChange: false
+FurnaceChange: false
 EnderManPlaceAndPickup: true
 ZombieBreakDoor: true
-CreeperExplode: true
+Explosions: true
 SignChangeText: true
 PlayerJoin: true
+
+UsePermissions: false
