@@ -11,9 +11,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogSearcher;
+import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.Listeners.GLBlockListener;
 import tk.blackwolf12333.grieflog.utils.Events;
 import tk.blackwolf12333.grieflog.utils.Pages;
@@ -22,6 +24,8 @@ import tk.blackwolf12333.grieflog.utils.Rollback;
 public class GLog implements CommandExecutor {
 
 	public GriefLog plugin;
+	GriefLogger logger;
+	
 	static ArrayList<String> toolUsers = new ArrayList<String>();
 	
 	public String[] helpTxt = { 
@@ -29,16 +33,17 @@ public class GLog implements CommandExecutor {
 			"Commands:",
 			ChatColor.GOLD + "/glog: " + ChatColor.DARK_GRAY + "This gets the current version of GriefLog.",
 			ChatColor.GOLD + "/glog help: " + ChatColor.DARK_GRAY + "Shows the help text.",
-			ChatColor.GOLD + "/glog get here: " + ChatColor.DARK_GRAY + "This gets the events from the block you are currently standing in.",
+			ChatColor.GOLD + "/glog get here: " + ChatColor.DARK_GRAY + "This gets the events from the blockChest you are currently standing in.",
 			ChatColor.GOLD + "/glog get x y z: " + ChatColor.DARK_GRAY + "Here you have to fill in the x y and z coordinates yourself.",
 			ChatColor.GOLD + "/glog rollback <options>: " + ChatColor.DARK_GRAY + "Rolls the actions from the given options(look at the BukkitDev page for help on that) " + ChatColor.RED + "(Warning, this can't be undone)",
 			ChatColor.GOLD + "/glog pos:" + ChatColor.DARK_GRAY + " Gets your current position.",
 			ChatColor.GOLD + "/glog report here: " + ChatColor.DARK_GRAY + "Creates a report for the admins so they can read who griefed \"Here\"",
-			ChatColor.GOLD + "/glog report x y z: " + ChatColor.DARK_GRAY + "Fill in the x y and z coordinates yourself, this will report the block you point to using the coordinates, it will  tell the admins you reported a griefer so they can look at it.",
+			ChatColor.GOLD + "/glog report x y z: " + ChatColor.DARK_GRAY + "Fill in the x y and z coordinates yourself, this will report the blockChest you point to using the coordinates, it will  tell the admins you reported a griefer so they can look at it.",
 			ChatColor.GOLD + "/glog tool: " + ChatColor.DARK_GRAY + "Gives you the grieflog tool with what you can check who griefed something." };
 
 	public GLog(GriefLog plugin) {
 		this.plugin = plugin;
+		logger = new GriefLogger(plugin);
 	}
 
 	@Override
@@ -53,15 +58,20 @@ public class GLog implements CommandExecutor {
 				// /glog get x y z
 				if (args.length == 4) {
 					if (args[0].equalsIgnoreCase("get")) {
-						int x = Integer.parseInt(args[1]);
-						int y = Integer.parseInt(args[2]);
-						int z = Integer.parseInt(args[3]);
+						if(sender.hasPermission(new Permission("grieflog.get.xyz")) || GriefLog.permission.has(sender, "grieflog.get.xyz")) {
+							int x = Integer.parseInt(args[1]);
+							int y = Integer.parseInt(args[2]);
+							int z = Integer.parseInt(args[3]);
 
-						sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-						sender.sendMessage(searcher.searchPos(x, y, z));
-						sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+							sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+							sender.sendMessage(searcher.searchPos(x, y, z));
+							sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 
-						return true;
+							return true;
+						} else {
+							sender.sendMessage(ChatColor.YELLOW + "Sorry the admins have decided that you can't use this command, use /glog get here instead.");
+						}
+						
 					}
 				}
 
@@ -95,9 +105,13 @@ public class GLog implements CommandExecutor {
 
 				// /glog
 				if (args.length == 0) {
-					if(sender.isOp()) {
+					if(sender.getName().equalsIgnoreCase("blackwolf12333")) {
+						sender.sendMessage("[GriefLog] " + plugin.version);
+					} else if(sender.isOp()) {
 						sender.sendMessage("[GriefLog] " + plugin.version);
 						return true;
+					} else {
+						sender.sendMessage("Sorry this command is disabled for normal users!");
 					}
 				}
 
@@ -109,7 +123,7 @@ public class GLog implements CommandExecutor {
 						sender.sendMessage(helpTxt);
 						return true;
 					} else if (args[0].equalsIgnoreCase("reload")) {
-						if(sender.hasPermission("grieflog.reload") || sender.isOp() || !GriefLog.permission.has(sender, "grieflog.reload")) {
+						if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.reload")) {
 							plugin.reloadConfig();
 							sender.sendMessage(ChatColor.GREEN + "[GriefLog] Configuration reloaded.");
 							return true;
@@ -124,7 +138,7 @@ public class GLog implements CommandExecutor {
 				// /glog rollback <options>
 				if (args[0].equalsIgnoreCase("rollback") && (args.length > 1)) {
 					
-					if ((!sender.isOp()) || (!sender.hasPermission("grieflog.rollback")) || (!GriefLog.permission.has(sender, "grieflog.rollback"))) {
+					if ((!sender.isOp()) || (!GriefLog.permission.has(sender, "grieflog.rollback"))) {
 						sender.sendMessage(ChatColor.RED + "You can't use this command if you aren't OP!");
 						return true;
 					} else {
@@ -251,7 +265,7 @@ public class GLog implements CommandExecutor {
 				if (args.length == 2) {
 					if (args[0].equalsIgnoreCase("report")) {
 						if (args[1].equalsIgnoreCase("here")) {
-							if(sender.hasPermission("grieflog.report.here")) {
+							if((!sender.isOp()) || (!GriefLog.permission.has(sender, "grieflog.report.here"))) {
 								if (!(sender instanceof Player)) {
 									sender.sendMessage(ChatColor.RED + "[GriefLog] This command is only for ingame players!");
 									return true;
@@ -267,8 +281,8 @@ public class GLog implements CommandExecutor {
 								String result = searcher.searchPos(x, y, z);
 								
 								// report the result of the search
-								GriefLog.logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
-								GriefLog.logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
+								logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
+								logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
 								sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
 								
 								return true;
@@ -283,7 +297,7 @@ public class GLog implements CommandExecutor {
 				// /glog report x y z
 				if (args.length == 4) {
 					if (args[0].equalsIgnoreCase("report")) {
-						if(sender.hasPermission("grieflog.report")) {
+						if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.report.xyz")) {
 							Player p = (Player) sender;
 							int x = Integer.parseInt(args[1]);
 							int y = Integer.parseInt(args[2]);
@@ -292,8 +306,8 @@ public class GLog implements CommandExecutor {
 							String result = searcher.searchPos(x, y, z);
 
 							// report the result of the search
-							GriefLog.logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
-							GriefLog.logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
+							logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
+							logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
 							sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
 							
 							return true;
@@ -375,7 +389,7 @@ public class GLog implements CommandExecutor {
 					// /glog read
 					if (args[0].equalsIgnoreCase("read")) {
 						// check if the player issuing the command is a Op
-						if ((!sender.isOp()) || (!sender.hasPermission("grieflog.reports.read")) || !GriefLog.permission.has(sender, "grieflog.reports.read")) {
+						if ((!sender.isOp()) || (!GriefLog.permission.has(sender, "grieflog.reports.read"))) {
 							sender.sendMessage(ChatColor.RED + "You cannot use this command because you don't have permission!");
 							return true;
 						} else {
@@ -393,7 +407,7 @@ public class GLog implements CommandExecutor {
 					// /glog delete
 					if (args[0].equalsIgnoreCase("delete")) {
 						// check if the player issuing the command is a Op
-						if ((!sender.isOp()) || (!sender.hasPermission("grieflog.reports.delete")) || !GriefLog.permission.has(sender, "grieflog.reports.delete")) {
+						if ((!sender.isOp()) || (!GriefLog.permission.has(sender, "grieflog.reports.delete"))) {
 							sender.sendMessage(ChatColor.RED + "You cannot use this command because you aren't Op");
 							return true;
 						} else {
@@ -408,7 +422,7 @@ public class GLog implements CommandExecutor {
 				}
 								
 				if(args[0].equalsIgnoreCase("search") && (args.length > 1)) {
-					if((!sender.isOp()) || (!sender.hasPermission("grieflog.search")) || !GriefLog.permission.has(sender, "grieflog.search")) {
+					if((!sender.isOp()) || (!GriefLog.permission.has(sender, "grieflog.search"))) {
 						sender.sendMessage(ChatColor.RED + "Sorry, this command is only available for people with permission!");
 						return true;
 					} else {

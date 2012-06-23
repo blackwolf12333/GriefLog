@@ -18,5 +18,3 @@ ZombieBreakDoor: true
 Explosions: true
 SignChangeText: true
 PlayerJoin: true
-
-UsePermissions: false

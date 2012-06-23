@@ -294,7 +294,7 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 				try {
 					br.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					// TODO Auto-generated catch blockChest
 					e.printStackTrace();
 				}
 			}

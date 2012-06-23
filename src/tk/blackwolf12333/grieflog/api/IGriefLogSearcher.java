@@ -32,9 +32,9 @@ public interface IGriefLogSearcher {
 	 * @param event
 	 *            : The event to search for.
 	 * @param blockType
-	 *            : The type of block that is part of the event.
+	 *            : The type of blockChest that is part of the event.
 	 * @return This function returns the line/lines on which the players name
-	 *         and the event and the type of block is found.
+	 *         and the event and the type of blockChest is found.
 	 */
 	public String searchText(String name, String event, String blockType);
 
@@ -42,7 +42,7 @@ public interface IGriefLogSearcher {
 	 * @param pos
 	 *            : something else you might want to search for.
 	 * @return This function returns the line/lines on which the players name
-	 *         and the event and the type of block and something else is found.
+	 *         and the event and the type of blockChest and something else is found.
 	 */
 	public String searchPos(int x, int y, int z);
 

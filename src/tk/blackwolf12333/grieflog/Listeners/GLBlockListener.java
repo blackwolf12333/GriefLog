@@ -17,17 +17,17 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
+import tk.blackwolf12333.grieflog.GriefLogger;
 
 public class GLBlockListener implements Listener {
 
 	GriefLog gl;
-	public String data; // dunno anymore why i added this, but i use it, so i
-						// don't delete it
+	GriefLogger logger;
 	public static HashMap<String, Integer> tntIgnited = new HashMap<String, Integer>();
 	
 	public GLBlockListener(GriefLog plugin) {
 		gl = plugin;
-		
+		logger = new GriefLogger(plugin);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -48,7 +48,7 @@ public class GLBlockListener implements Listener {
 
 		String data = " [BLOCK_BREAK] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 		
-		GriefLog.logger.Log(data);
+		logger.Log(data);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -85,7 +85,7 @@ public class GLBlockListener implements Listener {
 		// log it
 		String data = " [BLOCK_PLACE] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 		
-		GriefLog.logger.Log(data);
+		logger.Log(data);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -94,7 +94,7 @@ public class GLBlockListener implements Listener {
 			String data = "";
 			Player player = event.getPlayer();
 			
-			// check if it was the environment that ignited the block
+			// check if it was the environment that ignited the blockChest
 			if (player == null) {
 				if (gl.getConfig().getBoolean("IgnoreEnvironment")) {
 					return;
@@ -119,7 +119,7 @@ public class GLBlockListener implements Listener {
 				data = " [BLOCK_IGNITE] By: " + playerName + " GM: " + gm + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 			}
 
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class GLBlockListener implements Listener {
 
 			String data = " [SIGN_CHANGE] By: " + playerName + " NewTxt: " + newTxt + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 	

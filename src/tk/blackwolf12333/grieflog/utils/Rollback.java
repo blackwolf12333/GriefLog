@@ -66,22 +66,20 @@ public class Rollback implements Runnable {
 	
 	@Override
 	public void run() {
-		rollback(this.sender);
+		try {
+		rollback();
+		} catch(Exception e) {
+			
+		}
 	}
 	
-	public void rollback(CommandSender sender)	{
-		if(plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
-			
-			@Override
-			public void run() {
-				while(count < allLines.size()) {
-					for(String line : allLines) {
-						rollback(line);
-						count++;
-					}
-				}
+	public void rollback()	{
+		while(count < allLines.size()) {
+			for(String line : allLines) {
+				rollback(line);
+				count++;
 			}
-		}) >= 0) sender.sendMessage("Successfully rolled back the grief:)");
+		}
 	}
 	
 	public boolean rollback(String line) {

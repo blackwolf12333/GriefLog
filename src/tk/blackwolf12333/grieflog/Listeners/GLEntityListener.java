@@ -13,13 +13,16 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
+import tk.blackwolf12333.grieflog.GriefLogger;
 
 public class GLEntityListener implements Listener {
 
 	GriefLog plugin;
+	GriefLogger logger;
 
 	public GLEntityListener(GriefLog instance) {
 		plugin = instance;
+		logger = new GriefLogger(instance);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -37,7 +40,7 @@ public class GLEntityListener implements Listener {
 
 				String data = " [ENTITY_EXPLODE] EntityType: " + entityName + " Block: " + b.getType().toString() + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
 
-				GriefLog.logger.Log(data);
+				logger.Log(data);
 			}
 		}
 	}
@@ -53,7 +56,7 @@ public class GLEntityListener implements Listener {
 
 			String data = " [ENTITY_BREAK_DOOR] Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
 
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -74,7 +77,7 @@ public class GLEntityListener implements Listener {
 					data = " [ENDERMAN_PLACE] Where: " + x + ", " + y + ", " + z + " Ín: " + world + System.getProperty("line.separator");
 				}
 
-				GriefLog.logger.Log(data);
+				logger.Log(data);
 			} else {
 				return;
 			}

@@ -9,13 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
+import tk.blackwolf12333.grieflog.GriefLogger;
 
 public class GLBucketListener implements Listener {
 
 	GriefLog gl;
+	GriefLogger logger;
 
 	public GLBucketListener(GriefLog plugin) {
 		gl = plugin;
+		logger = new GriefLogger(plugin);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -34,7 +37,7 @@ public class GLBucketListener implements Listener {
 			String data = "";
 			if (bucket == Material.WATER_BUCKET) {
 				data = " [BUCKET_WATER_EMPTY] Who: " + name + " GM: " + gm + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
-				GriefLog.logger.Log(data);
+				logger.Log(data);
 			}
 		}
 		if (gl.getConfig().getBoolean("BucketLavaEmpty")) {
@@ -53,7 +56,7 @@ public class GLBucketListener implements Listener {
 			if (bucket == Material.LAVA_BUCKET) {
 				data = " [BUCKET_LAVA_EMPTY] Who: " + name + " GM: " + gm + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");
 
-				GriefLog.logger.Log(data);
+				logger.Log(data);
 			}
 		}
 	}

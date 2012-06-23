@@ -23,15 +23,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogSearcher;
+import tk.blackwolf12333.grieflog.GriefLogger;
 
 public class GLPlayerListener implements Listener {
 
 	GriefLog gl;
+	GriefLogger logger;
+	
 	List<File> files = new ArrayList<File>();
 	GriefLogSearcher searcher = new GriefLogSearcher();
 
 	public GLPlayerListener(GriefLog plugin) {
 		gl = plugin;
+		logger = new GriefLogger(plugin);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -45,7 +49,7 @@ public class GLPlayerListener implements Listener {
 			String playerWorld = world.getName();
 
 			String data = " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -59,7 +63,7 @@ public class GLPlayerListener implements Listener {
 			String from = where.getName();
 
 			String data = " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -71,7 +75,7 @@ public class GLPlayerListener implements Listener {
 			String namePlayer = event.getPlayer().getName();
 
 			String data = " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -96,7 +100,7 @@ public class GLPlayerListener implements Listener {
 			String worldName = event.getPlayer().getWorld().getName();
 
 			String data = " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
-			GriefLog.logger.Log(data);
+			logger.Log(data);
 		}
 	}
 
@@ -104,7 +108,7 @@ public class GLPlayerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action a = event.getAction();
 		Player p = event.getPlayer();
-		// check if the player left clicked a block
+		// check if the player left clicked a blockChest
 		if (a == Action.LEFT_CLICK_BLOCK) {
 			// check if the item in hand of the player == the selection tool
 			// specified in the config file
