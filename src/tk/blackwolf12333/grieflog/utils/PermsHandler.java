@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -12,8 +13,6 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-import org.anjocaido.groupmanager.permissions.BukkitPermissions;
-
 import tk.blackwolf12333.grieflog.GriefLog;
 
 public class PermsHandler {
@@ -21,7 +20,6 @@ public class PermsHandler {
 	GriefLog plugin;
 	PermissionManager permsEx;
 	PermissionHandler permissionPlugin;
-	BukkitPermissions essentials;
 	
 	public static net.milkbowl.vault.permission.Permission vaultPermission;
 	Perms handler = Perms.BUKKIT;
@@ -36,6 +34,7 @@ public class PermsHandler {
 	        if (permissionProvider != null) {
 	            vaultPermission = permissionProvider.getProvider();
 	            handler = Perms.VAULT;
+	            GriefLog.log.info("Using Vault permissions plugin for permissions.");
 	            return;
 	        }
 		}
@@ -43,14 +42,17 @@ public class PermsHandler {
 		if(pm.isPluginEnabled("PermissionsEx")) {
 			handler = Perms.PERMSEX;
 			permsEx = PermissionsEx.getPermissionManager();
+			GriefLog.log.info("Using PermissionsEx permissions plugin for permissions.");
 		} else if(pm.isPluginEnabled("Permissions")) {
 			permissionPlugin = ((Permissions)plugin.getServer().getPluginManager().getPlugin("Permissions")).getHandler();
+			GriefLog.log.info("Using Permissions plugin for permissions.");
 		} else {
+			GriefLog.log.info("Using default server permissions for permissions.");
 		}
 	}
 	
 	public boolean has(CommandSender sender, String node) {
-		if(!(sender instanceof Player)) {
+		if(sender instanceof ConsoleCommandSender) {
 			return true;
 		}
 		Player p = (Player) sender;
@@ -66,9 +68,6 @@ public class PermsHandler {
 				return permsEx.has(p, node);
 			case PERMISSIONS:
 				return permissionPlugin.has(p, node);
-			case ESSENTIALS:
-				//TODO: do this...
-				break;
 			case BUKKIT:
 				return p.hasPermission(node);
 		}
@@ -79,7 +78,6 @@ public class PermsHandler {
 	enum Perms {
 		PERMSEX,
 		VAULT,
-		ESSENTIALS,
 		PERMISSIONS,
 		BUKKIT;
 	}

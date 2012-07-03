@@ -27,7 +27,6 @@ import tk.blackwolf12333.grieflog.api.IPages;
 import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.utils.Pages;
 import tk.blackwolf12333.grieflog.utils.PermsHandler;
-import tk.blackwolf12333.grieflog.utils.Time;
 
 public class GriefLog extends JavaPlugin {
 
@@ -44,7 +43,6 @@ public class GriefLog extends JavaPlugin {
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
 	File temp = new File("plugins" + File.separator + "GriefLog" + File.separator + "temp.glog");
-	Time t = new Time();
 	public boolean usingPerms = false;
 
 	@Override
@@ -94,7 +92,8 @@ public class GriefLog extends JavaPlugin {
 		
 		version = this.getDescription().getVersion();
 
-		// config stuff
+		// config stuff		
+		getConfig().options().copyHeader(true);
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 		
@@ -137,8 +136,9 @@ public class GriefLog extends JavaPlugin {
 	}
 	
 	public void saveHashMapTo(HashMap<String,Integer> hashmap, File file) {
+		ObjectOutputStream oos = null;
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+			oos = new ObjectOutputStream(new FileOutputStream(file));
 			oos.writeObject(hashmap);
 			oos.flush();
 			oos.close();
@@ -148,15 +148,23 @@ public class GriefLog extends JavaPlugin {
 		} catch (IOException e) {
 			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
+		} finally {
+			try {
+				oos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Integer> loadHashMapFrom(File file) {
 		HashMap<String, Integer> result = null;
+		ObjectInputStream ois = null;
 		
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+			ois = new ObjectInputStream(new FileInputStream(file));
 			result = (HashMap<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
@@ -168,6 +176,13 @@ public class GriefLog extends JavaPlugin {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
+		} finally {
+			try {
+				ois.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return result;

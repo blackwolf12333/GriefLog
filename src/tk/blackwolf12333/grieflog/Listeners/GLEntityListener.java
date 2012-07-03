@@ -35,7 +35,7 @@ public class GLEntityListener implements Listener {
 				int x = b.getX();
 				int y = b.getY();
 				int z = b.getZ();
-				String entityName = event.getEntityType().getName();
+				String entityName = event.getEntityType().toString();
 				String world = event.getLocation().getWorld().getName();
 
 				String data = " [ENTITY_EXPLODE] EntityType: " + entityName + " Block: " + b.getType().toString() + " Where: " + x + ", " + y + ", " + z + " In: " + world + System.getProperty("line.separator");

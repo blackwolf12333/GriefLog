@@ -32,13 +32,11 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 		
 		File file = new File("logs/");
 		String[] list = file.list();
-
 		if(file.exists()) {
 			for (String element : list) {
 				files.add(new File("logs" + File.separator + element));
 			}
 		}
-		
 	}
 	
 	private String searchFile(String ...text)
@@ -49,17 +47,20 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 		{
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
+			FileReader fr = null;
+			BufferedReader br = null;
 			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					FileReader fr = new FileReader(searchFile);
-					BufferedReader br = new BufferedReader(fr);
+					fr = new FileReader(searchFile);
+					br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
 						if (line.contains(text[0])) {
 							data += line + System.getProperty("line.separator");
+							continue;
 						} else {
 							continue;
 						}
@@ -67,23 +68,35 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					if((fr != null) && (br != null)) {
+						try {
+							fr.close();
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}
 		if(text.length == 2) {
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
+			FileReader fr = null;
+			BufferedReader br = null;
 			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					FileReader fr = new FileReader(searchFile);
-					BufferedReader br = new BufferedReader(fr);
+					fr = new FileReader(searchFile);
+					br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
 						if ((line.contains(text[0])) && (line.contains(text[1]))) {
 							data += line + System.getProperty("line.separator");
+							continue;
 						} else {
 							continue;
 						}
@@ -91,6 +104,15 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					if((fr != null) && (br != null)) {
+						try {
+							fr.close();
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}
@@ -98,17 +120,20 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 		{
 			File[] searchFiles = new File[files.size()];
 			searchFiles = files.toArray(searchFiles);
+			FileReader fr = null;
+			BufferedReader br = null;
 			
 			for(File searchFile : searchFiles)
 			{
 				try {
-					FileReader fr = new FileReader(searchFile);
-					BufferedReader br = new BufferedReader(fr);
+					fr = new FileReader(searchFile);
+					br = new BufferedReader(fr);
 					String line = "";
 
 					while ((line = br.readLine()) != null) {
 						if ((line.contains(text[0])) && (line.contains(text[1])) && (line.contains(text[2]))) {
 							data += line + System.getProperty("line.separator");
+							continue;
 						} else {
 							continue;
 						}
@@ -116,6 +141,15 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 					
 				} catch (Exception e) {
 					e.printStackTrace();
+				} finally {
+					if((fr != null) && (br != null)) {
+						try {
+							fr.close();
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}
@@ -141,82 +175,8 @@ public class GriefLogSearcher implements IGriefLogSearcher {
 	@Override
 	public String searchPos(int x, int y, int z) {
 		String xyz = x + ", " + y + ", " + z;
-		return	searchFile(xyz);
+		return searchFile(xyz);
 	}
-
-	/*@Override
-	public boolean searchGriefLog(String text, String file, Player p) {
-
-		try {
-			FileReader fileReader = new FileReader(file);
-			BufferedReader br = new BufferedReader(fileReader);
-			String line = "";
-
-			if (isAddExtraLines()) {
-				p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-
-				while ((line = br.readLine()) != null) {
-					if (line.contains(text)) {
-						p.sendMessage(line);
-					}
-				}
-
-				p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-			} else {
-				while ((line = br.readLine()) != null) {
-					if (line.contains(text)) {
-						p.sendMessage(line);
-					}
-				}
-			}
-
-			br.close();
-			fileReader.close();
-
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}*/
-
-	/*@Override
-	public boolean searchGriefLog(String text, File file, Player p) {
-
-		try {
-			FileReader fileReader = new FileReader(file);
-			BufferedReader br = new BufferedReader(fileReader);
-			String line = "";
-
-			if (isAddExtraLines()) {
-				p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-
-				while ((line = br.readLine()) != null) {
-					if (line.contains(text)) {
-						p.sendMessage(line);
-					}
-				}
-
-				p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-			} else {
-				while ((line = br.readLine()) != null) {
-					if (line.contains(text)) {
-						p.sendMessage(line);
-					}
-				}
-			}
-
-			br.close();
-			fileReader.close();
-
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}*/
 
 	@Override
 	public void readReportFile(File file, CommandSender sender) {

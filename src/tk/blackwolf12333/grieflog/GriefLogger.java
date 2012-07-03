@@ -84,11 +84,11 @@ public class GriefLogger implements IGriefLogger {
 	}
 
 	private void autoBackup() {
-		File backupdir = new File("logs" + File.separator);
+		File backupdir = new File("logs");
 		if (!backupdir.exists()) {
 			backupdir.mkdir();
 		}
-		File backup = new File("logs" + File.separator + "GriefLog" + t.now() + ".txt");
+		File backup = new File(backupdir, "GriefLog" + t.now() + ".txt");
 		if (!backup.exists()) {
 			try {
 				backup.createNewFile();
@@ -98,7 +98,7 @@ public class GriefLogger implements IGriefLogger {
 		}
 		try {
 			copy(GriefLog.file, backup);
-			GriefLog.log.info("[GriefLog] Log file moved to logs/");
+			GriefLog.log.info("Log file moved to logs/");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

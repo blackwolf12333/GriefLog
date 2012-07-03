@@ -1,8 +1,34 @@
 name: GriefLog
-version: 3.9
+version: 4.0
 main: tk.blackwolf12333.grieflog.GriefLog
 softdepend: [PermissionsEx,Permissions,GroupManager,bPermissions,Vault]
 commands:
     glog:
-        description: Main command, type glog help for more info.
+        description: Main command, type /glog help for more info.
         usage: /glog <option> <arguments>
+permissions:
+    grieflog.*:
+        description: Gives access to all GriefLog commands
+        default: false
+        children:
+            grieflog.search: true
+            grieflog.report: true
+            grieflog.reports: true
+            grieflog.rollback: true
+            grieflog.tool: true
+            grieflog.reload: true
+            grieflog.get.xyz: true
+            grieflog.page: true
+    grieflog.reports.*:
+        description: Permission to use the /glog read command.
+        default: false
+        children:
+            grieflog.reports.read: true
+            grieflog.reports.delete: true
+    grieflog.report.*:
+        description: Permission to use the /glog report command.
+        default: false
+        children:
+            grieflog.reports.xyz: true
+            grieflog.reports.here: true
+        

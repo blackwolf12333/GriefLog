@@ -1,9 +1,15 @@
-# Set the selection tool here:
+# Set the selection tool first.
+# Second you can set when your logs have reached the size 
+# you specify, should be moved to the logs/ folder.
+# And last but not least, you can set which things you would like to get logged.
+# If you want more help on the configuration you should contact me on http://dev.bukkit.org/server-mods/grieflog/
+# or you can pm me there, you could also add me as skype contact, but that will only be chat, 
+# my name is blackwolf12333.
+
 SelectionTool: 51
-# when should the log file be moved to logs/
+
 mb: 5
 
-# Which things would you like to have logged?
 DoCommand: true
 ChangeWorld: true
 ChangeGameMode: true
@@ -11,8 +17,6 @@ BlockIgnite: true
 IgnoreEnvironment: false
 BucketWaterEmpty: true
 BucketLavaEmpty: true
-ChestChange: false
-FurnaceChange: false
 EnderManPlaceAndPickup: true
 ZombieBreakDoor: true
 Explosions: true

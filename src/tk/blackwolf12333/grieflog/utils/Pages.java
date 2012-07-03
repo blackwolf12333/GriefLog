@@ -23,11 +23,14 @@ public class Pages implements IPages {
 		int totalPages = (split.length / 9) + 1;
 		
 		pages = new String[totalPages][9];
+		int page = 1;
 		
 		for(int j = 0; j < totalPages; j++) {
 			for(int i = 0; i < 9; i++) {
-				pages[j][i] = split[i*j];
+				pages[j][i] = split[i * page];
 			}
+			
+			page++;
 		}
 		
 		return pages;
