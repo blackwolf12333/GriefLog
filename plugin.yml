@@ -1,11 +1,20 @@
 name: GriefLog
-version: 4.0
+version: 4.2
 main: tk.blackwolf12333.grieflog.GriefLog
 softdepend: [PermissionsEx,Permissions,GroupManager,bPermissions,Vault]
 commands:
     glog:
         description: Main command, type /glog help for more info.
         usage: /glog <option> <arguments>
+    addfriend:
+        description: Add a friend so he can break your blocks.
+        usage: /addfriend <playername>
+    removefriend:
+        description: Remove a player from your friend list so he can't break your blocks.
+        usage: /removefriend <playername>
+    listfriends:
+        description: List your friends you added to your friend list.
+        usage: /listfriends
 permissions:
     grieflog.*:
         description: Gives access to all GriefLog commands
@@ -19,6 +28,8 @@ permissions:
             grieflog.reload: true
             grieflog.get.xyz: true
             grieflog.page: true
+            grieflog.getwarning: true
+            grieflog.dontlogwe: true
     grieflog.reports.*:
         description: Permission to use the /glog read command.
         default: false
@@ -31,4 +42,9 @@ permissions:
         children:
             grieflog.reports.xyz: true
             grieflog.reports.here: true
+    grieflog.getwarning.*:
+        description: Permission to get a warning when someone does something that indicates that he has a modified client.
+        default: false
+        children:
+            grieflog.getwarning.breakair: true
         

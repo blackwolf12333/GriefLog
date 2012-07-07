@@ -12,27 +12,31 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import tk.blackwolf12333.grieflog.Listeners.GLBlockListener;
-import tk.blackwolf12333.grieflog.Listeners.GLBucketListener;
-import tk.blackwolf12333.grieflog.Listeners.GLEntityListener;
-import tk.blackwolf12333.grieflog.Listeners.GLPlayerListener;
-import tk.blackwolf12333.grieflog.api.IGriefLogSearcher;
+import tk.blackwolf12333.grieflog.api.ISearcher;
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
 import tk.blackwolf12333.grieflog.api.IPages;
 import tk.blackwolf12333.grieflog.commands.GLog;
+import tk.blackwolf12333.grieflog.listeners.GLBlockListener;
+import tk.blackwolf12333.grieflog.listeners.GLBucketListener;
+import tk.blackwolf12333.grieflog.listeners.GLEntityListener;
+import tk.blackwolf12333.grieflog.listeners.GLPlayerListener;
+import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.utils.Pages;
 import tk.blackwolf12333.grieflog.utils.PermsHandler;
+import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
 public class GriefLog extends JavaPlugin {
 
 	public String version;
 	public static Logger log;
 	public static PermsHandler permission;
+	public static File weFile;
+	public static File dataFolder;
+	File temp;
 		
 	// the listeners
 	GLBlockListener bListener = new GLBlockListener(this);
@@ -42,9 +46,8 @@ public class GriefLog extends JavaPlugin {
 	
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
-	File temp = new File("plugins" + File.separator + "GriefLog" + File.separator + "temp.glog");
 	public boolean usingPerms = false;
-
+	
 	@Override
 	public void onLoad() {
 		log = this.getLogger();
@@ -52,12 +55,13 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		temp = new File(getDataFolder(), "temp.glog");
+		
 		// save the tntIgnited variable
 		if(!temp.exists()) {
 			try {
 				temp.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch blockChest
 				e.printStackTrace();
 			}
 		}
@@ -69,7 +73,10 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
+		weFile = new File(getDataFolder(), "WorldEditLog.txt");
+		temp = new File(getDataFolder(), "temp.glog");
+		dataFolder = getDataFolder();
+		
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -90,44 +97,49 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		
-		version = this.getDescription().getVersion();
-
-		// config stuff		
-		getConfig().options().copyHeader(true);
-		getConfig().options().copyDefaults(true);
-		saveConfig();
+		// check if worldedit is enabled in this server
+		if(pm.getPlugin("WorldEdit") != null) {
+			if(!weFile.exists()) {
+				try {
+					weFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			log.info("WorldEdit was found logging WorldEdit.");
+		}
 		
+		// config stuff
+		new GLConfigHandler(this);
+		GLConfigHandler.setupGriefLogConfig();
+		if(GLConfigHandler.values.getBlockprotection()) {
+			new GLConfigHandler(this);
+			GLConfigHandler.setupFriendsConfig();
+		}
+		
+		// setup the permissions
 		permission = new PermsHandler(this);
-		
-		// add the permissions
-		pm.addPermission(new Permission("grieflog.get.xyz"));
-		pm.addPermission(new Permission("grieflog.reports.read"));
-		pm.addPermission(new Permission("grieflog.reports.delete"));
-		pm.addPermission(new Permission("grieflog.search"));
-		pm.addPermission(new Permission("grieflog.reload"));
-		pm.addPermission(new Permission("grieflog.rollback"));
-		pm.addPermission(new Permission("grieflog.report.here"));
-		pm.addPermission(new Permission("grieflog.report.xyz"));
 		
 		// register command
 		getCommand("glog").setExecutor(new GLog(this));
 		
 		// enable the api
-		IGriefLogger logger = new GriefLogger(this);
+		IGriefLogger logger = new GriefLogger();
 		Bukkit.getServicesManager().register(IGriefLogger.class, logger, this, ServicePriority.Normal);
 		
-		IGriefLogSearcher searcher = new GriefLogSearcher();
-		Bukkit.getServicesManager().register(IGriefLogSearcher.class, searcher, this, ServicePriority.Normal);
+		ISearcher searcher = new GriefLogSearcher();
+		Bukkit.getServicesManager().register(ISearcher.class, searcher, this, ServicePriority.Normal);
 		
 		IPages pages = new Pages();
 		Bukkit.getServicesManager().register(IPages.class, pages, this, ServicePriority.Normal);
 
 		// tell the console that grieflog is hereby enabled
+		version = this.getDescription().getVersion();
 		log.info("GriefLog " + version + " Enabled");
 	}
 	
 	// pretty self explaining
-	public double getFileSize(File file) {
+	public static double getFileSize(File file) {
 		double bytes = file.length();
 		double kilobytes = (bytes / 1024);
 		double megabytes = (kilobytes / 1024);
@@ -143,16 +155,13 @@ public class GriefLog extends JavaPlugin {
 			oos.flush();
 			oos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
 		} finally {
 			try {
 				oos.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -168,19 +177,15 @@ public class GriefLog extends JavaPlugin {
 			result = (HashMap<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch blockChest
 			e.printStackTrace();
 		} finally {
 			try {
 				ois.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -6,19 +6,37 @@
 # or you can pm me there, you could also add me as skype contact, but that will only be chat, 
 # my name is blackwolf12333.
 
+# What will be your selection tool? i recommend this one:P
 SelectionTool: 51
 
+# when should the log be backed up?
 mb: 5
 
+# do you want the block protection function to be enabled?
+block-protection: true
+block-protection-blacklist: 
+- 2
+- 3
+- 10
+- 11
+
+# which events would you like to have logged?
+WorldEdit: false
 DoCommand: true
 ChangeWorld: true
 ChangeGameMode: true
 BlockIgnite: true
+# would you like to not log the fire spread by the environment?
 IgnoreEnvironment: false
 BucketWaterEmpty: true
 BucketLavaEmpty: true
 EnderManPlaceAndPickup: true
 ZombieBreakDoor: true
 Explosions: true
-SignChangeText: true
 PlayerJoin: true
+
+# If you want stuff prevented, like people can't use lava, set these things to true
+anti-lava: false
+anti-tnt: false
+anti-creeper: false
+anti-fire: false

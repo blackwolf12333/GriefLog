@@ -1,4 +1,4 @@
-package tk.blackwolf12333.grieflog;
+package tk.blackwolf12333.grieflog.worldedit;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,53 +6,47 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import tk.blackwolf12333.grieflog.api.IGriefLogger;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+
+import tk.blackwolf12333.grieflog.GriefLog;
+import tk.blackwolf12333.grieflog.utils.Events;
 import tk.blackwolf12333.grieflog.utils.Time;
-import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
-public class GriefLogger implements IGriefLogger, Runnable {
+public class WorldEditLogger implements Runnable {
 
+	Player p;
+	GriefLog plugin;
+	
 	Time t = new Time();
-	String data;
+	HashMap<Block, Material> blocksChanged = new HashMap<Block, Material>();
 	
-	public GriefLogger() {}
-	
-	public GriefLogger(String data) {
-		this.data = data;
+	public WorldEditLogger(GriefLog plugin, Player p, HashMap<Block, Material> blocks) {
+		this.p = p;
+		this.blocksChanged = blocks;
+		this.plugin = plugin;
 	}
 	
 	@Override
 	public void run() {
-		Log(this.data);
-	}
-
-	@Override
-	public void Log(String data) {
-		try {
-			// if file doesn't exists, then create it
-			if (!GriefLog.file.exists()) {
-				GriefLog.file.createNewFile();
-			}
-
-			// if the file has reached the max size, set in the config back it
-			// up
-			if (GriefLog.getFileSize(GriefLog.file) >= GLConfigHandler.values.getMb()) {
-				autoBackup();
-			}
+		for(Iterator<Block> it = blocksChanged.keySet().iterator(); it.hasNext();) {
+			Block b = it.next();
+			String type = blocksChanged.get(b).toString();
+			int x = b.getX();
+			int y = b.getY();
+			int z = b.getZ();
+			String world = b.getWorld().getName();
+			String where = x + ", " + y + ", " + z + " in: " + world;
+			String data = t.now() + " " + Events.WORLDEDIT.getEvent() + " By: " + p.getName() + " What: " + type + " Where: " + where + System.getProperty("line.separator");
 			
-			// put the time in front of the data
-			String ret = t.now() + data;
-
-			// log it
-			Log(ret, GriefLog.file);
-
-		} catch (IOException e) {
-			GriefLog.log.warning(e.toString());
+			Log(data, GriefLog.weFile);
 		}
 	}
-	
-	@Override
+
 	public void Log(String data, File file)
 	{
 		try {
@@ -60,10 +54,8 @@ public class GriefLogger implements IGriefLogger, Runnable {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-
-			// if the file has reached the max size, set in the config back it
-			// up
-			if (GriefLog.getFileSize(file) >= GLConfigHandler.values.getMb()) {
+			
+			if(GriefLog.getFileSize(file) >= 5) {
 				autoBackup();
 			}
 
@@ -90,13 +82,13 @@ public class GriefLogger implements IGriefLogger, Runnable {
 			GriefLog.log.warning(e.toString());
 		}
 	}
-
+	
 	private void autoBackup() {
-		File backupdir = new File("logs" + File.separator);
+		File backupdir = new File(plugin.getDataFolder() + File.separator +"WELogs" + File.separator);
 		if (!backupdir.exists()) {
 			backupdir.mkdir();
 		}
-		File backup = new File("logs" + File.separator + "GriefLog" + t.now() + ".txt");
+		File backup = new File(plugin.getDataFolder() + File.separator +"WELogs" + File.separator + "WorldEditLog" + t.now() + ".txt");
 		if (!backup.exists()) {
 			try {
 				backup.createNewFile();

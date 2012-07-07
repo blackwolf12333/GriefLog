@@ -1,12 +1,15 @@
-package tk.blackwolf12333.grieflog.Listeners;
+package tk.blackwolf12333.grieflog.listeners;
 
 import java.io.File;
-import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+//import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,26 +24,44 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.bukkit.WorldEditAPI;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.Region;
+//import org.bukkit.event.player.PlayerMoveEvent;
+
+/*import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.bukkit.WorldEditAPI;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.Region;*/
+
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.GriefLogger;
+//import tk.blackwolf12333.grieflog.WorldEditLogger;
+import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
+import tk.blackwolf12333.grieflog.search.Searcher;
+import tk.blackwolf12333.grieflog.search.WorldEditSearcher;
+import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
+import tk.blackwolf12333.grieflog.worldedit.WorldEditCollector;
 
 public class GLPlayerListener implements Listener {
 
-	GriefLog gl;
-	GriefLogger logger;
+	GriefLog plugin;
 	
 	List<File> files = new ArrayList<File>();
-	GriefLogSearcher searcher = new GriefLogSearcher();
+	Searcher searcher;
 
 	public GLPlayerListener(GriefLog plugin) {
-		gl = plugin;
-		logger = new GriefLogger(plugin);
+		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		if (gl.getConfig().getBoolean("ChangeGameMode")) {
+		if (GLConfigHandler.values.getGmChange()) {
 			Player player = event.getPlayer();
 			String p = player.getName();
 			GameMode gm = event.getNewGameMode();
@@ -49,33 +70,56 @@ public class GLPlayerListener implements Listener {
 			String playerWorld = world.getName();
 
 			String data = " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
-			logger.Log(data);
+			GriefLogger logger = new GriefLogger(data);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-
-		if (gl.getConfig().getBoolean("ChangeWorld")) {
+		if (GLConfigHandler.values.getWorldChange()) {
 			Player player = event.getPlayer();
 			String playerName = player.getName();
 			World where = event.getFrom();
 			String from = where.getName();
 
 			String data = " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
-			logger.Log(data);
+			GriefLogger logger = new GriefLogger(data);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if(plugin.getConfig().getBoolean("WorldEdit")) {
+			if((!GriefLog.permission.has(event.getPlayer(), "grieflog.dontlogwe")) || (!event.getPlayer().isOp())) {
+				if(event.getMessage().startsWith("//set")) {
+					WorldEditPlugin we = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+					WorldEditAPI weApi = new WorldEditAPI(we);
+					
+					LocalWorld weWorld = weApi.getSession(event.getPlayer()).getSelectionWorld();
+					try {
+						Region selection = weApi.getSession(event.getPlayer()).getSelection(weWorld);
+						Iterator<BlockVector> blocks = selection.iterator();
+						
+						WorldEditCollector collector = new WorldEditCollector(plugin, event.getPlayer(), blocks);
+						collector.collect();
+						
+					} catch (IncompleteRegionException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 		
-		if (gl.getConfig().getBoolean("DoCommand")) {
+		
+		if (GLConfigHandler.values.getCommand()) {
 			String cmd = event.getMessage();
 			String namePlayer = event.getPlayer().getName();
 
 			String data = " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
-			logger.Log(data);
+			GriefLogger logger = new GriefLogger(data);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 
@@ -93,14 +137,15 @@ public class GLPlayerListener implements Listener {
 			}
 		}
 
-		if (gl.getConfig().getBoolean("PlayerJoin")) {
-			InetAddress address = event.getPlayer().getAddress().getAddress();
+		if (GLConfigHandler.values.getPlayerJoin()) {
+			String address = event.getPlayer().getAddress().getAddress().getHostAddress();
 			int gm = event.getPlayer().getGameMode().getValue();
 			String name = event.getPlayer().getName();
 			String worldName = event.getPlayer().getWorld().getName();
 
-			String data = " [PLAYER_LOGIN] " + name + " On: " + address.getHostAddress() + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
-			logger.Log(data);
+			String data = " [PLAYER_LOGIN] " + name + " On: " + address + " With GameMode: " + gm + " In: " + worldName + System.getProperty("line.separator");
+			GriefLogger logger = new GriefLogger(data);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 
@@ -108,11 +153,11 @@ public class GLPlayerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action a = event.getAction();
 		Player p = event.getPlayer();
-		// check if the player left clicked a blockChest
+		
 		if (a == Action.LEFT_CLICK_BLOCK) {
 			// check if the item in hand of the player == the selection tool
 			// specified in the config file
-			if (p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool")) {
+			if (p.getItemInHand().getTypeId() == GLConfigHandler.values.getTool()) {
 				Block b = event.getClickedBlock();
 				Player player = event.getPlayer();
 
@@ -121,15 +166,29 @@ public class GLPlayerListener implements Listener {
 				Integer z = b.getZ();
 
 				event.setCancelled(true);
-
-				player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-				player.sendMessage(searcher.searchPos(x, y, z));
-				player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+				
+				searcher = new GriefLogSearcher();
+				String result = searcher.searchPos(x, y, z);
+				if(result != null) {
+					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+					player.sendMessage(result);
+					player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+				} else {
+					searcher = new WorldEditSearcher();
+					result = searcher.searchPos(x, y, z);
+					if(result != null) {
+						player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+						player.sendMessage(result);
+						player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+					} else {
+						player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
+					}
+				}
 			}
 		}
 		
 		if(a == Action.RIGHT_CLICK_BLOCK) {
-			if(p.getItemInHand().getTypeId() == gl.getConfig().getInt("SelectionTool")) {
+			if(p.getItemInHand().getTypeId() == GLConfigHandler.values.getTool()) {
 				BlockFace face = event.getBlockFace();
 				Block b = event.getClickedBlock().getRelative(face);
 				Player player = event.getPlayer();
@@ -139,11 +198,82 @@ public class GLPlayerListener implements Listener {
 				Integer z = b.getZ();
 
 				event.setCancelled(true);
-
-				player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-				player.sendMessage(searcher.searchPos(x, y, z));
-				player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+				
+				searcher = new GriefLogSearcher();
+				String result = searcher.searchPos(x, y, z);
+				if(result != null) {
+					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+					player.sendMessage(result);
+					player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+				} else {
+					searcher = new WorldEditSearcher();
+					result = searcher.searchPos(x, y, z);
+					if(result != null) {
+						player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+						player.sendMessage(result);
+						player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+					} else {
+						player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
+					}
+				}
+			}
+			
+			Block clicked = event.getClickedBlock();
+			
+			if((clicked.getType() == Material.LEVER) || (clicked.getType() == Material.STONE_BUTTON)) {
+				if(GLConfigHandler.values.getBlockprotection()) {
+					searcher = new GriefLogSearcher();
+					
+					int x = clicked.getX();
+					int y = clicked.getY();
+					int z = clicked.getZ();
+					String world = clicked.getWorld().getName();
+					String loc = x + ", " + y + ", " + z + " in: " + world;
+					String evt = "[BLOCK_PLACE]";
+					
+					String result = searcher.searchText(evt, loc);
+					
+					if(result != null) {
+						String[] split1 = result.split(System.getProperty("line.separator"));
+						String[] split2 = split1[split1.length - 1].split(" ");
+						String owner = split2[4];
+						if((!event.getPlayer().getName().equalsIgnoreCase(owner)) && (!event.getPlayer().isOp()) && (!GLConfigHandler.isOnFriendsList(owner, event.getPlayer().getName()))) {
+							event.setCancelled(true);
+							event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
+						}
+					} else {
+						// if the search result is null ignore it because than nothing happened on that location
+					}
+				}
 			}
 		}
 	}
+	
+	/*int count = 0;
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Location to = event.getTo();
+		Player player = event.getPlayer();
+		
+		Block blockTo = player.getWorld().getBlockAt(to);
+		int x = blockTo.getX();
+		int y = blockTo.getY();
+		int z = blockTo.getZ();
+		Block blockToOneDown = player.getWorld().getBlockAt(x, y-1, z);
+		
+		if(!(player.getGameMode() == GameMode.CREATIVE)) {
+			if(!player.isInsideVehicle()) {
+				if((blockToOneDown.getType() == Material.WATER) || (blockToOneDown.getType() == Material.STATIONARY_WATER)) {
+					count++;
+				}
+			}
+		}
+		
+		if(count == 20) {
+			System.out.print("Player " + player.getName() + " being jesus!");
+			count = 0;
+			player.teleport(event.getFrom());
+		}
+	}*/
 }

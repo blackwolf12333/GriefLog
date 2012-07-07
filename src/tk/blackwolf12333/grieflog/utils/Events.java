@@ -7,7 +7,8 @@ public enum Events {
 	LAVA("[BUCKET_LAVA_EMPTY", "lava", "lava_bucket"),
 	WATER("[BUCKET_WATER_EMPTY", "water", "water_bucket"),
 	ENDERMAN_PICKUP("[ENDERMAN_PICKUP]", "pickup", "enderman_pickup"),
-	ENDERMAN_PLACE("[ENDERMAN_PLACE]", "place", "enderman_place");
+	ENDERMAN_PLACE("[ENDERMAN_PLACE]", "place", "enderman_place"),
+	WORLDEDIT("[WORLDEDIT]", "we", "worldedit", "world-edit");
 	
 	private String event;
 	private String[] alias;

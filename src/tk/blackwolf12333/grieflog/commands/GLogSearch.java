@@ -5,17 +5,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.GriefLogSearcher;
-import tk.blackwolf12333.grieflog.Listeners.GLBlockListener;
+import tk.blackwolf12333.grieflog.listeners.GLBlockListener;
+import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.utils.Events;
 import tk.blackwolf12333.grieflog.utils.Pages;
 
 public class GLogSearch {
 
-	
-	
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
-		
 		if(cmd.getName().equalsIgnoreCase("glog")) {
 			if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.search")) {
 				Pages pages = new Pages();
@@ -34,8 +31,13 @@ public class GLogSearch {
 							sender.sendMessage(page1);
 							sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 							return true;
+						} else {
+							sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+							sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+							sender.sendMessage(page1);
+							sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+							return true;
 						}
-						return true;
 					} else if(arguments[0].equalsIgnoreCase("e")) {
 						pages.makePages(searcher.searchText(getEventFromAlias(arguments[1])));
 						String[] page1 = Pages.getPage(0);
@@ -62,8 +64,13 @@ public class GLogSearch {
 								sender.sendMessage(page1);
 								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 								return true;
+							} else {
+								sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+								sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+								sender.sendMessage(page1);
+								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+								return true;
 							}
-							return true;
 						}
 					} else if(arg[0].equalsIgnoreCase("e")) {
 						if(arg2[0].equalsIgnoreCase("p")) {
@@ -77,8 +84,13 @@ public class GLogSearch {
 								sender.sendMessage(page1);
 								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 								return true;
+							} else {
+								sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+								sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+								sender.sendMessage(page1);
+								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+								return true;
 							}
-							return true;
 						}
 					} else if(arg2[0].equalsIgnoreCase("p")) {
 						if(arg[0].equalsIgnoreCase("e")) {
@@ -92,8 +104,13 @@ public class GLogSearch {
 								sender.sendMessage(page1);
 								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 								return true;
+							} else {
+								sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+								sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+								sender.sendMessage(page1);
+								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+								return true;
 							}
-							return true;
 						}
 					} else if(arg2[0].equalsIgnoreCase("e")) {
 						if(arg[0].equalsIgnoreCase("p")) {
@@ -107,8 +124,13 @@ public class GLogSearch {
 								sender.sendMessage(page1);
 								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 								return true;
+							} else {
+								sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+								sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+								sender.sendMessage(page1);
+								sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+								return true;
 							}
-							return true;
 						}
 					}
 					return true;
@@ -130,8 +152,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						} else if(arg2[0].equalsIgnoreCase("w")) {
 							if(arg3[0].equalsIgnoreCase("e")) {
@@ -145,8 +172,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						}
 					} else if(arg[0].equalsIgnoreCase("e")) {
@@ -162,8 +194,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						} else if(arg2[0].equalsIgnoreCase("w")) {
 							if(arg3[0].equalsIgnoreCase("p")) {
@@ -177,8 +214,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						}
 					} else if(arg[0].equalsIgnoreCase("w")) {
@@ -194,8 +236,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						} else if(arg2[0].equalsIgnoreCase("e")) {
 							if(arg3[0].equalsIgnoreCase("p")) {
@@ -209,8 +256,13 @@ public class GLogSearch {
 									sender.sendMessage(page1);
 									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
 									return true;
+								} else {
+									sender.sendMessage(ChatColor.DARK_GREEN + "+++++++SearchResults++++++++");
+									sender.sendMessage(ChatColor.YELLOW + "This player has ignited " + timesIgniteTnt + " blocks of TNT.");
+									sender.sendMessage(page1);
+									sender.sendMessage(ChatColor.DARK_GREEN + "++++++SearchResultsEnd++++++");
+									return true;
 								}
-								return true;
 							}
 						}
 					}

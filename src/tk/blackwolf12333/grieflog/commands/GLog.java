@@ -12,10 +12,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.Events;
+import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
+import tk.blackwolf12333.grieflog.search.Searcher;
+import tk.blackwolf12333.grieflog.search.WorldEditSearcher;
 import tk.blackwolf12333.grieflog.utils.Pages;
+import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
 public class GLog implements CommandExecutor {
 
@@ -23,7 +25,6 @@ public class GLog implements CommandExecutor {
 	GriefLogger logger;
 	
 	static ArrayList<String> toolUsers = new ArrayList<String>();
-	
 	public String[] helpTxt = { 
 			ChatColor.RED + "+++++++++++++ [GriefLog] ++++++++++++++++", 
 			"Commands:",
@@ -37,11 +38,12 @@ public class GLog implements CommandExecutor {
 			ChatColor.GOLD + "/glog report x y z: " + ChatColor.DARK_GRAY + "Fill in the x y and z coordinates yourself, this will report the blockChest you point to using the coordinates, it will  tell the admins you reported a griefer so they can look at it.",
 			ChatColor.GOLD + "/glog tool: " + ChatColor.DARK_GRAY + "Gives you the grieflog tool with what you can check who griefed something.",
 			ChatColor.GOLD + "/glog search <options>" + ChatColor.DARK_GRAY + "This lets you search for the specified arguments, these work the same as with the rollback arguments."};
+	
 	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, but i cannot let you do that! You don't have permission.";
 	
 	public GLog(GriefLog plugin) {
 		this.plugin = plugin;
-		logger = new GriefLogger(plugin);
+		logger = new GriefLogger();
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class GLog implements CommandExecutor {
 
 		// inside this if statement all the magic happens
 		if (cmd.getName().equalsIgnoreCase("glog")) {
-			GriefLogSearcher searcher = new GriefLogSearcher();
+			Searcher searcher = new GriefLogSearcher();
 			
 			try {
 				// /glog get x y z
@@ -59,14 +61,46 @@ public class GLog implements CommandExecutor {
 							int x = Integer.parseInt(args[1]);
 							int y = Integer.parseInt(args[2]);
 							int z = Integer.parseInt(args[3]);
-
-							sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-							sender.sendMessage(searcher.searchPos(x, y, z));
-							sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+							
+							String result = searcher.searchPos(x, y, z);
+							if(result != null) {
+								sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+								sender.sendMessage(searcher.searchPos(x, y, z));
+								sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+							} else {
+								searcher = new WorldEditSearcher();
+								result = searcher.searchPos(x, y, z);
+								if(result != null) {
+									sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+									sender.sendMessage(result);
+									sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+								} else {
+									sender.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
+								}
+							}
 
 							return true;
 						} else {
 							sender.sendMessage(ChatColor.YELLOW + "Sorry the admins have decided that you can't use this command, use /glog get here instead.");
+							return true;
+						}
+					} else if (args[0].equalsIgnoreCase("report")) {
+						if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.report.xyz")) {
+							Player p = (Player) sender;
+							int x = Integer.parseInt(args[1]);
+							int y = Integer.parseInt(args[2]);
+							int z = Integer.parseInt(args[3]);
+
+							String result = searcher.searchPos(x, y, z);
+
+							// report the result of the search
+							logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
+							logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
+							sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
+							
+							return true;
+						} else {
+							sender.sendMessage(noPermsMsg);
 							return true;
 						}
 					}
@@ -91,10 +125,22 @@ public class GLog implements CommandExecutor {
 							int y = p.getLocation().getBlockY();
 							int z = p.getLocation().getBlockZ();
 
-							p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-							p.sendMessage(searcher.searchPos(x, y, z));
-							p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-
+							String result = searcher.searchPos(x, y, z);
+							if(result != null) {
+								p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+								p.sendMessage(searcher.searchPos(x, y, z));
+								p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+							} else {
+								searcher = new WorldEditSearcher();
+								result = searcher.searchPos(x, y, z);
+								if(result != null) {
+									p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
+									p.sendMessage(result);
+									p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
+								} else {
+									p.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
+								}
+							}
 							return true;
 						}
 					}
@@ -114,33 +160,9 @@ public class GLog implements CommandExecutor {
 					}
 				}
 
-				// /glog help/reload
-				if (args.length == 1) {
-					// check if the player requests help
-					if (args[0].equalsIgnoreCase("help")) {
-						// if so, send him the help text
-						sender.sendMessage(helpTxt);
-						return true;
-					} else if (args[0].equalsIgnoreCase("reload")) {
-						if(sender.isOp()) {
-							plugin.reloadConfig();
-							sender.sendMessage(ChatColor.GREEN + "[GriefLog] Configuration reloaded.");
-							return true;
-						} else if(GriefLog.permission.has(sender, "grieflog.reload")) {
-							plugin.reloadConfig();
-							sender.sendMessage(ChatColor.GREEN + "[GriefLog] Configuration reloaded.");
-							return true;
-						} else {
-							sender.sendMessage(noPermsMsg);
-							return true;
-						}
-						
-					}
-				}
-
 				// /glog rollback <options>
-				if (args[0].equalsIgnoreCase("rollback")) {
-					GLogRollback rb = new GLogRollback();
+				if (args[0].equalsIgnoreCase("rollback") || args[0].equalsIgnoreCase("rb")) {
+					GLogRollback rb = new GLogRollback(plugin);
 					return rb.onCommand(sender, cmd, cmdLabel, args);
 				}
 
@@ -177,33 +199,26 @@ public class GLog implements CommandExecutor {
 					}
 				}
 
-				// /glog report x y z
-				if (args.length == 4) {
-					if (args[0].equalsIgnoreCase("report")) {
-						if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.report.xyz")) {
-							Player p = (Player) sender;
-							int x = Integer.parseInt(args[1]);
-							int y = Integer.parseInt(args[2]);
-							int z = Integer.parseInt(args[3]);
-
-							String result = searcher.searchPos(x, y, z);
-
-							// report the result of the search
-							logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
-							logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
-							sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
-							
+				if (args.length == 1) {
+					// check if the player requests help
+					if (args[0].equalsIgnoreCase("help")) {
+						// if so, send him the help text
+						sender.sendMessage(helpTxt);
+						return true;
+					} else if (args[0].equalsIgnoreCase("reload")) {
+						if(sender.isOp()) {
+							GLConfigHandler.reloadConfig();
+							sender.sendMessage(ChatColor.GREEN + "[GriefLog] Configuration reloaded.");
+							return true;
+						} else if(GriefLog.permission.has(sender, "grieflog.reload")) {
+							plugin.reloadConfig();
+							sender.sendMessage(ChatColor.GREEN + "[GriefLog] Configuration reloaded.");
 							return true;
 						} else {
 							sender.sendMessage(noPermsMsg);
 							return true;
 						}
-					}
-				}
-
-				if (args.length == 1) {
-					// /glog tool
-					if (args[0].equalsIgnoreCase("tool")) {
+					} else if (args[0].equalsIgnoreCase("tool")) {
 						if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.tool")) {
 							if (!(sender instanceof Player)) {
 								sender.sendMessage(ChatColor.RED + "[GriefLog] This command is only for ingame players!");
@@ -237,10 +252,7 @@ public class GLog implements CommandExecutor {
 							sender.sendMessage(noPermsMsg);
 							return true;
 						}
-					}
-
-					// /glog pos
-					if (args[0].equalsIgnoreCase("pos")) {
+					} else if (args[0].equalsIgnoreCase("pos")) {
 						if(args.length == 2) {
 							if(sender.isOp()) {
 								for(Player p : plugin.getServer().getOnlinePlayers()) {
@@ -274,10 +286,7 @@ public class GLog implements CommandExecutor {
 							p.sendMessage(x + ", " + y + ", " + z);
 							return true;
 						}
-					}
-
-					// /glog read
-					if (args[0].equalsIgnoreCase("read")) {
+					} else if (args[0].equalsIgnoreCase("read")) {
 						// check if the player issuing the command is a Op
 						if (sender.isOp() || GriefLog.permission.has(sender, "grieflog.reports.read")) {
 							try {
@@ -287,17 +296,14 @@ public class GLog implements CommandExecutor {
 								return true;
 							} catch (Exception e) {
 								GriefLog.log.warning("File Not Found Exception, the file: " + GriefLog.reportFile.getName() + " could not be found.");
-								sender.sendMessage("No report file has been found:)");
+								sender.sendMessage(ChatColor.YELLOW + "No report file has been found.");
 								return true;
 							}
 						} else {
 							sender.sendMessage(noPermsMsg);
 							return true;
 						}
-					}
-
-					// /glog delete
-					if (args[0].equalsIgnoreCase("delete")) {
+					} else if (args[0].equalsIgnoreCase("delete")) {
 						// check if the player issuing the command is a Op
 						if (sender.isOp() || GriefLog.permission.has(sender, "grieflog.reports.delete")) {
 							// check if the file could be deleted, if not, tell
@@ -319,9 +325,9 @@ public class GLog implements CommandExecutor {
 					}
 				}
 								
-				if(args[0].equalsIgnoreCase("search") && (args.length > 1)) {
+				if(args[0].equalsIgnoreCase("search")) {
 					GLogSearch search = new GLogSearch();
-					search.onCommand(sender, cmd, cmdLabel, args);
+					return search.onCommand(sender, cmd, cmdLabel, args);
 				}
 				
 				if(args[0].equalsIgnoreCase("page")) {
@@ -340,21 +346,17 @@ public class GLog implements CommandExecutor {
 						return true;
 					}
 				}
+				
+				if(args.length >= 2) {
+					if(args[0].equalsIgnoreCase("bp")) {
+						GLogBp blockProtection = new GLogBp();
+						return blockProtection.onCommand(sender, cmdLabel, args);
+					}
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return false;
-	}
-	
-	public String getEventFromAlias(String alias) {
-		for(Events event : Events.values()) {
-			for(String a : event.getAlias()) {
-				if(alias.equalsIgnoreCase(a)) {
-					return event.getEvent();
-				}
-			}
-		}
-		return null;
 	}
 }
