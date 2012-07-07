@@ -2,9 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/home/peter/Downloads/bukkit-1.2.5-R4.1-20120615.060142-9.jar"/>
+	<classpathentry kind="lib" path="/home/peter/Downloads/bukkit-1.2.5-R4.1-20120705.042223-21.jar"/>
 	<classpathentry kind="lib" path="/home/peter/Documents/Test Server/plugins/pluginsbla/Vault.jar"/>
 	<classpathentry kind="lib" path="/home/peter/Downloads/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="/home/peter/Downloads/vPerms.jar"/>
+	<classpathentry kind="lib" path="/home/peter/Downloads/worldedit-5.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
