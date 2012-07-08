@@ -97,7 +97,7 @@ public class WorldEditLogger implements Runnable {
 			}
 		}
 		try {
-			copy(GriefLog.file, backup);
+			copy(GriefLog.weFile, backup);
 			GriefLog.log.info("[GriefLog] Log file moved to logs/");
 		} catch (Exception e) {
 			e.printStackTrace();
