@@ -39,13 +39,12 @@ public class WorldEditCollector {
 				blocksChanged.put(b, b.getType());
 			}
 			
-			
+			blockCount++;
 			if(blockCount == 200) {
 				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new WorldEditLogger(plugin, p, blocksChanged));
 				blockCount = 0;
+				blocksChanged.clear();
 			}
-			
-			blockCount++;
 		}
 	}
 }
