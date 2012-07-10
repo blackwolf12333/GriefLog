@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.api;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 
@@ -14,7 +15,7 @@ public interface ISearcher {
 	 * @return This function returns the line/lines on which the players name is
 	 *         found.
 	 */
-	public String searchText(String name);
+	public ArrayList<String> searchText(String name);
 
 	/**
 	 * @param name
@@ -24,7 +25,7 @@ public interface ISearcher {
 	 * @return This function returns the line/lines on which the players name
 	 *         and the event is found.
 	 */
-	public String searchText(String name, String event);
+	public ArrayList<String> searchText(String name, String event);
 
 	/**
 	 * @param name
@@ -36,7 +37,7 @@ public interface ISearcher {
 	 * @return This function returns the line/lines on which the players name
 	 *         and the event and the type of blockChest is found.
 	 */
-	public String searchText(String name, String event, String blockType);
+	public ArrayList<String> searchText(String name, String event, String blockType);
 
 	/**
 	 * @param pos
@@ -44,7 +45,7 @@ public interface ISearcher {
 	 * @return This function returns the line/lines on which the players name
 	 *         and the event and the type of blockChest and something else is found.
 	 */
-	public String searchPos(int x, int y, int z);
+	public ArrayList<String> searchPos(int x, int y, int z);
 
 	/**
 	 * @param file

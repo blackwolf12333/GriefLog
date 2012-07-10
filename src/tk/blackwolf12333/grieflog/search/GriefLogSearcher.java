@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 
@@ -14,7 +15,8 @@ import tk.blackwolf12333.grieflog.GriefLog;
 
 public class GriefLogSearcher extends Searcher {
 
-	public GriefLogSearcher() {
+	public GriefLogSearcher(GriefLog plugin) {
+		super(plugin);
 		files.add(GriefLog.file);
 		
 		File file = new File("logs" + File.separator);
@@ -27,22 +29,22 @@ public class GriefLogSearcher extends Searcher {
 	}
 
 	@Override
-	public String searchText(String arg0) {
+	public ArrayList<String> searchText(String arg0) {
 		return searchFile(arg0);
 	}
 
 	@Override
-	public String searchText(String arg0, String arg1) {
+	public ArrayList<String> searchText(String arg0, String arg1) {
 		return searchFile(arg0, arg1);
 	}
 
 	@Override
-	public String searchText(String arg0, String arg1, String arg2) {
+	public ArrayList<String> searchText(String arg0, String arg1, String arg2) {
 		return searchFile(arg0, arg1, arg2);
 	}
 
 	@Override
-	public String searchPos(int x, int y, int z) {
+	public ArrayList<String> searchPos(int x, int y, int z) {
 		String xyz = x + ", " + y + ", " + z;
 		return searchFile(xyz);
 	}
@@ -53,7 +55,7 @@ public class GriefLogSearcher extends Searcher {
 	 */
 	public void readReportFile(File file, CommandSender sender) {}
 	
-	public String searchForBlockProtection(String ...text) {
+	public ArrayList<String> searchForBlockProtection(String ...text) {
 		files.clear();
 		files.add(GriefLog.file);
 		

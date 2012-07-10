@@ -18,14 +18,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import tk.blackwolf12333.grieflog.api.ISearcher;
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
-import tk.blackwolf12333.grieflog.api.IPages;
 import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.listeners.GLBlockListener;
 import tk.blackwolf12333.grieflog.listeners.GLBucketListener;
 import tk.blackwolf12333.grieflog.listeners.GLEntityListener;
 import tk.blackwolf12333.grieflog.listeners.GLPlayerListener;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
-import tk.blackwolf12333.grieflog.utils.Pages;
 import tk.blackwolf12333.grieflog.utils.PermsHandler;
 import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
@@ -34,7 +32,6 @@ public class GriefLog extends JavaPlugin {
 	public String version;
 	public static Logger log;
 	public static PermsHandler permission;
-	public static File weFile;
 	public static File dataFolder;
 	File temp;
 		
@@ -73,7 +70,6 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		weFile = new File(getDataFolder(), "WorldEditLog.txt");
 		temp = new File(getDataFolder(), "temp.glog");
 		dataFolder = getDataFolder();
 		
@@ -97,18 +93,6 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		
-		// check if worldedit is enabled in this server
-		if(pm.getPlugin("WorldEdit") != null) {
-			if(!weFile.exists()) {
-				try {
-					weFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			log.info("WorldEdit was found logging WorldEdit.");
-		}
-		
 		// config stuff
 		new GLConfigHandler(this);
 		GLConfigHandler.setupGriefLogConfig();
@@ -127,11 +111,8 @@ public class GriefLog extends JavaPlugin {
 		IGriefLogger logger = new GriefLogger();
 		Bukkit.getServicesManager().register(IGriefLogger.class, logger, this, ServicePriority.Normal);
 		
-		ISearcher searcher = new GriefLogSearcher();
+		ISearcher searcher = new GriefLogSearcher(this);
 		Bukkit.getServicesManager().register(ISearcher.class, searcher, this, ServicePriority.Normal);
-		
-		IPages pages = new Pages();
-		Bukkit.getServicesManager().register(IPages.class, pages, this, ServicePriority.Normal);
 
 		// tell the console that grieflog is hereby enabled
 		version = this.getDescription().getVersion();

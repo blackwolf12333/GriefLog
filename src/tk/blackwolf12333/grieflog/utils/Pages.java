@@ -1,8 +1,8 @@
 package tk.blackwolf12333.grieflog.utils;
 
-import tk.blackwolf12333.grieflog.api.IPages;
+import java.util.ArrayList;
 
-public class Pages implements IPages {
+public class Pages {
 
 	public static String[][] pages;
 	
@@ -17,8 +17,12 @@ public class Pages implements IPages {
 		}
 	}
 	
-	public String[][] makePages(String text) {
-		String[] split = text.split(System.getProperty("line.separator"));
+	public String[][] makePages(ArrayList<String> text) {
+		String[] split = new String[text.size()];
+		
+		for(int i = 0; i < split.length; i++) {
+			split[i] = text.get(i);
+		}
 		
 		int totalPages = (split.length / 9) + 1;
 		

@@ -15,7 +15,6 @@ import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.search.Searcher;
-import tk.blackwolf12333.grieflog.search.WorldEditSearcher;
 import tk.blackwolf12333.grieflog.utils.Pages;
 import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
@@ -51,7 +50,7 @@ public class GLog implements CommandExecutor {
 
 		// inside this if statement all the magic happens
 		if (cmd.getName().equalsIgnoreCase("glog")) {
-			Searcher searcher = new GriefLogSearcher();
+			Searcher searcher = new GriefLogSearcher(plugin);
 			
 			try {
 				// /glog get x y z
@@ -62,21 +61,15 @@ public class GLog implements CommandExecutor {
 							int y = Integer.parseInt(args[2]);
 							int z = Integer.parseInt(args[3]);
 							
-							String result = searcher.searchPos(x, y, z);
+							ArrayList<String> result = searcher.searchPos(x, y, z);
 							if(result != null) {
 								sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-								sender.sendMessage(searcher.searchPos(x, y, z));
+								for(int i = 0; i < result.size(); i++) {
+									sender.sendMessage(result.get(i));
+								}
 								sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 							} else {
-								searcher = new WorldEditSearcher();
-								result = searcher.searchPos(x, y, z);
-								if(result != null) {
-									sender.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-									sender.sendMessage(result);
-									sender.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-								} else {
-									sender.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
-								}
+								sender.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
 							}
 
 							return true;
@@ -91,10 +84,12 @@ public class GLog implements CommandExecutor {
 							int y = Integer.parseInt(args[2]);
 							int z = Integer.parseInt(args[3]);
 
-							String result = searcher.searchPos(x, y, z);
+							ArrayList<String> result = searcher.searchPos(x, y, z);
 
 							// report the result of the search
-							logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
+							for(int i = 0; i < result.size(); i++) {
+								logger.Log(result.get(i) + System.getProperty("line.separator"), GriefLog.reportFile);
+							}
 							logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
 							sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
 							
@@ -125,21 +120,15 @@ public class GLog implements CommandExecutor {
 							int y = p.getLocation().getBlockY();
 							int z = p.getLocation().getBlockZ();
 
-							String result = searcher.searchPos(x, y, z);
+							ArrayList<String> result = searcher.searchPos(x, y, z);
 							if(result != null) {
 								p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-								p.sendMessage(searcher.searchPos(x, y, z));
+								for(int i = 0; i < result.size(); i++) {
+									sender.sendMessage(result.get(i));
+								}
 								p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 							} else {
-								searcher = new WorldEditSearcher();
-								result = searcher.searchPos(x, y, z);
-								if(result != null) {
-									p.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-									p.sendMessage(result);
-									p.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-								} else {
-									p.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
-								}
+								p.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
 							}
 							return true;
 						}
@@ -183,10 +172,12 @@ public class GLog implements CommandExecutor {
 								int y = p.getLocation().getBlockY();
 								int z = p.getLocation().getBlockZ();
 
-								String result = searcher.searchPos(x, y, z);
+								ArrayList<String> result = searcher.searchPos(x, y, z);
 								
 								// report the result of the search
-								logger.Log(result + System.getProperty("line.separator"), GriefLog.reportFile);
+								for(int i = 0; i < result.size(); i++) {
+									logger.Log(result.get(i) + System.getProperty("line.separator"), GriefLog.reportFile);
+								}
 								logger.Log( "Reported by: " + p.getName() + System.getProperty("line.separator"), GriefLog.reportFile);
 								sender.sendMessage(ChatColor.DARK_BLUE + "Reported this position, have a happy day:)");
 								
@@ -326,7 +317,7 @@ public class GLog implements CommandExecutor {
 				}
 								
 				if(args[0].equalsIgnoreCase("search")) {
-					GLogSearch search = new GLogSearch();
+					GLogSearch search = new GLogSearch(plugin);
 					return search.onCommand(sender, cmd, cmdLabel, args);
 				}
 				

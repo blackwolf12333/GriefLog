@@ -22,6 +22,7 @@ public class GLogRollback {
 		this.plugin = plugin;
 	}
 	
+	@SuppressWarnings("unused")
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
 		if(cmd.getName().equalsIgnoreCase("glog")) {
@@ -37,37 +38,19 @@ public class GLogRollback {
 									arguments.add(args[i]);
 								}
 							}
-							
 							ArgumentParser parser = new ArgumentParser(arguments);
 							
 							RollbackWE rb = new RollbackWE(plugin, sender, parser.getResult());
-							plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, rb);
 							return true;
 						} else {
 							sender.sendMessage(ChatColor.DARK_RED + "You can't have a worldedit selection so you can't use this command!");
 							return true;
 						}
 					} else {
-						if(args.length == 2) {
-							ArgumentParser parser = new ArgumentParser(args);
-							
-							Rollback rb = new Rollback(plugin, sender, parser.getResult());
-							plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, rb);
-						} else if(args.length == 3) {
-							ArgumentParser parser = new ArgumentParser(args);
-							
-							Rollback rb = new Rollback(plugin, sender, parser.getResult());
-							plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, rb);
-							
-							
-							sender.sendMessage("Tried to rollback the grief!");
-							return true;
-						} else if(args.length == 4) {
-							ArgumentParser parser = new ArgumentParser(args);
-							
-							Rollback rb = new Rollback(plugin, sender, parser.getResult());
-							plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, rb);
-						}
+						ArgumentParser parser = new ArgumentParser(args);
+						
+						Rollback rb = new Rollback(plugin, sender, parser.getResult());
+						return true;
 					}
 				} else {
 					sender.sendMessage(noPermsMsg);

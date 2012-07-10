@@ -3,6 +3,7 @@ package tk.blackwolf12333.grieflog.search;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -11,27 +12,28 @@ import tk.blackwolf12333.grieflog.GriefLog;
 
 public class ReportSearcher extends Searcher {
 
-	public ReportSearcher() {
+	public ReportSearcher(GriefLog plugin) {
+		super(plugin);
 		files.add(GriefLog.reportFile);
 	}
 	
 	@Override
-	public String searchText(String arg0) {
+	public ArrayList<String> searchText(String arg0) {
 		return searchFile(arg0);
 	}
 
 	@Override
-	public String searchText(String arg0, String arg1) {
+	public ArrayList<String> searchText(String arg0, String arg1) {
 		return searchFile(arg0, arg1);
 	}
 
 	@Override
-	public String searchText(String arg0, String arg1, String arg2) {
+	public ArrayList<String> searchText(String arg0, String arg1, String arg2) {
 		return searchFile(arg0, arg1, arg2);
 	}
 
 	@Override
-	public String searchPos(int x, int y, int z) {
+	public ArrayList<String> searchPos(int x, int y, int z) {
 		String xyz = x + ", " + y + ", " + z;
 		return searchFile(xyz);
 	}

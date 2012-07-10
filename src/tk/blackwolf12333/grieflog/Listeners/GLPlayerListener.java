@@ -2,13 +2,10 @@ package tk.blackwolf12333.grieflog.listeners;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
-//import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-//import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -24,29 +21,11 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.bukkit.WorldEditAPI;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.Region;
-//import org.bukkit.event.player.PlayerMoveEvent;
-
-/*import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.bukkit.WorldEditAPI;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.Region;*/
-
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
-//import tk.blackwolf12333.grieflog.WorldEditLogger;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
 import tk.blackwolf12333.grieflog.search.Searcher;
-import tk.blackwolf12333.grieflog.search.WorldEditSearcher;
 import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
-import tk.blackwolf12333.grieflog.worldedit.WorldEditCollector;
 
 public class GLPlayerListener implements Listener {
 
@@ -91,28 +70,6 @@ public class GLPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if(plugin.getConfig().getBoolean("WorldEdit")) {
-			if((!GriefLog.permission.has(event.getPlayer(), "grieflog.dontlogwe")) || (!event.getPlayer().isOp())) {
-				if(event.getMessage().startsWith("//set")) {
-					WorldEditPlugin we = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
-					WorldEditAPI weApi = new WorldEditAPI(we);
-					
-					LocalWorld weWorld = weApi.getSession(event.getPlayer()).getSelectionWorld();
-					try {
-						Region selection = weApi.getSession(event.getPlayer()).getSelection(weWorld);
-						Iterator<BlockVector> blocks = selection.iterator();
-						
-						WorldEditCollector collector = new WorldEditCollector(plugin, event.getPlayer(), blocks);
-						collector.collect();
-						
-					} catch (IncompleteRegionException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		
 		if (GLConfigHandler.values.getCommand()) {
 			String cmd = event.getMessage();
 			String namePlayer = event.getPlayer().getName();
@@ -167,22 +124,16 @@ public class GLPlayerListener implements Listener {
 
 				event.setCancelled(true);
 				
-				searcher = new GriefLogSearcher();
-				String result = searcher.searchPos(x, y, z);
+				searcher = new GriefLogSearcher(plugin);
+				ArrayList<String> result = searcher.searchPos(x, y, z);
 				if(result != null) {
-					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-					player.sendMessage(result);
+					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");					
+					for(int i = 0; i < result.size(); i++) {
+						player.sendMessage(result.get(i));
+					}
 					player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 				} else {
-					searcher = new WorldEditSearcher();
-					result = searcher.searchPos(x, y, z);
-					if(result != null) {
-						player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-						player.sendMessage(result);
-						player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-					} else {
-						player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
-					}
+					player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
 				}
 			}
 		}
@@ -199,22 +150,16 @@ public class GLPlayerListener implements Listener {
 
 				event.setCancelled(true);
 				
-				searcher = new GriefLogSearcher();
-				String result = searcher.searchPos(x, y, z);
+				searcher = new GriefLogSearcher(plugin);
+				ArrayList<String> result = searcher.searchPos(x, y, z);
 				if(result != null) {
 					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-					player.sendMessage(result);
+					for(int i = 0; i < result.size(); i++) {
+						player.sendMessage(result.get(i));
+					}
 					player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
 				} else {
-					searcher = new WorldEditSearcher();
-					result = searcher.searchPos(x, y, z);
-					if(result != null) {
-						player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
-						player.sendMessage(result);
-						player.sendMessage(ChatColor.BLUE + "++++++++++GriefLogEnd+++++++++");
-					} else {
-						player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
-					}
+					player.sendMessage(ChatColor.BLUE + "[GriefLog] Nothing Found Here.");
 				}
 			}
 			
@@ -222,7 +167,7 @@ public class GLPlayerListener implements Listener {
 			
 			if((clicked.getType() == Material.LEVER) || (clicked.getType() == Material.STONE_BUTTON)) {
 				if(GLConfigHandler.values.getBlockprotection()) {
-					searcher = new GriefLogSearcher();
+					searcher = new GriefLogSearcher(plugin);
 					
 					int x = clicked.getX();
 					int y = clicked.getY();
@@ -231,10 +176,13 @@ public class GLPlayerListener implements Listener {
 					String loc = x + ", " + y + ", " + z + " in: " + world;
 					String evt = "[BLOCK_PLACE]";
 					
-					String result = searcher.searchText(evt, loc);
+					ArrayList<String> result = searcher.searchText(evt, loc);
 					
 					if(result != null) {
-						String[] split1 = result.split(System.getProperty("line.separator"));
+						String[] split1 = new String[result.size()];
+						for(int i = 0; i < split1.length; i++) {
+							split1[i] = result.get(i);
+						}
 						String[] split2 = split1[split1.length - 1].split(" ");
 						String owner = split2[4];
 						if((!event.getPlayer().getName().equalsIgnoreCase(owner)) && (!event.getPlayer().isOp()) && (!GLConfigHandler.isOnFriendsList(owner, event.getPlayer().getName()))) {

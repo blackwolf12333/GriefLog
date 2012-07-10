@@ -10,6 +10,14 @@ import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
 
 public class GLogBp {
 
+	String[] helpTxt = { 
+			ChatColor.RED + "++++++++++ [GriefLog-BlockProtection] +++++++++++++", 
+			"Commands:",
+			ChatColor.GOLD + "/glog bp help" + ChatColor.DARK_GRAY + "Gives this help text.",
+			ChatColor.GOLD + "/glog bp listfriends: " + ChatColor.DARK_GRAY + "This lists the friends on your friendslist.",
+			ChatColor.GOLD + "/glog bp addfriend <friendsname>: " + ChatColor.DARK_GRAY + "This adds a friend to your friendslist so that he can break your blocks.",
+			ChatColor.GOLD + "/glog bp removefriend <friendsname>: " + ChatColor.DARK_GRAY + "This removes a friend from your friendslist."};
+	
 	public boolean onCommand(CommandSender sender, String cmdLabel, String[] args) {
 		
 		if(args[1].equalsIgnoreCase("listfriends")) {
@@ -60,6 +68,11 @@ public class GLogBp {
 					return true;
 				}
 			}
+		}
+		
+		if(args[1].equalsIgnoreCase("help")) {
+			sender.sendMessage(helpTxt);
+			return true;
 		}
 		
 		return false;

@@ -12,11 +12,17 @@ import tk.blackwolf12333.grieflog.utils.Pages;
 
 public class GLogSearch {
 
+	GriefLog plugin;
+	
+	public GLogSearch(GriefLog plugin) {
+		this.plugin = plugin;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("glog")) {
 			if(sender.isOp() || GriefLog.permission.has(sender, "grieflog.search")) {
 				Pages pages = new Pages();
-				GriefLogSearcher searcher = new GriefLogSearcher();
+				GriefLogSearcher searcher = new GriefLogSearcher(plugin);
 				
 				if(args.length == 2) {
 					String[] arguments = args[1].split(":");

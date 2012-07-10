@@ -41,7 +41,7 @@ public class GLBlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(GLConfigHandler.values.getBlockprotection()) {
 			if(!isBlockOnBlacklist(event.getBlock().getTypeId())) {
-				searcher = new GriefLogSearcher();
+				searcher = new GriefLogSearcher(plugin);
 				
 				int x = event.getBlock().getX();
 				int y = event.getBlock().getY();
@@ -50,10 +50,14 @@ public class GLBlockListener implements Listener {
 				String loc = x + ", " + y + ", " + z + " in: " + world;
 				String evt = "[BLOCK_PLACE]";
 				
-				String result = searcher.searchForBlockProtection(evt, loc);
+				ArrayList<String> result = searcher.searchForBlockProtection(evt, loc);
 				
 				if(result != null) {
-					String[] split1 = result.split(System.getProperty("line.separator"));
+					String[] split1 = new String[result.size()];
+					for(int i = 0; i < split1.length; i++) {
+						split1[i] = result.get(i);
+					}
+					
 					String[] split2 = split1[split1.length - 1].split(" ");
 					String owner = split2[4];
 					boolean isOnFriendsList = GLConfigHandler.isOnFriendsList(owner, event.getPlayer().getName());
