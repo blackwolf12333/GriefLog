@@ -78,25 +78,33 @@ public class GLEntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		if (GLConfigHandler.values.getEnderman()) {
-			if (event.getEntity() instanceof Enderman) {
-				String data = "";
-				Block b = event.getBlock();
-				int x = b.getX();
-				int y = b.getY();
-				int z = b.getZ();
-				String world = b.getWorld().getName();
-
-				if (event.getTo() == Material.AIR) {
-					data = " [ENDERMAN_PICKUP] Where: " + x + ", " + y + ", " + z + " Ín: " + world + System.getProperty("line.separator");
+		if(GLConfigHandler.values.getAntiEnderMan()) {
+			if(event.getEntity() instanceof Enderman) {
+				event.setCancelled(true);
+			}
+		}
+		
+		if(!event.isCancelled()) {
+			if (GLConfigHandler.values.getEnderman()) {
+				if (event.getEntity() instanceof Enderman) {
+					String data = "";
+					Block b = event.getBlock();
+					int x = b.getX();
+					int y = b.getY();
+					int z = b.getZ();
+					String world = b.getWorld().getName();
+					
+					if (event.getTo() == Material.AIR) {
+						data = " [ENDERMAN_PICKUP] Where: " + x + ", " + y + ", " + z + " Ín: " + world + System.getProperty("line.separator");
+					} else {
+						data = " [ENDERMAN_PLACE] Where: " + x + ", " + y + ", " + z + " Ín: " + world + System.getProperty("line.separator");
+					}
+					
+					GriefLogger logger = new GriefLogger(data);
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 				} else {
-					data = " [ENDERMAN_PLACE] Where: " + x + ", " + y + ", " + z + " Ín: " + world + System.getProperty("line.separator");
+					return;
 				}
-
-				GriefLogger logger = new GriefLogger(data);
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
-			} else {
-				return;
 			}
 		}
 	}

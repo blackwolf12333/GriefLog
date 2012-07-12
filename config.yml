@@ -40,3 +40,4 @@ anti-lava: false
 anti-tnt: false
 anti-creeper: false
 anti-fire: false
+anti-endermangrief: false

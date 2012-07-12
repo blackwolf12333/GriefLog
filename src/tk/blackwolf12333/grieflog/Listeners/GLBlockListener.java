@@ -20,6 +20,7 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 //import org.bukkit.event.block.BlockSpreadEvent;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
@@ -41,7 +42,7 @@ public class GLBlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(GLConfigHandler.values.getBlockprotection()) {
 			if(!isBlockOnBlacklist(event.getBlock().getTypeId())) {
-				searcher = new GriefLogSearcher(plugin);
+				searcher = new GriefLogSearcher(GriefLog.players.get(event.getPlayer().getName()), plugin);
 				
 				int x = event.getBlock().getX();
 				int y = event.getBlock().getY();
@@ -60,12 +61,10 @@ public class GLBlockListener implements Listener {
 					
 					String[] split2 = split1[split1.length - 1].split(" ");
 					String owner = split2[4];
-					boolean isOnFriendsList = GLConfigHandler.isOnFriendsList(owner, event.getPlayer().getName());
-					if((!event.getPlayer().isOp()) && (!event.getPlayer().getName().equalsIgnoreCase(owner))) {
-						if(!isOnFriendsList) {
-							event.setCancelled(true);
-							event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
-						}
+					boolean isOnFriendsList = GLConfigHandler.isOnFriendsList(owner, event.getPlayer());
+					if(!isOnFriendsList) {
+						event.setCancelled(true);
+						event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
 					}
 				} else {
 					// if the search result is null ignore it because than nothing happened on that location
@@ -99,10 +98,10 @@ public class GLBlockListener implements Listener {
 			String data = " [BLOCK_BREAK] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 			
 			GriefLogger logger = new GriefLogger(data);
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, logger);
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if(!event.isCancelled()) {
@@ -138,7 +137,7 @@ public class GLBlockListener implements Listener {
 			String data = " [BLOCK_PLACE] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
 			
 			GriefLogger logger = new GriefLogger(data);
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, logger);
 		}
 	}
 
@@ -153,7 +152,7 @@ public class GLBlockListener implements Listener {
 			String data = "";
 			Player player = event.getPlayer();
 			
-			// check if it was the environment that ignited the blockChest
+			// check if it was the environment that ignited the block
 			if (player == null) {
 				if (GLConfigHandler.values.getIgnoreEnvironment()) {
 					return;
@@ -167,6 +166,10 @@ public class GLBlockListener implements Listener {
 					data = " [BLOCK_IGNITE] By: Environment" + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
 				}
 			} else { // it is a player
+				if(event.getBlock().getType() == Material.TNT) {
+					GLPlayer p = new GLPlayer(plugin, player);
+					p.playersIgnitedTNT.put(event.getBlock().getLocation(), player.getName());
+				}
 				IgniteCause ic = event.getCause();
 				String playerName = player.getName();
 				String worldName = event.getBlock().getWorld().getName();

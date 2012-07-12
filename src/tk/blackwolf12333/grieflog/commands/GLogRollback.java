@@ -7,9 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.rollback.Rollback;
-import tk.blackwolf12333.grieflog.rollback.RollbackWE;
 import tk.blackwolf12333.grieflog.utils.ArgumentParser;
 
 public class GLogRollback {
@@ -22,7 +21,6 @@ public class GLogRollback {
 		this.plugin = plugin;
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
 		if(cmd.getName().equalsIgnoreCase("glog")) {
@@ -32,25 +30,40 @@ public class GLogRollback {
 					if(args[1].equalsIgnoreCase("we")) {
 						if(sender instanceof Player) {
 							ArrayList<String> arguments = new ArrayList<String>();
+							GLPlayer player = GriefLog.players.get(sender.getName());
 							
-							for(int i = 0; i < args.length; i++) {
-								if(i >= 2) {
-									arguments.add(args[i]);
+							if(player.isDoingRollback) {
+								player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
+								return true;
+							} else {
+								for(int i = 0; i < args.length; i++) {
+									if(i >= 2) {
+										arguments.add(args[i]);
+									}
 								}
+								ArgumentParser parser = new ArgumentParser(arguments);
+								player.search(true, parser.getResult());
+								
+								player.rollback();
+								
+								return true;
 							}
-							ArgumentParser parser = new ArgumentParser(arguments);
-							
-							RollbackWE rb = new RollbackWE(plugin, sender, parser.getResult());
-							return true;
 						} else {
 							sender.sendMessage(ChatColor.DARK_RED + "You can't have a worldedit selection so you can't use this command!");
 							return true;
 						}
 					} else {
-						ArgumentParser parser = new ArgumentParser(args);
-						
-						Rollback rb = new Rollback(plugin, sender, parser.getResult());
-						return true;
+						GLPlayer player = GriefLog.players.get(sender.getName());
+						if(player.isDoingRollback) {
+							player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
+							return true;
+						} else {
+							ArgumentParser parser = new ArgumentParser(args);
+							player.search(false, parser.getResult());
+							
+							player.rollback();
+							return true;
+						}
 					}
 				} else {
 					sender.sendMessage(noPermsMsg);

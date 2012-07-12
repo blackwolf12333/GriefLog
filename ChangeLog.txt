@@ -1,0 +1,4 @@
+4.5.1:
+* Added a cancel command for the rollback, that should cancel the rollback currently active.
+* Added a check if the player is already rolling something back, if so don't let him do a second rollback.
+* Made it so that the friends are checked entirely by the isOnFriendsList function in ConfigHandler.

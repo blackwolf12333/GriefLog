@@ -8,36 +8,28 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 
-public class ReportSearcher extends Searcher {
+public abstract class ReportSearcher extends Searcher {
 
-	public ReportSearcher(GriefLog plugin) {
-		super(plugin);
+	public ReportSearcher(GLPlayer player, GriefLog plugin) {
+		super(plugin, player);
 		files.add(GriefLog.reportFile);
 	}
 	
 	@Override
-	public ArrayList<String> searchText(String arg0) {
-		return searchFile(arg0);
-	}
+	public abstract ArrayList<String> searchText(String arg0);
 
 	@Override
-	public ArrayList<String> searchText(String arg0, String arg1) {
-		return searchFile(arg0, arg1);
-	}
+	public abstract ArrayList<String> searchText(String arg0, String arg1);
 
 	@Override
-	public ArrayList<String> searchText(String arg0, String arg1, String arg2) {
-		return searchFile(arg0, arg1, arg2);
-	}
+	public abstract ArrayList<String> searchText(String arg0, String arg1, String arg2);
 
 	@Override
-	public ArrayList<String> searchPos(int x, int y, int z) {
-		String xyz = x + ", " + y + ", " + z;
-		return searchFile(xyz);
-	}
-
+	public abstract ArrayList<String> searchPos(int x, int y, int z);
+	
 	@Override
 	public void readReportFile(File file, CommandSender sender) {
 		try {

@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.commands;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
@@ -50,7 +52,7 @@ public class GLog implements CommandExecutor {
 
 		// inside this if statement all the magic happens
 		if (cmd.getName().equalsIgnoreCase("glog")) {
-			Searcher searcher = new GriefLogSearcher(plugin);
+			Searcher searcher = new GriefLogSearcher(GriefLog.players.get(sender.getName()), plugin);
 			
 			try {
 				// /glog get x y z
@@ -296,7 +298,7 @@ public class GLog implements CommandExecutor {
 						}
 					} else if (args[0].equalsIgnoreCase("delete")) {
 						// check if the player issuing the command is a Op
-						if (sender.isOp() || GriefLog.permission.has(sender, "grieflog.reports.delete")) {
+						if (GriefLog.permission.has(sender, "grieflog.reports.delete")) {
 							// check if the file could be deleted, if not, tell
 							// the sender of the command
 							if(!GriefLog.reportFile.exists()) {
@@ -312,6 +314,11 @@ public class GLog implements CommandExecutor {
 						} else {
 							sender.sendMessage(noPermsMsg);
 							return true;
+						}
+					} else if(args[0].equalsIgnoreCase("cancel")) {
+						if(GriefLog.permission.has(sender, "grieflog.rollback")) {
+							GLPlayer player = GriefLog.players.get(sender.getName());
+							Bukkit.getScheduler().cancelTask(player.getRollbackTaskID()); // cancel the rollback at any point
 						}
 					}
 				}

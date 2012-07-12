@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 public class Time {
 
 	// time format
-	public static final String DATE_FORMAT_NOW = "HH:mm:ss";
+	public static final String DATE_FORMAT_NOW = "HH-mm-ss";
 
 	// get the current time
 	public String now() {

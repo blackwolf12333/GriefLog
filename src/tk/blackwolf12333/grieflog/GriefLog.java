@@ -31,6 +31,7 @@ public class GriefLog extends JavaPlugin {
 
 	public String version;
 	public static Logger log;
+	public static GriefLog instance;
 	public static PermsHandler permission;
 	public static File dataFolder;
 	File temp;
@@ -43,11 +44,13 @@ public class GriefLog extends JavaPlugin {
 	
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
+	public static HashMap<String, GLPlayer> players = new HashMap<String, GLPlayer>();
 	public boolean usingPerms = false;
 	
 	@Override
 	public void onLoad() {
 		log = this.getLogger();
+		instance = this;
 	}
 
 	@Override
@@ -111,7 +114,7 @@ public class GriefLog extends JavaPlugin {
 		IGriefLogger logger = new GriefLogger();
 		Bukkit.getServicesManager().register(IGriefLogger.class, logger, this, ServicePriority.Normal);
 		
-		ISearcher searcher = new GriefLogSearcher(this);
+		ISearcher searcher = new GriefLogSearcher();
 		Bukkit.getServicesManager().register(ISearcher.class, searcher, this, ServicePriority.Normal);
 
 		// tell the console that grieflog is hereby enabled

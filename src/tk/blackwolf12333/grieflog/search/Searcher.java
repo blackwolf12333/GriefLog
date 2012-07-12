@@ -11,8 +11,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.api.ISearcher;
 
@@ -22,10 +24,17 @@ public abstract class Searcher implements ISearcher {
 	ArrayList<String> data = new ArrayList<String>();
 	
 	GriefLog plugin;
+	GLPlayer player;
 	static String[] text;
+	public static Runnable searchTask;
 	
-	public Searcher(GriefLog plugin) {
+	public Searcher(GriefLog plugin, GLPlayer player) {
 		this.plugin = plugin;
+		this.player = player;
+	}
+	
+	public Searcher() {
+		
 	}
 	
 	public class SearchTask implements Callable<ArrayList<String>> {
@@ -37,7 +46,6 @@ public abstract class Searcher implements ISearcher {
 		}
 		
 		public ArrayList<String> call() {
-			System.out.print("Searching now...");
 			if(text.length == 1)
 			{
 				File[] searchFiles = new File[files.size()];
@@ -153,13 +161,12 @@ public abstract class Searcher implements ISearcher {
 	protected ArrayList<String> searchFile(String ...text) {
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		FutureTask<ArrayList<String>> searchTask = new FutureTask<ArrayList<String>>(new SearchTask(text));
+		Searcher.searchTask = searchTask;
 		executor.execute(searchTask);
-		System.out.print("Searching task started");
 		ArrayList<String> ret = new ArrayList<String>();
 		
 		try {
 			ret = searchTask.get();
-			System.out.print("Searching task ended");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -167,6 +174,59 @@ public abstract class Searcher implements ISearcher {
 		}
 		
 		return ret;
+	}
+	
+	public boolean isInWorldEditSelection(Location block) {
+		if(player.getWorldEditSelection().contains(block)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isInWorldEditSelection2(int x, int y, int z) {
+		Location max = player.getWorldEditSelection().getMaximumPoint();
+		Location min = player.getWorldEditSelection().getMinimumPoint();
+		
+		boolean xB = false;
+		boolean yB = false;
+		boolean zB = false;
+		
+		if(x <= max.getBlockX()) {
+			if(x >= min.getBlockX()) {
+				xB = true;
+			} else {
+				xB = false;
+			}
+		} else {
+			xB = false;
+		}
+		
+		if(y <= max.getBlockY()) {
+			if(y >= min.getBlockY()) {
+				yB = true;
+			} else {
+				yB = false;
+			}
+		} else {
+			yB = false;
+		}
+		
+		if(z <= max.getBlockZ()) {
+			if(z >= min.getBlockZ()) {
+				zB = true;
+			} else {
+				zB = false;
+			}
+		} else {
+			zB = false;
+		}
+		
+		if(xB && yB && zB) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override

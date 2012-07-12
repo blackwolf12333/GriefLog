@@ -11,12 +11,13 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 
 public class GriefLogSearcher extends Searcher {
 
-	public GriefLogSearcher(GriefLog plugin) {
-		super(plugin);
+	public GriefLogSearcher(GLPlayer player, GriefLog plugin) {
+		super(plugin, player);
 		files.add(GriefLog.file);
 		
 		File file = new File("logs" + File.separator);
@@ -26,6 +27,10 @@ public class GriefLogSearcher extends Searcher {
 				files.add(new File("logs" + File.separator + element));
 			}
 		}
+	}
+	
+	public GriefLogSearcher() {
+		
 	}
 
 	@Override

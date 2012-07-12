@@ -11,6 +11,7 @@ import java.util.List;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 
@@ -131,7 +132,13 @@ public class GLConfigHandler {
 		return friendsConfig.getStringList(player);
 	}
 	
-	public static boolean isOnFriendsList(String player, String friend) {
-		return GLConfigHandler.getFriends(player).contains(friend);
+	public static boolean isOnFriendsList(String player, Player friend) {
+		if(friend.isOp()) {
+			return true;
+		} else if(friend.getName().equalsIgnoreCase(player)) {
+			return true;
+		} else {
+			return GLConfigHandler.getFriends(player).contains(friend.getName());
+		}
 	}
 }

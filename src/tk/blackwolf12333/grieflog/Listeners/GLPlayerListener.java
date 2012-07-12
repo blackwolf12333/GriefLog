@@ -20,7 +20,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
@@ -83,6 +85,8 @@ public class GLPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
+		
+		GriefLog.players.put(p.getName(), new GLPlayer(plugin, p));
 		// check if the player is op, if so, tell him/her, if there are new
 		// reports
 		if (p.isOp()) {
@@ -105,6 +109,13 @@ public class GLPlayerListener implements Listener {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerDisconnect(PlayerQuitEvent event) {
+		GLPlayer p = GriefLog.players.get(event.getPlayer().getName());
+		GriefLog.players.remove(p);
+		p = null;
+	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -124,7 +135,7 @@ public class GLPlayerListener implements Listener {
 
 				event.setCancelled(true);
 				
-				searcher = new GriefLogSearcher(plugin);
+				searcher = new GriefLogSearcher(new GLPlayer(plugin, player), plugin);
 				ArrayList<String> result = searcher.searchPos(x, y, z);
 				if(result != null) {
 					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");					
@@ -150,7 +161,7 @@ public class GLPlayerListener implements Listener {
 
 				event.setCancelled(true);
 				
-				searcher = new GriefLogSearcher(plugin);
+				searcher = new GriefLogSearcher(new GLPlayer(plugin, player), plugin);
 				ArrayList<String> result = searcher.searchPos(x, y, z);
 				if(result != null) {
 					player.sendMessage(ChatColor.BLUE + "+++++++++++GriefLog+++++++++++");
@@ -167,7 +178,7 @@ public class GLPlayerListener implements Listener {
 			
 			if((clicked.getType() == Material.LEVER) || (clicked.getType() == Material.STONE_BUTTON)) {
 				if(GLConfigHandler.values.getBlockprotection()) {
-					searcher = new GriefLogSearcher(plugin);
+					searcher = new GriefLogSearcher(new GLPlayer(plugin, event.getPlayer()), plugin);
 					
 					int x = clicked.getX();
 					int y = clicked.getY();
@@ -185,7 +196,7 @@ public class GLPlayerListener implements Listener {
 						}
 						String[] split2 = split1[split1.length - 1].split(" ");
 						String owner = split2[4];
-						if((!event.getPlayer().getName().equalsIgnoreCase(owner)) && (!event.getPlayer().isOp()) && (!GLConfigHandler.isOnFriendsList(owner, event.getPlayer().getName()))) {
+						if(!GLConfigHandler.isOnFriendsList(owner, event.getPlayer())) {
 							event.setCancelled(true);
 							event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
 						}

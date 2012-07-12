@@ -27,6 +27,7 @@ public class ConfigValues {
 	boolean antitnt;
 	boolean anticreeper;
 	boolean antifire;
+	boolean antienderman;
 	
 	/**
 	 * @return the grieflogConfig
@@ -267,6 +268,17 @@ public class ConfigValues {
 	 */
 	public void setAntifire(boolean antifire) {
 		this.antifire = antifire;
+	}
+	
+	/**
+	 * @return anti-endermangrief 
+	 */
+	public boolean getAntiEnderMan() {
+		return antienderman;
+	}
+	
+	public void setAntiEnderMan(boolean antienderman) {
+		this.antienderman = antienderman;
 	}
 	
 	

@@ -106,7 +106,7 @@ public class GriefLogger implements IGriefLogger, Runnable {
 		}
 		try {
 			copy(GriefLog.file, backup);
-			GriefLog.log.info("[GriefLog] Log file moved to logs/");
+			GriefLog.log.info("Log file moved to logs/");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
