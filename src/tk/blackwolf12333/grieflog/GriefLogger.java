@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
 import tk.blackwolf12333.grieflog.utils.Time;
-import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
+import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class GriefLogger implements IGriefLogger, Runnable {
 
@@ -37,7 +37,7 @@ public class GriefLogger implements IGriefLogger, Runnable {
 
 			// if the file has reached the max size, set in the config back it
 			// up
-			if (GriefLog.getFileSize(GriefLog.file) >= GLConfigHandler.values.getMb()) {
+			if (GriefLog.getFileSize(GriefLog.file) >= ConfigHandler.values.getMb()) {
 				autoBackup();
 			}
 			
@@ -53,8 +53,7 @@ public class GriefLogger implements IGriefLogger, Runnable {
 	}
 	
 	@Override
-	public void Log(String data, File file)
-	{
+	public void Log(String data, File file) {
 		try {
 			// if file doesn't exists, then create it
 			if (!file.exists()) {
@@ -63,7 +62,7 @@ public class GriefLogger implements IGriefLogger, Runnable {
 
 			// if the file has reached the max size, set in the config back it
 			// up
-			if (GriefLog.getFileSize(file) >= GLConfigHandler.values.getMb()) {
+			if (GriefLog.getFileSize(file) >= ConfigHandler.values.getMb()) {
 				autoBackup();
 			}
 
@@ -114,7 +113,6 @@ public class GriefLogger implements IGriefLogger, Runnable {
 	
 	// pretty self explaining function
 	public void copy(File from, File to) throws IOException {
-		
 		if (!from.exists())
 			return;
 		if (!to.exists()) {

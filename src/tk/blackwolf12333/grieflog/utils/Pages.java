@@ -17,7 +17,7 @@ public class Pages {
 		}
 	}
 	
-	public String[][] makePages(ArrayList<String> text) {
+	public static String[][] makePages(ArrayList<String> text) {
 		String[] split = new String[text.size()];
 		
 		for(int i = 0; i < split.length; i++) {

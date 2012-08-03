@@ -2,3 +2,23 @@
 * Added a cancel command for the rollback, that should cancel the rollback currently active.
 * Added a check if the player is already rolling something back, if so don't let him do a second rollback.
 * Made it so that the friends are checked entirely by the isOnFriendsList function in ConfigHandler.
+* Added player quit logging.
+* Added command to teleport to the last known location of any player that is offline.
+* Changed some booleans to private instead of public and made getters for them, setter are not yet needed.
+* Made the world edit filter work on a thread instead of having it do that on the main thread.
+* Fixed a bug that threw an ArrayIndexOutOfBoundsException because the blacklist didn't contain anything.
+* Added a possibility to check if the ArgumentParser generated an exception.
+* Changed the way the worldedit filter works on the search results(using threads now).
+* Fixed the tool, didn't work because of the worldedit filter or so, dunno why exactly, but it works now again:)
+
+4.6
+* Fixed the worldedit filter.
+* Added actions to fix the problem that the result was null because the search wasn't ready yet.
+* Fixed the rollback not rolling back lava and water because i changed the log string there a while ago
+* Made the lava and water rollback the 8 blocks around the source block
+* Fixed the worldedit filter not filtering the newest version of the log
+* Fixed the worldedit filter not filtering the newest explosions
+* Added a check to see if CreeperHeal is enabled, if so don't log explosions, it will result in loggin AIR
+* Split the rollback function in smaller pieces (this is part of my optimization quest:P) 
+* Added a guess of how long a rollback will take in seconds
+* Fixed a bug in the onEnable method making a call to a not existing configuration instance

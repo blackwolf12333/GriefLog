@@ -3,8 +3,6 @@ package tk.blackwolf12333.grieflog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -14,25 +12,29 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-import tk.blackwolf12333.grieflog.rollback.RollbackBase;
-import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
-import tk.blackwolf12333.grieflog.search.Searcher;
-import tk.blackwolf12333.grieflog.utils.Events;
+import tk.blackwolf12333.grieflog.action.RollbackAction;
+import tk.blackwolf12333.grieflog.action.SearchAction;
+import tk.blackwolf12333.grieflog.action.WorldEditFilterAction;
 
 public class GLPlayer {
-	
+
 	World world;
 	Player player;
 	GriefLog plugin;
 	CommandSender sender;
 	Boolean worldedit;
+	String[][] pages;
 	public Integer rollbackTaskID;
+	public Thread worldeditFilter;
+	public Thread searchTask;
+	public Thread rollbackThread;
 	
-	public boolean isDoingRollback = false;
-	public boolean isSearching = false;
+	boolean isDoingRollback = false;
+	boolean isSearching = false;
+	boolean isUsingTool = false;
+	public boolean we = false;
 	public HashMap<Location, String> playersIgnitedTNT = new HashMap<Location, String>();
 	public ArrayList<String> result = new ArrayList<String>();
-	public ArrayList<String> filteredResult = new ArrayList<String>();
 	
 	public GLPlayer(GriefLog plugin, Player player) {
 		this.player = player;
@@ -45,238 +47,86 @@ public class GLPlayer {
 	}
 	
 	public void search(boolean we, ArrayList<String> args) {
-		isSearching = true;
-		worldedit = we;
-		Searcher searcher = new GriefLogSearcher(this, plugin);
-		
-		if(args.size() == 1) {
-			result = searcher.searchText(args.get(0));
-		} else if(args.size() == 2) {
-			result = searcher.searchText(args.get(0), args.get(1));
-		} else if(args.size() == 3) {
-			result = searcher.searchText(args.get(0), args.get(1), args.get(2));
-		} else {
-			result = null;
+		String[] arg = new String[args.size()];
+		for(int i = 0; i < args.size(); i++) {
+			arg[i] = args.get(i);
 		}
 		
-		if(we)
-			filterForWorldEditRollback();
-		
-		isSearching = false;
+		new SearchTask(this, new SearchAction(this), arg);
 	}
 	
-	@SuppressWarnings("unused")
-	public void rollback() {
-		isDoingRollback = true;
-		
-		if(worldedit) {
-			player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + filteredResult.size() + " events!");
-			RollbackBase rb = new RollbackBase(plugin, this, filteredResult);
-		} else {
-			player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
-			RollbackBase rb = new RollbackBase(plugin, this, result);
+	public void rollback(boolean we, ArrayList<String> args) {
+		String[] arg = new String[args.size()];
+		for(int i = 0; i < args.size(); i++) {
+			arg[i] = args.get(i);
 		}
-		result = null;
 		
-		isDoingRollback = false;
+		if(we) {
+			new SearchTask(this, new WorldEditFilterAction(this), arg);
+		} else {
+			new SearchTask(this, new RollbackAction(this), arg);
+		}
 	}
 	
-	private void filterForWorldEditRollback() {
-		for(int i = 0; i < result.size(); i++) {
-			String line = result.get(i);
+	/*@SuppressWarnings("unused")
+	private boolean rollback2(boolean we, ArrayList<String> args) {
+		if(this.isSearching()) {
+			rollback2(we, args);
+			return false;
+		} else if(this.worldeditFilter.isAlive()) {
+			rollback2(we, args);
+			return false;
+		} else {
+			isDoingRollback = true;
 			
-			if(line.contains(Events.BREAK.getEvent())) {
-				String[] content = line.split("\\ ");
-				if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 14) {
-					String strX = content[9].replace(",", "");
-					String strY = content[10].replace(",", "");
-					String strZ = content[11].replace(",", "");
-					String worldname = content[13].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 15) {
-					String strX = content[10].replace(",", "");
-					String strY = content[11].replace(",", "");
-					String strZ = content[12].replace(",", "");
-					String worldname = content[14].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 16) {
-					String strX = content[11].replace(",", "");
-					String strY = content[12].replace(",", "");
-					String strZ = content[13].replace(",", "");
-					String worldname = content[15].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				}
-			} else if(line.contains(Events.EXPLODE.getEvent())) {
-				String[] content = line.split("\\ ");
+			if(we) {
+				worldeditFilter = new Thread(new WorldEditFilter(result, plugin, this));
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, worldeditFilter);
 				
-				String strX = content[8].replace(",", "");
-				String strY = content[9].replace(",", "");
-				String strZ = content[10].replace(",", "");
-				String worldname = content[12].trim();
-				
-				int x = Integer.parseInt(strX);
-				int y = Integer.parseInt(strY);
-				int z = Integer.parseInt(strZ);
-
-				world = Bukkit.getWorld(worldname);
-				Location loc = new Location(world, x, y, z);
-				if(isInWorldEditSelection(loc)) {
-					filteredResult.add(line);
-				}
-			} else if(line.contains(Events.PLACE.getEvent())) {
-				String[] content = line.split("\\ ");
-				
-				if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 14) {
-					String strX = content[9].replace(",", "");
-					String strY = content[10].replace(",", "");
-					String strZ = content[11].replace(",", "");
-					String worldname = content[13].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 15) {
-					String strX = content[10].replace(",", "");
-					String strY = content[11].replace(",", "");
-					String strZ = content[12].replace(",", "");
-					String worldname = content[14].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				} else if(content.length == 16) {
-					String strX = content[11].replace(",", "");
-					String strY = content[12].replace(",", "");
-					String strZ = content[13].replace(",", "");
-					String worldname = content[15].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						filteredResult.add(line);
-					}
-				}
-			} else if(line.contains(Events.LAVA.getEvent())) {
-				String[] content = line.split("\\ ");
-				
-				String strX = content[6].replace(",", "");
-				String strY = content[7].replace(",", "");
-				String strZ = content[8].replace(",", "");
-				String worldname = content[10].trim();
-				
-				int x = Integer.parseInt(strX);
-				int y = Integer.parseInt(strY);
-				int z = Integer.parseInt(strZ);
-
-				world = Bukkit.getWorld(worldname);
-				Location loc = new Location(world, x, y, z);
-				if(isInWorldEditSelection(loc)) {
-					filteredResult.add(line);
-				}
-			} else if(line.contains(Events.WATER.getEvent())) {
-				String[] content = line.split("\\ ");
-				
-				String strX = content[6].replace(",", "");
-				String strY = content[7].replace(",", "");
-				String strZ = content[8].replace(",", "");
-				String worldname = content[10].trim();
-				
-				int x = Integer.parseInt(strX);
-				int y = Integer.parseInt(strY);
-				int z = Integer.parseInt(strZ);
-
-				world = Bukkit.getWorld(worldname);
-				Location loc = new Location(world, x, y, z);
-				if(isInWorldEditSelection(loc)) {
-					filteredResult.add(line);
-				}
+				player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
+				Rollback rb = new Rollback(plugin, this);
+			} else {
+				player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
+				Rollback rb = new Rollback(plugin, this);
 			}
+			result = null;
+			
+			isDoingRollback = false;
+			
+			return true;
 		}
-	}
+	}*/
 	
 	public void print(String msg) {
 		player.sendMessage(msg);
 	}
 	
 	public void print(String[] msg) {
-		player.sendMessage(msg);
+		if(msg != null) {
+			for(int i = 0; i < msg.length; i++) {
+				if(msg[i] != null) {
+					player.sendMessage(msg[i]);
+				}
+			}
+		}
 	}
 	
-	private boolean isInWorldEditSelection(Location loc) {
-		return this.getWorldEditSelection().contains(loc);
+	public void print(ArrayList<String> msg) {
+		if(msg != null) {
+			for(int i = 0; i < msg.size(); i++) {
+				if(msg.get(i) != null) {
+					player.sendMessage(msg.get(i));
+				}
+			}
+		}
+	}
+	
+	public boolean teleport(Location to) {
+		return player.teleport(to);
+	}
+	
+	public GriefLog getGriefLog() {
+		return plugin;
 	}
 	
 	public World getWorld() {
@@ -295,6 +145,10 @@ public class GLPlayer {
 		return result;
 	}
 	
+	public void setSearchResult(ArrayList<String> result) {
+		this.result = result;
+	}
+	
 	public Selection getWorldEditSelection() {
 		WorldEditPlugin we = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
 		return we.getSelection(player);
@@ -302,6 +156,54 @@ public class GLPlayer {
 	
 	public Integer getRollbackTaskID() {
 		return rollbackTaskID;
+	}
+	
+	public Thread getSearchTask() {
+		return searchTask;
+	}
+	
+	public boolean isUsingTool() {
+		return isUsingTool;
+	}
+	
+	public void setUsingTool(boolean isUsingTool) {
+		this.isUsingTool = isUsingTool;
+	}
+	
+	public boolean isDoingRollback() {
+		return isDoingRollback;
+	}
+	
+	public void setDoingRollback(boolean rollback) {
+		this.isDoingRollback = rollback;
+	}
+	
+	public boolean isSearching() {
+		return isSearching;
+	}
+	
+	public void setSearching(boolean searching) {
+		this.isSearching = searching;
+	}
+	
+	public String[][] getPages() {
+		return pages;
+	}
+	
+	public void setPages(String[][] pages) {
+		this.pages = pages;
+	}
+	
+	public static GLPlayer getGLPlayer(Player p) {
+		return GriefLog.players.get(p.getName());
+	}
+	
+	public static GLPlayer getGLPlayer(CommandSender sender) {
+		return GriefLog.players.get(sender.getName());
+	}
+	
+	public static GLPlayer getGLPlayer(String p) {
+		return GriefLog.players.get(p);
 	}
 	
 	@Override

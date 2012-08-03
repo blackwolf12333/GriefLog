@@ -6,11 +6,16 @@ import java.util.ArrayList;
 public class ArgumentParser {
 
 	ArrayList<String> result = new ArrayList<String>();
+	public boolean error = false;
+	
 	public String player;
 	public String world;
 	public String event;
 	
 	public ArgumentParser(String[] args) {
+		if(args.length == -1) {
+			error = true;
+		}
 		ArrayList<String> arguments = new ArrayList<String>();
 		
 		for(int i = 0; i < args.length; i++) {
@@ -31,6 +36,9 @@ public class ArgumentParser {
 	
 	public void parse(ArrayList<String> args) {
 		
+		if(error) {
+			return;
+		}
 		if(args.size() == 1) {
 			String[] split1 = args.get(0).split(":");
 			char ch1 = split1[0].charAt(0);

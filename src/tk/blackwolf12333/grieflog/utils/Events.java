@@ -3,11 +3,15 @@ package tk.blackwolf12333.grieflog.utils;
 public enum Events {
 	BREAK ("[BLOCK_BREAK]", "break", "block_break"),
 	PLACE ("[BLOCK_PLACE]", "place", "block_place"),
-	EXPLODE("[ENTITY_EXPLODE]", "explode", "explosion"),
-	LAVA("[BUCKET_LAVA_EMPTY", "lava", "lava_bucket"),
-	WATER("[BUCKET_WATER_EMPTY", "water", "water_bucket"),
-	ENDERMAN_PICKUP("[ENDERMAN_PICKUP]", "pickup", "enderman_pickup"),
-	ENDERMAN_PLACE("[ENDERMAN_PLACE]", "place", "enderman_place");
+	LAVA ("[BUCKET_LAVA_EMPTY", "lava", "lava_bucket"),
+	WATER ("[BUCKET_WATER_EMPTY", "water", "water_bucket"),
+	ENDERMAN_PICKUP ("[ENDERMAN_PICKUP]", "pickup", "enderman_pickup", "enderman", "endermangrief"),
+	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", "place", "enderman_place", "enderman", "endermangrief"),
+	ZOMBIEBREAKDOOR ("[ENTITY_BREAK_DOOR]", "zombiebreakdoor"),
+	EXPLODE ("[ENTITY_EXPLODE]", "explode", "explosion"),
+	JOIN ("[PLAYER_LOGIN]", "login", "player_login"),
+	QUIT ("[PLAYER_QUIT]", "quit", "player_quit"),
+	COMMAND ("[PLAYER_COMMAND]", "command", "player_command");
 	
 	private String event;
 	private String[] alias;

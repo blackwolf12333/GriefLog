@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigValues {
 
-	FileConfiguration grieflogConfig = GLConfigHandler.config;
+	FileConfiguration grieflogConfig = ConfigHandler.config;
 	
 	int tool;
 	int mb;
@@ -23,6 +23,7 @@ public class ConfigValues {
 	boolean zombie;
 	boolean explosions;
 	boolean playerJoin;
+	boolean playerQuit;
 	boolean antilava;
 	boolean antitnt;
 	boolean anticreeper;
@@ -45,7 +46,7 @@ public class ConfigValues {
 	 * @return the tool
 	 */
 	public int getTool() {
-		return GLConfigHandler.config.getInt("SelectionTool");
+		return ConfigHandler.config.getInt("SelectionTool");
 	}
 	/**
 	 * @param tool the tool to set
@@ -57,7 +58,7 @@ public class ConfigValues {
 	 * @return the mb
 	 */
 	public int getMb() {
-		return GLConfigHandler.config.getInt("mb");
+		return ConfigHandler.config.getInt("mb");
 	}
 	/**
 	 * @param mb the mb to set
@@ -69,7 +70,7 @@ public class ConfigValues {
 	 * @return the blockprotection
 	 */
 	public boolean getBlockprotection() {
-		return GLConfigHandler.config.getBoolean("block-protection");
+		return ConfigHandler.config.getBoolean("block-protection");
 	}
 	/**
 	 * @param blockprotection the blockprotection to set
@@ -81,7 +82,7 @@ public class ConfigValues {
 	 * @return the itemBlacklist
 	 */
 	public List<Integer> getItemBlacklist() {
-		return GLConfigHandler.config.getIntegerList("block-protection-blacklist");
+		return ConfigHandler.config.getIntegerList("block-protection-blacklist");
 	}
 	/**
 	 * @param itemBlacklist the itemBlacklist to set
@@ -93,7 +94,7 @@ public class ConfigValues {
 	 * @return the command
 	 */
 	public boolean getCommand() {
-		return GLConfigHandler.config.getBoolean("DoCommand");
+		return ConfigHandler.config.getBoolean("DoCommand");
 	}
 	/**
 	 * @param command the command to set
@@ -105,7 +106,7 @@ public class ConfigValues {
 	 * @return the worldChange
 	 */
 	public boolean getWorldChange() {
-		return GLConfigHandler.config.getBoolean("ChangeWorld");
+		return ConfigHandler.config.getBoolean("ChangeWorld");
 	}
 	/**
 	 * @param worldChange the worldChange to set
@@ -117,7 +118,7 @@ public class ConfigValues {
 	 * @return the gmChange
 	 */
 	public boolean getGmChange() {
-		return GLConfigHandler.config.getBoolean("ChangeGameMode");
+		return ConfigHandler.config.getBoolean("ChangeGameMode");
 	}
 	/**
 	 * @param gmChange the gmChange to set
@@ -129,7 +130,7 @@ public class ConfigValues {
 	 * @return the blockIgnite
 	 */
 	public boolean getBlockIgnite() {
-		return GLConfigHandler.config.getBoolean("BlockIgnite");
+		return ConfigHandler.config.getBoolean("BlockIgnite");
 	}
 	/**
 	 * @param blockIgnite the blockIgnite to set
@@ -141,7 +142,7 @@ public class ConfigValues {
 	 * @return the ignoreEnvironment
 	 */
 	public boolean getIgnoreEnvironment() {
-		return GLConfigHandler.config.getBoolean("IgnoreEnvironment");
+		return ConfigHandler.config.getBoolean("IgnoreEnvironment");
 	}
 	/**
 	 * @param ignoreEnvironment the ignoreEnvironment to set
@@ -153,7 +154,7 @@ public class ConfigValues {
 	 * @return the bucketWater
 	 */
 	public boolean getBucketWater() {
-		return GLConfigHandler.config.getBoolean("BucketWaterEmpty");
+		return ConfigHandler.config.getBoolean("BucketWaterEmpty");
 	}
 	/**
 	 * @param bucketWater the bucketWater to set
@@ -165,7 +166,7 @@ public class ConfigValues {
 	 * @return the bucketLava
 	 */
 	public boolean getBucketLava() {
-		return GLConfigHandler.config.getBoolean("BucketLavaEmpty");
+		return ConfigHandler.config.getBoolean("BucketLavaEmpty");
 	}
 	/**
 	 * @param bucketLava the bucketLava to set
@@ -177,7 +178,7 @@ public class ConfigValues {
 	 * @return the enderman
 	 */
 	public boolean getEnderman() {
-		return GLConfigHandler.config.getBoolean("EnderManPlaceAndPickup");
+		return ConfigHandler.config.getBoolean("EnderManPlaceAndPickup");
 	}
 	/**
 	 * @param enderman the enderman to set
@@ -189,7 +190,7 @@ public class ConfigValues {
 	 * @return the zombie
 	 */
 	public boolean getZombie() {
-		return GLConfigHandler.config.getBoolean("ZombieBreakDoor");
+		return ConfigHandler.config.getBoolean("ZombieBreakDoor");
 	}
 	/**
 	 * @param zombie the zombie to set
@@ -201,7 +202,7 @@ public class ConfigValues {
 	 * @return the explosions
 	 */
 	public boolean getExplosions() {
-		return GLConfigHandler.config.getBoolean("Explosions");
+		return ConfigHandler.config.getBoolean("Explosions");
 	}
 	/**
 	 * @param explosions the explosions to set
@@ -213,7 +214,7 @@ public class ConfigValues {
 	 * @return the playerJoin
 	 */
 	public boolean getPlayerJoin() {
-		return GLConfigHandler.config.getBoolean("PlayerJoin");
+		return ConfigHandler.config.getBoolean("PlayerJoin");
 	}
 	/**
 	 * @param playerJoin the playerJoin to set
@@ -225,7 +226,7 @@ public class ConfigValues {
 	 * @return the antilava
 	 */
 	public boolean getAntilava() {
-		return GLConfigHandler.config.getBoolean("anti-lava");
+		return ConfigHandler.config.getBoolean("anti-lava");
 	}
 	/**
 	 * @param antilava the antilava to set
@@ -237,7 +238,7 @@ public class ConfigValues {
 	 * @return the antitnt
 	 */
 	public boolean getAntitnt() {
-		return GLConfigHandler.config.getBoolean("anti-tnt");
+		return ConfigHandler.config.getBoolean("anti-tnt");
 	}
 	/**
 	 * @param antitnt the antitnt to set
@@ -249,7 +250,7 @@ public class ConfigValues {
 	 * @return the anticreeper
 	 */
 	public boolean getAnticreeper() {
-		return GLConfigHandler.config.getBoolean("anti-creeper");
+		return ConfigHandler.config.getBoolean("anti-creeper");
 	}
 	/**
 	 * @param anticreeper the anticreeper to set
@@ -261,7 +262,7 @@ public class ConfigValues {
 	 * @return the antifire
 	 */
 	public boolean getAntifire() {
-		return GLConfigHandler.config.getBoolean("anti-fire");
+		return ConfigHandler.config.getBoolean("anti-fire");
 	}
 	/**
 	 * @param antifire the antifire to set
@@ -274,11 +275,15 @@ public class ConfigValues {
 	 * @return anti-endermangrief 
 	 */
 	public boolean getAntiEnderMan() {
-		return antienderman;
+		return ConfigHandler.config.getBoolean("anti-endermangrief");
 	}
 	
 	public void setAntiEnderMan(boolean antienderman) {
 		this.antienderman = antienderman;
+	}
+	
+	public boolean getPlayerQuit() {
+		return playerQuit = ConfigHandler.config.getBoolean("PlayerQuit");
 	}
 	
 	

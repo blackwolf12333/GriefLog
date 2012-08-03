@@ -34,6 +34,7 @@ EnderManPlaceAndPickup: true
 ZombieBreakDoor: true
 Explosions: true
 PlayerJoin: true
+PlayerQuit: true
 
 # If you want stuff prevented, like people can't use lava, set these things to true
 anti-lava: false

@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
+import tk.blackwolf12333.grieflog.SearchTask;
+import tk.blackwolf12333.grieflog.action.RollbackAction;
+import tk.blackwolf12333.grieflog.action.WorldEditFilterAction;
 import tk.blackwolf12333.grieflog.utils.ArgumentParser;
 
 public class GLogRollback {
@@ -24,15 +27,14 @@ public class GLogRollback {
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		
 		if(cmd.getName().equalsIgnoreCase("glog")) {
-			// /glog rollback <options>
 			if (args[0].equalsIgnoreCase("rollback") || args[0].equalsIgnoreCase("rb")) {
 				if (sender.isOp() || GriefLog.permission.has(sender, "grieflog.rollback")) {
 					if(args[1].equalsIgnoreCase("we")) {
 						if(sender instanceof Player) {
 							ArrayList<String> arguments = new ArrayList<String>();
-							GLPlayer player = GriefLog.players.get(sender.getName());
+							GLPlayer player = GLPlayer.getGLPlayer(sender);
 							
-							if(player.isDoingRollback) {
+							if(player.isDoingRollback()) {
 								player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
 								return true;
 							} else {
@@ -41,10 +43,15 @@ public class GLogRollback {
 										arguments.add(args[i]);
 									}
 								}
-								ArgumentParser parser = new ArgumentParser(arguments);
-								player.search(true, parser.getResult());
 								
-								player.rollback();
+								ArgumentParser parser = new ArgumentParser(arguments);
+								
+								// check if the parser throwed any errors
+								if(parser.error) {
+									player.print(ChatColor.DARK_RED + "Sorry, an error occured. Please check if you formatted the arguments right.");
+								} else {
+									new SearchTask(player, new WorldEditFilterAction(player), parser.getResult());
+								}
 								
 								return true;
 							}
@@ -53,15 +60,19 @@ public class GLogRollback {
 							return true;
 						}
 					} else {
-						GLPlayer player = GriefLog.players.get(sender.getName());
-						if(player.isDoingRollback) {
+						GLPlayer player = GLPlayer.getGLPlayer(sender);
+						if(player.isDoingRollback()) {
 							player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
 							return true;
 						} else {
 							ArgumentParser parser = new ArgumentParser(args);
-							player.search(false, parser.getResult());
+							// check if the parser throwed any errors
+							if(parser.error) {
+								player.print(ChatColor.DARK_RED + "Sorry, an error occured. Please check if you formatted the arguments right.");
+							} else {
+								new SearchTask(player, new RollbackAction(player), parser.getResult());
+							}
 							
-							player.rollback();
 							return true;
 						}
 					}

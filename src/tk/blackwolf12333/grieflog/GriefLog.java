@@ -12,35 +12,36 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import tk.blackwolf12333.grieflog.api.ISearcher;
 import tk.blackwolf12333.grieflog.api.IGriefLogger;
 import tk.blackwolf12333.grieflog.commands.GLog;
-import tk.blackwolf12333.grieflog.listeners.GLBlockListener;
-import tk.blackwolf12333.grieflog.listeners.GLBucketListener;
-import tk.blackwolf12333.grieflog.listeners.GLEntityListener;
-import tk.blackwolf12333.grieflog.listeners.GLPlayerListener;
-import tk.blackwolf12333.grieflog.search.GriefLogSearcher;
+import tk.blackwolf12333.grieflog.listeners.BlockListener;
+import tk.blackwolf12333.grieflog.listeners.BucketListener;
+import tk.blackwolf12333.grieflog.listeners.EntityListener;
+import tk.blackwolf12333.grieflog.listeners.PlayerListener;
 import tk.blackwolf12333.grieflog.utils.PermsHandler;
-import tk.blackwolf12333.grieflog.utils.config.GLConfigHandler;
+import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class GriefLog extends JavaPlugin {
-
+	
+	File temp;
 	public String version;
 	public static Logger log;
 	public static GriefLog instance;
 	public static PermsHandler permission;
 	public static File dataFolder;
-	File temp;
 		
 	// the listeners
-	GLBlockListener bListener = new GLBlockListener(this);
-	GLPlayerListener pListener = new GLPlayerListener(this);
-	GLEntityListener eListener = new GLEntityListener(this);
-	GLBucketListener bucketListener = new GLBucketListener(this);
+	public BlockListener bListener = new BlockListener(this);
+	public PlayerListener pListener = new PlayerListener(this);
+	public EntityListener eListener = new EntityListener(this);
+	public BucketListener bucketListener = new BucketListener(this);
+	
 	
 	public static File file = new File("GriefLog.txt");
 	public static File reportFile = new File("Report.txt");
@@ -55,6 +56,9 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// delete all instances of GLPlayer so that will not cause a memory leak
+		players.clear();
+		
 		temp = new File(getDataFolder(), "temp.glog");
 		
 		// save the tntIgnited variable
@@ -65,7 +69,7 @@ public class GriefLog extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
-		saveHashMapTo(GLBlockListener.tntIgnited, temp);
+		saveHashMapTo(BlockListener.tntIgnited, temp);
 		
 		// tell the console that grieflog is hereby disabled
 		log.info("GriefLog Disabled!!!");
@@ -86,7 +90,7 @@ public class GriefLog extends JavaPlugin {
 		}
 		
 		if(temp.exists()) {
-			GLBlockListener.tntIgnited = loadHashMapFrom(temp);
+			BlockListener.tntIgnited = loadHashMapFrom(temp);
 		}
 		
 		// register events
@@ -97,11 +101,18 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(bucketListener, this);
 		
 		// config stuff
-		new GLConfigHandler(this);
-		GLConfigHandler.setupGriefLogConfig();
-		if(GLConfigHandler.values.getBlockprotection()) {
-			new GLConfigHandler(this);
-			GLConfigHandler.setupFriendsConfig();
+		new ConfigHandler(this);
+		ConfigHandler.setupGriefLogConfig();
+		if(ConfigHandler.values.getBlockprotection()) {
+			new ConfigHandler(this);
+			ConfigHandler.setupFriendsConfig();
+		}
+		
+		// check for CreeperHeal if it is in the server don't log explosions, 
+		// this will result in logging air instead of the exploded block.
+		if(pm.getPlugin("CreeperHeal") != null) {
+			log.info("CreeperHeal was detected, not logging Creeper and TNT explosions.");
+			ConfigHandler.config.set("Explosions", false);
 		}
 		
 		// setup the permissions
@@ -110,19 +121,24 @@ public class GriefLog extends JavaPlugin {
 		// register command
 		getCommand("glog").setExecutor(new GLog(this));
 		
-		// enable the api
+		// add all online players to the players hashmap
+		for(Player p : getServer().getOnlinePlayers()) {
+			// add the online players
+			players.put(p.getName(), new GLPlayer(this, p));
+		}
+		// add the console as GLPlayer
+		ConsoleCommandSender console = this.getServer().getConsoleSender();
+		players.put(console.getName(), new GLPlayer(this, console));
+		
+		// enable the api, i think this is useless, so i will delete it soon
 		IGriefLogger logger = new GriefLogger();
 		Bukkit.getServicesManager().register(IGriefLogger.class, logger, this, ServicePriority.Normal);
 		
-		ISearcher searcher = new GriefLogSearcher();
-		Bukkit.getServicesManager().register(ISearcher.class, searcher, this, ServicePriority.Normal);
-
 		// tell the console that grieflog is hereby enabled
 		version = this.getDescription().getVersion();
 		log.info("GriefLog " + version + " Enabled");
 	}
 	
-	// pretty self explaining
 	public static double getFileSize(File file) {
 		double bytes = file.length();
 		double kilobytes = (bytes / 1024);
@@ -131,7 +147,12 @@ public class GriefLog extends JavaPlugin {
 		return megabytes;
 	}
 	
-	public void saveHashMapTo(HashMap<String,Integer> hashmap, File file) {
+	/**
+	 * Saves a HashMap<K, V> to a file.
+	 * @param hashmap : The HashMap to be saved.
+	 * @param file : The file to which the HashMap is saved to.
+	 */
+	public <K, V> void saveHashMapTo(HashMap<K, V> hashmap, File file) {
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(file));
@@ -151,14 +172,19 @@ public class GriefLog extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Loads a HashMap<K, V> from a file.
+	 * @param file : The file from which the HashMap will be loaded.
+	 * @return Returns a HashMap that was saved in the file.
+	 */
 	@SuppressWarnings("unchecked")
-	public HashMap<String, Integer> loadHashMapFrom(File file) {
-		HashMap<String, Integer> result = null;
+	public <K, V> HashMap<K, V> loadHashMapFrom(File file) {
+		HashMap<K, V> result = null;
 		ObjectInputStream ois = null;
 		
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
-			result = (HashMap<String, Integer>) ois.readObject();
+			result = (HashMap<K, V>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
