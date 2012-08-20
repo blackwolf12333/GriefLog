@@ -44,6 +44,9 @@ public class ExplodeRollback extends BaseRollback {
 			String strY = content[11].replace(",", "");
 			String strZ = content[12].replace(",", "");
 			String type = content[8];
+			if(type.contains(":")) {
+				return rollbackWithData(line);
+			}
 			String worldname = content[14].trim();
 			
 			int x = Integer.parseInt(strX);
@@ -66,6 +69,32 @@ public class ExplodeRollback extends BaseRollback {
 			}
 		} else {
 			return false;
+		}
+	}
+	
+	public boolean rollbackWithData(String line) {
+		String[] content = line.split("\\ ");
+		String strX = content[10].replace(",", "");
+		String strY = content[11].replace(",", "");
+		String strZ = content[12].replace(",", "");
+		String[] typeAndData = content[8].split(":");
+		String type = typeAndData[0];
+		byte data = Byte.parseByte(typeAndData[1]);
+		String worldname = content[14].trim();
+		
+		int x = Integer.parseInt(strX);
+		int y = Integer.parseInt(strY);
+		int z = Integer.parseInt(strZ);
+		
+		world = Bukkit.getServer().getWorld(worldname);
+		Location loc = new Location(world, x, y, z);
+		Material m = Material.getMaterial(type);
+		if (m == null) {
+			GriefLog.log.info("Could not get the right materials, Material DOESN'T exist!!!");
+			return false;
+		} else {
+			Bukkit.getWorld(worldname).getBlockAt(loc).setTypeIdAndData(m.getId(), data, true);
+			return true;
 		}
 	}
 }

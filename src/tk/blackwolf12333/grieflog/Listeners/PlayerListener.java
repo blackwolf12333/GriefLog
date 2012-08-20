@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +23,13 @@ import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.SearchTask;
-import tk.blackwolf12333.grieflog.action.BlockProtectionAction;
+import tk.blackwolf12333.grieflog.callback.BlockProtectionCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
+import tk.blackwolf12333.grieflog.data.PlayerChangedGamemodeData;
+import tk.blackwolf12333.grieflog.data.PlayerChangedWorldData;
+import tk.blackwolf12333.grieflog.data.PlayerCommandData;
+import tk.blackwolf12333.grieflog.data.PlayerJoinData;
+import tk.blackwolf12333.grieflog.data.PlayerQuitData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class PlayerListener implements Listener {
@@ -43,15 +46,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (ConfigHandler.values.getGmChange()) {
-			Player player = event.getPlayer();
-			String p = player.getName();
-			GameMode gm = event.getNewGameMode();
-			int gameM = gm.getValue();
-			World world = player.getWorld();
-			String playerWorld = world.getName();
-
-			String data = " [GAMEMODE_CHANGE] " + p + " New Gamemode: " + gameM + " Where: " + playerWorld + System.getProperty("line.separator");
-			GriefLogger logger = new GriefLogger(data);
+			PlayerChangedGamemodeData data = new PlayerChangedGamemodeData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getNewGameMode().getValue());
+			
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
@@ -59,13 +56,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		if (ConfigHandler.values.getWorldChange()) {
-			Player player = event.getPlayer();
-			String playerName = player.getName();
-			World where = event.getFrom();
-			String from = where.getName();
-
-			String data = " [WORLD_CHANGE] Who: " + playerName + " From: " + from + System.getProperty("line.separator");
-			GriefLogger logger = new GriefLogger(data);
+			PlayerChangedWorldData data = new PlayerChangedWorldData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getFrom().getName());
+			
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
@@ -73,11 +66,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (ConfigHandler.values.getCommand()) {
-			String cmd = event.getMessage();
-			String namePlayer = event.getPlayer().getName();
-
-			String data = " [PLAYER_COMMAND] Who: " + namePlayer + " Command: " + cmd + System.getProperty("line.separator");
-			GriefLogger logger = new GriefLogger(data);
+			PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
+			
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
@@ -100,38 +91,29 @@ public class PlayerListener implements Listener {
 
 		if (ConfigHandler.values.getPlayerJoin()) {
 			String address = event.getPlayer().getAddress().getAddress().getHostAddress();
-			int gm = event.getPlayer().getGameMode().getValue();
-			String name = event.getPlayer().getName();
 			int x = p.getLocation().getBlockX();
 			int y = p.getLocation().getBlockY();
 			int z = p.getLocation().getBlockZ();
-			String worldName = event.getPlayer().getWorld().getName();
-			String where = " " + x + ", " + y + ", " + z + " in: " + worldName;
 
-			String data = " [PLAYER_LOGIN] " + name + " On: " + address + " With GameMode: " + gm + where + System.getProperty("line.separator");
-			GriefLogger logger = new GriefLogger(data);
+			PlayerJoinData data = new PlayerJoinData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), address, x, y, z);
+			
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
-		GLPlayer p = GriefLog.players.get(event.getPlayer().getName());
-		GriefLog.players.remove(p);
-		p = null;
+		GriefLog.players.remove(event.getPlayer().getName());
 		
 		if(ConfigHandler.values.getPlayerQuit()) {
-			Player player = event.getPlayer();
-			String name = player.getName();
-			int gm = player.getGameMode().getValue();
-			int x = player.getLocation().getBlockX();
-			int y = player.getLocation().getBlockY();
-			int z = player.getLocation().getBlockZ();
-			String world = player.getWorld().getName();
-			String where = " " + x + ", " + y + ", " + z + " in: " + world;
+			int x = event.getPlayer().getLocation().getBlockX();
+			int y = event.getPlayer().getLocation().getBlockY();
+			int z = event.getPlayer().getLocation().getBlockZ();
 			
-			String data = " [PLAYER_QUIT] " + name + " GM: " + gm + where + System.getProperty("line.separator");
-			GriefLogger logger = new GriefLogger(data);
+			PlayerQuitData data = new PlayerQuitData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), x, y, z);
+			
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
@@ -142,74 +124,58 @@ public class PlayerListener implements Listener {
 		Player p = event.getPlayer();
 		Block b = event.getClickedBlock();
 		
+		// check which action occured and handle appropriate
 		if (a == Action.LEFT_CLICK_BLOCK) {
 			// check if the item in hand of the player == the selection tool
 			// specified in the config file
 			if (p.getItemInHand().getTypeId() == ConfigHandler.config.getInt("SelectionTool")) {
+				if(p.isSneaking()) {
+					GLPlayer player = GLPlayer.getGLPlayer(event.getPlayer());
+					b = b.getRelative(event.getBlockFace());
+
+					Integer x = b.getX();
+					Integer y = b.getY();
+					Integer z = b.getZ();
+					String world = b.getWorld().getName();
+
+					event.setCancelled(true);
+					
+					ArrayList<String> args = new ArrayList<String>();
+					args.add(x + ", " + y + ", " + z + " in: " + world);
+					new SearchTask(player, new SearchCallback(player), args);
+				}
 				GLPlayer player = GLPlayer.getGLPlayer(p);
 				
 				Integer x = b.getX();
 				Integer y = b.getY();
 				Integer z = b.getZ();
+				String world = b.getWorld().getName();
 
 				event.setCancelled(true);
 				
 				ArrayList<String> args = new ArrayList<String>();
-				args.add(x + ", " + y + ", " + z);
-				player.search(false, args);
+				args.add(x + ", " + y + ", " + z + " in: " + world);
+				new SearchTask(player, new SearchCallback(player), args);
 			}
-		}
-		
-		if(a == Action.RIGHT_CLICK_BLOCK) {
-			if(p.getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
-				BlockFace face = event.getBlockFace();
-				b = event.getClickedBlock().getRelative(face);
-				final GLPlayer player = GLPlayer.getGLPlayer(p);
-
-				Integer x = b.getX();
-				Integer y = b.getY();
-				Integer z = b.getZ();
-
-				event.setCancelled(true);
-				
-				ArrayList<String> args = new ArrayList<String>();
-				args.add(x + ", " + y + ", " + z);
-				player.search(false, args);
-			} else if(p.getItemInHand().getType() == Material.FLINT_AND_STEEL) {
+		} else if(a == Action.RIGHT_CLICK_BLOCK) {
+			if(p.getItemInHand().getType() == Material.FLINT_AND_STEEL) {
 				if(event.getClickedBlock().getType() == Material.TNT) {
 					playerFAS.put(event.getClickedBlock(), p.getName());
 				}
 			}
 			
-			Block clicked = event.getClickedBlock();
-			
-			if((clicked.getType() == Material.LEVER) || (clicked.getType() == Material.STONE_BUTTON)) {
+			if((b.getType() == Material.LEVER) || (b.getType() == Material.STONE_BUTTON)) {
 				if(ConfigHandler.values.getBlockprotection()) {
 					GLPlayer player = GriefLog.players.get(p.getName());
 					
-					int x = clicked.getX();
-					int y = clicked.getY();
-					int z = clicked.getZ();
-					String world = clicked.getWorld().getName();
+					int x = b.getX();
+					int y = b.getY();
+					int z = b.getZ();
+					String world = b.getWorld().getName();
 					String loc = x + ", " + y + ", " + z + " in: " + world;
 					String evt = "[BLOCK_PLACE]";
 					
-					new SearchTask(player, new BlockProtectionAction(player, null, event), loc, evt);
-					
-					/*if(player.result != null) {
-						String[] split1 = new String[player.result.size()];
-						for(int i = 0; i < split1.length; i++) {
-							split1[i] = player.result.get(i);
-						}
-						String[] split2 = split1[split1.length - 1].split(" ");
-						String owner = split2[4];
-						if(!ConfigHandler.isOnFriendsList(owner, event.getPlayer())) {
-							event.setCancelled(true);
-							event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
-						}
-					} else {
-						// if the search result is null ignore it because than nothing happened on that location
-					}*/
+					new SearchTask(player, new BlockProtectionCallback(player, null, event), loc, evt);
 				}
 			}
 		}

@@ -13,7 +13,7 @@ public class ArgumentParser {
 	public String event;
 	
 	public ArgumentParser(String[] args) {
-		if(args.length == -1) {
+		if(args == null) {
 			error = true;
 		}
 		ArrayList<String> arguments = new ArrayList<String>();
@@ -35,7 +35,6 @@ public class ArgumentParser {
 	}
 	
 	public void parse(ArrayList<String> args) {
-		
 		if(error) {
 			return;
 		}
@@ -163,7 +162,7 @@ public class ArgumentParser {
 		for(Events event : Events.values()) {
 			for(String a : event.getAlias()) {
 				if(alias.equalsIgnoreCase(a)) {
-					return event.getEvent();
+					return event.getEventName();
 				}
 			}
 		}

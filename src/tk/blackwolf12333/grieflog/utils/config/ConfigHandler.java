@@ -1,13 +1,21 @@
 package tk.blackwolf12333.grieflog.utils.config;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -16,7 +24,7 @@ import tk.blackwolf12333.grieflog.GriefLog;
 
 public class ConfigHandler {
 
-	static GriefLog plugin;
+	public static GriefLog plugin;
 	public static File configFile;
 	public static File friendsFile;
 	public static FileConfiguration config;
@@ -31,7 +39,7 @@ public class ConfigHandler {
 	public static void setupGriefLogConfig() {
 		configFile = new File(plugin.getDataFolder(), "config.yml");
 	    config = new YamlConfiguration();
-
+	    
 	    if(!configFile.exists()) {
 	    	configFile.getParentFile().mkdirs();
 	    	try {
@@ -40,8 +48,9 @@ public class ConfigHandler {
 				e.printStackTrace();
 			}
 	        copy(plugin.getResource("config.yml"), configFile);
+	        loadConfig();
 	    } else {
-	    	loadConfig();
+	    	checkForChangesAndLoad();
 	    }
 	}
 	
@@ -52,6 +61,7 @@ public class ConfigHandler {
 	    if(!friendsFile.exists()) {
 	    	friendsFile.getParentFile().mkdirs();
 	        copy(plugin.getResource("friends.yml"), friendsFile);
+	        loadFriendsConfig();
 	    } else {
 	    	loadFriendsConfig();
 	    }
@@ -72,7 +82,7 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void saveConfig() { //Save configuration file
+	public static void saveConfig() {
 	    try {
 	    	GriefLog.log.info("Saving configuration file.");
 	        config.save(configFile);
@@ -81,7 +91,7 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void saveFriendsConfig() { //Save configuration file
+	public static void saveFriendsConfig() {
 	    try {
 	        friendsConfig.save(friendsFile);
 	    } catch (IOException e) {
@@ -89,16 +99,17 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void loadConfig() { //Load configuration file
+	public static void loadConfig() {
 	    try {
-	    	GriefLog.log.info("Loading configuration file.");
 	        config.load(configFile);
-	    } catch (Exception e) {
+	    } catch (IOException e) {
 	        e.printStackTrace();
+	    } catch (InvalidConfigurationException e) {
+	    	
 	    }
 	}
 	
-	public static void loadFriendsConfig() { //Load configuration file
+	public static void loadFriendsConfig() {
 	    try {
 	        friendsConfig.load(friendsFile);
 	    } catch (Exception e) {
@@ -106,12 +117,81 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void reloadConfig() { // reload the config
+	public static void reloadConfig() {
 		loadConfig();
 	}
 	
-	public static void reloadFriendsConfig() { // reload the friends list config
+	public static void reloadFriendsConfig() {
 		loadFriendsConfig();
+	}
+	
+	private static void checkForChangesAndLoad() {
+		try {
+			loadConfig();
+			Map<String, Object> oldConf = config.getValues(true);
+			
+			FileConfiguration newconfig = new YamlConfiguration();
+			newconfig.load(plugin.getResource("config.yml"));
+			Map<String, Object> newConf = newconfig.getValues(true);
+			
+			if(newConf.size() > oldConf.size()) {
+				configFile.delete();
+				
+				createNewConfigFileAndLoad();
+				List<String> contents = readFileAndPutContentsInList();
+				for(Iterator<String> it = oldConf.keySet().iterator(); it.hasNext();) {
+		        	String next = it.next();
+		        	
+		        	String newNode = next + ": " + oldConf.get(next);
+		        	for(int i = 0; i < contents.size(); i++) {
+		        		String line = contents.get(i);
+		        		if(line.contains(next)) {
+		        			contents.set(i, newNode);
+		    			} else {
+		    				continue;
+		    			}
+		        	}
+		    		
+		        }
+				writeListToFileAndLoad(contents);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			// ignore this exception
+		}
+	}
+	
+	private static List<String> readFileAndPutContentsInList() throws IOException, FileNotFoundException {
+		BufferedReader reader = new BufferedReader(new FileReader(configFile));
+		String line = null;
+		List<String> contents = new ArrayList<String>();
+		while((line = reader.readLine()) != null) {
+			contents.add(line);
+		}
+		reader.close();
+		
+		return contents;
+	}
+	
+	private static void writeListToFileAndLoad(List<String> list) throws IOException, InvalidConfigurationException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(configFile));
+		for(int i = 0; i < list.size(); i++) {
+			bw.append(list.get(i));
+			bw.newLine();
+		}
+		bw.close();
+		loadConfig();
+	}
+	
+	private static void createNewConfigFileAndLoad() {
+		try {
+			configFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        copy(plugin.getResource("config.yml"), configFile);
+        loadConfig();
 	}
 	
 	public static List<String> getFriends(String player) {
@@ -127,7 +207,10 @@ public class ConfigHandler {
 		} else if(friend.getName().equalsIgnoreCase(player)) {
 			return true;
 		} else {
-			return ConfigHandler.getFriends(player).contains(friend.getName());
+			if(ConfigHandler.getFriends(player) != null) {
+				return ConfigHandler.getFriends(player).contains(friend.getName());
+			}
+			return false;
 		}
 	}
 }

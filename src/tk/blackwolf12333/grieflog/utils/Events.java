@@ -1,31 +1,37 @@
 package tk.blackwolf12333.grieflog.utils;
 
 public enum Events {
-	BREAK ("[BLOCK_BREAK]", "break", "block_break"),
-	PLACE ("[BLOCK_PLACE]", "place", "block_place"),
-	LAVA ("[BUCKET_LAVA_EMPTY", "lava", "lava_bucket"),
-	WATER ("[BUCKET_WATER_EMPTY", "water", "water_bucket"),
-	ENDERMAN_PICKUP ("[ENDERMAN_PICKUP]", "pickup", "enderman_pickup", "enderman", "endermangrief"),
-	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", "place", "enderman_place", "enderman", "endermangrief"),
-	ZOMBIEBREAKDOOR ("[ENTITY_BREAK_DOOR]", "zombiebreakdoor"),
-	EXPLODE ("[ENTITY_EXPLODE]", "explode", "explosion"),
-	JOIN ("[PLAYER_LOGIN]", "login", "player_login"),
-	QUIT ("[PLAYER_QUIT]", "quit", "player_quit"),
-	COMMAND ("[PLAYER_COMMAND]", "command", "player_command");
+	BREAK ("[BLOCK_BREAK]", true, "break", "block_break"),
+	PLACE ("[BLOCK_PLACE]", true, "place", "block_place"),
+	LAVA ("[BUCKET_LAVA_EMPTY]", true, "lava", "lava_bucket"),
+	WATER ("[BUCKET_WATER_EMPTY]", true, "water", "water_bucket"),
+	IGNITE ("[BLOCK_IGNITE]", false, "fire", "ignite", "block_ignite"),
+	ENDERMAN_PICKUP ("[ENDERMAN_PICKUP]", false, "pickup", "enderman_pickup", "enderman", "endermangrief"),
+	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", false, "place", "enderman_place", "enderman", "endermangrief"),
+	ZOMBIEBREAKDOOR ("[ENTITY_BREAK_DOOR]", false, "zombiebreakdoor"),
+	EXPLODE ("[ENTITY_EXPLODE]", true, "explode", "explosion"),
+	JOIN ("[PLAYER_LOGIN]", false),
+	QUIT ("[PLAYER_QUIT]", false),
+	COMMAND ("[PLAYER_COMMAND]", false),
+	GAMEMODE ("[GAMEMODE_CHANGE]", false),
+	WORLDCHANGE ("[WORLD_CHANGE]", false);
 	
 	private String event;
 	private String[] alias;
+	private boolean canRollback;
 	
-	Events(String event){
+	Events(String event, boolean canRollback){
 		this.event = event;
+		this.canRollback = canRollback;
 	}
 	
-	Events(String event, String ...alias){
+	Events(String event, boolean canRollback, String ...alias){
 		this.event = event;
 		this.alias = alias;
+		this.canRollback = canRollback;
 	}
 	
-	public String getEvent() {
+	public String getEventName() {
 		return event;
 	}
 	
@@ -39,5 +45,25 @@ public enum Events {
 	
 	public void setAlias(String[] alias) {
 		this.alias = alias;
+	}
+	
+	public boolean getCanRollback() {
+		return canRollback;
+	}
+	
+	public void setCanRollback(boolean canRollback) {
+		this.canRollback = canRollback;
+	}
+	
+	public static Events getEvent(String name) {
+		for(Events event : Events.values()) {
+			if(event.getEventName().equals(name.trim())) {
+				return event;
+			} else {
+				continue;
+			}
+		}
+		
+		return null;
 	}
 }

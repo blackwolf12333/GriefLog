@@ -10,6 +10,7 @@ public class Time {
 
 	// time format
 	public static final String DATE_FORMAT_NOW = "HH-mm-ss";
+	GregorianCalendar calendar = new GregorianCalendar();
 
 	// get the current time
 	public String now() {
@@ -17,43 +18,26 @@ public class Time {
 		return day() + "-" + month() + "-" + year() + " " + df.format(new Date());
 	}
 
-	// get the date
-	public String Date() {
-		return day() + "-" + month() + "-" + year();
-	}
-
-	// get the current time
-	public long getTime() {
-		Date date = new Date();
-		return date.getTime();
-	}
-
 	// get today's day
 	public int day() {
-		GregorianCalendar calendar = new GregorianCalendar();
-		int day = calendar.get(Calendar.DATE);
-		return day;
+		return calendar.get(Calendar.DATE);
 	}
 
 	// get this month
 	public int month() {
-		GregorianCalendar calendar = new GregorianCalendar();
-		int month = calendar.get(Calendar.MONTH) + 1;
-		return month;
+		return calendar.get(Calendar.MONTH) + 1;
 	}
 
 	// get the year we live in
 	public int year() {
-		GregorianCalendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-		return year;
+		return calendar.get(Calendar.YEAR);
 	}
 
-	public long getTimeStamp(String strDate) {
+	public static long getTimeStamp(String strDate) {
 		long time = 0;
 		Date date = null;
 		try {
-			DateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			DateFormat format = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
 			date = format.parse(strDate);
 			time = date.getTime();
 		} catch (Exception e) {

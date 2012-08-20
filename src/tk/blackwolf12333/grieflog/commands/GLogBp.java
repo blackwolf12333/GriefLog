@@ -30,7 +30,6 @@ public class GLogBp {
 		}
 		
 		if(args[1].equalsIgnoreCase("addfriend")) {
-			ConfigHandler.loadFriendsConfig();
 			if(ConfigHandler.getFriends(sender.getName()).size() == 0) {
 				String[] list = new String[] {args[2]};
 				ConfigHandler.friendsConfig.set(sender.getName(), Arrays.asList(list));
@@ -50,8 +49,6 @@ public class GLogBp {
 		}
 		
 		if(args[1].equalsIgnoreCase("removefriend")) {
-			ConfigHandler.loadFriendsConfig();
-			
 			if(ConfigHandler.getFriends(sender.getName()) == null) {
 				sender.sendMessage(ChatColor.AQUA + "[GriefLog] You don't have any friends added yet.");
 				return true;

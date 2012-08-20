@@ -25,8 +25,9 @@ public class WaterRollback extends FluidRollback {
 			Location loc = new Location(world, x, y, z);
 			Block[] fluids = getFluidStream(world.getBlockAt(loc));
 			for(Block b : fluids) {
-				world.getBlockAt(b.getLocation()).setType(Material.AIR);
-			}
+				if(b != null) {
+					world.getBlockAt(b.getLocation()).setType(Material.AIR);
+				}			}
 			world.getBlockAt(loc).setType(Material.AIR);
 			return true;
 		} else if(content.length == 12) {
@@ -43,7 +44,9 @@ public class WaterRollback extends FluidRollback {
 			Location loc = new Location(world, x, y, z);
 			Block[] fluids = getFluidStream(world.getBlockAt(loc));
 			for(Block b : fluids) {
-				world.getBlockAt(b.getLocation()).setType(Material.AIR);
+				if(b != null) {
+					world.getBlockAt(b.getLocation()).setType(Material.AIR);
+				}
 			}
 			world.getBlockAt(loc).setType(Material.AIR);
 			return true;

@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import tk.blackwolf12333.grieflog.GLPlayer;
-import tk.blackwolf12333.grieflog.action.BaseAction;
+import tk.blackwolf12333.grieflog.callback.BaseCallback;
 
 public class WorldEditFilter implements Runnable {
 
@@ -15,10 +15,10 @@ public class WorldEditFilter implements Runnable {
 	ArrayList<String> searchResult;
 	World world;
 	GLPlayer player;
-	BaseAction action;
+	BaseCallback action;
 	
-	public WorldEditFilter(ArrayList<String> searchResult, BaseAction action, GLPlayer player) {
-		this.searchResult = searchResult;
+	public WorldEditFilter(BaseCallback action, GLPlayer player) {
+		this.searchResult = player.getSearchResult();
 		this.player = player;
 		this.action = action;
 		
@@ -32,13 +32,13 @@ public class WorldEditFilter implements Runnable {
 			
 			if(line == null) {
 				continue;
-			} else if(line.contains(Events.JOIN.getEvent())) {
+			} else if(line.contains(Events.JOIN.getEventName())) {
 				continue;
-			} else if(line.contains(Events.QUIT.getEvent())) {
+			} else if(line.contains(Events.QUIT.getEventName())) {
 				continue;
-			} else if(line.contains(Events.COMMAND.getEvent())) {
+			} else if(line.contains(Events.COMMAND.getEventName())) {
 				continue;
-			} else if(line.contains(Events.BREAK.getEvent())) {
+			} else if(line.contains(Events.BREAK.getEventName())) {
 				String[] content = line.split("\\ ");
 				if(content.length == 13) {
 					String strX = content[8].replace(",", "");
@@ -101,7 +101,7 @@ public class WorldEditFilter implements Runnable {
 						result.add(line);
 					}
 				}
-			} else if(line.contains(Events.EXPLODE.getEvent())) {
+			} else if(line.contains(Events.EXPLODE.getEventName())) {
 				String[] content = line.split("\\ ");
 				
 				if(content.length == 13) {
@@ -151,7 +151,7 @@ public class WorldEditFilter implements Runnable {
 					}
 				}
 				
-			} else if(line.contains(Events.PLACE.getEvent())) {
+			} else if(line.contains(Events.PLACE.getEventName())) {
 				String[] content = line.split("\\ ");
 				
 				if(content.length == 13) {
@@ -215,7 +215,7 @@ public class WorldEditFilter implements Runnable {
 						result.add(line);
 					}
 				}
-			} else if(line.contains(Events.LAVA.getEvent())) {
+			} else if(line.contains(Events.LAVA.getEventName())) {
 				String[] content = line.split("\\ ");
 				
 				if(content.length == 11) {
@@ -264,7 +264,7 @@ public class WorldEditFilter implements Runnable {
 						result.add(line);
 					}
 				}
-			} else if(line.contains(Events.WATER.getEvent())) {
+			} else if(line.contains(Events.WATER.getEventName())) {
 				String[] content = line.split("\\ ");
 				
 				if(content.length == 11) {

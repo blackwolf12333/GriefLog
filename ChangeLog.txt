@@ -22,3 +22,31 @@
 * Split the rollback function in smaller pieces (this is part of my optimization quest:P) 
 * Added a guess of how long a rollback will take in seconds
 * Fixed a bug in the onEnable method making a call to a not existing configuration instance
+* Fixed a little bug in the BlockProtectionAction, i was calling the wrong event which resulted in a npe
+* Renamed the actions to callback, because that's what it really is
+* Split some functions for better readability
+* Fixed that the config was not loaded when first time running
+
+4.6.7
+* Fixed a bug with the blockprotection when it was enabled it would send the searching... message by every block break event
+* Added block type and data to BlockIgnite logging
+* Added block data logging, will appear like this: DIRT:0 or LEVER:3
+* Added rollback for block data, this will make all your stairs look good after rollback xD
+* Fixed a bug with the ConsoleCommandSender and GLPlayer == NPE
+* Fixed a bug, if the rollback was complete, the taskId wasn't cleared 
+  so when someone used /glog cancel another task was cancelled and not the rollback
+
+
+4.6.8
+* Fixed a bug in the /glog tool command
+
+4.7
+* Dropped rollback support for the older versions 2.* and 3.*, some might work, i don't know
+* Added "DataEntries" that are the classes in tk.blackwolf12333.grieflog.data
+* Added loadFromString to BaseData classes to create a new instance of a DataEntry from a string from the logs
+* Added rollback function in the DataEntries for easier rollback
+* Improved the rollback
+* Added zombie and enderman grief rollback
+* And as always, fixed lots of bugs:)
+* Fixed a very dumb bug, arrays don't go from 1 to 3 but from 0 to 2...
+* Added configuration change check to load the new configuration options while keeping the old ones intact

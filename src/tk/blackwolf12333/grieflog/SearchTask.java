@@ -5,31 +5,36 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
-import tk.blackwolf12333.grieflog.action.BaseAction;
+import tk.blackwolf12333.grieflog.callback.BaseCallback;
+import tk.blackwolf12333.grieflog.callback.BlockProtectionCallback;
 
 public class SearchTask implements Runnable {
 
-	ArrayList<String> data = new ArrayList<String>();
-	ArrayList<File> files = new ArrayList<File>();
+	ArrayList<String> foundData = new ArrayList<String>();
+	TreeSet<File> filesToSearch = new TreeSet<File>();
 	
 	String[] text;
 	GLPlayer p;
-	BaseAction action;
+	BaseCallback action;
 	
-	public SearchTask(GLPlayer p, BaseAction action, String ...text) {
+	public SearchTask(GLPlayer p, BaseCallback action, String ...text) {
 		this.text = text;
 		this.p = p;
 		this.action = action;
 		
-		addFiles();
-		
+		addFilesToList();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(p.getGriefLog(), this);
+		if(!(action instanceof BlockProtectionCallback)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
+		}
 	}
 	
-	public SearchTask(GLPlayer p, BaseAction action, ArrayList<String> args) {
+	public SearchTask(GLPlayer p, BaseCallback action, ArrayList<String> args) {
 		this.p = p;
 		this.action = action;
 		this.text = new String[args.size()];
@@ -38,133 +43,76 @@ public class SearchTask implements Runnable {
 			text[i] = args.get(i);
 		}
 		
-		addFiles();
-		
+		addFilesToList();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(p.getGriefLog(), this);
+		if(!(action instanceof BlockProtectionCallback)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
+		}
 	}
 	
-	public void addFiles() {
-		files.add(GriefLog.file);
+	public void addFilesToList() {
+		filesToSearch.add(GriefLog.file);
 		
 		File file = new File("logs" + File.separator);
 		String[] list = file.list();
 		if(file.exists()) {
 			for (String element : list) {
-				files.add(new File("logs" + File.separator + element));
+				filesToSearch.add(new File("logs" + File.separator + element));
 			}
 		}
 	}
 	
 	public void run() {
-		if(text.length == 1)
-		{
-			File[] searchFiles = new File[files.size()];
-			searchFiles = files.toArray(searchFiles);
-			FileReader fr = null;
-			BufferedReader br = null;
-			
-			for(File searchFile : searchFiles)
-			{
-				try {
-					fr = new FileReader(searchFile);
-					br = new BufferedReader(fr);
-					String line = null;
-
-					while ((line = br.readLine()) != null) {
-						if (line.contains(text[0])) {
-							data.add(line + System.getProperty("line.separator"));
-						} else {
-							continue;
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if((fr != null) && (br != null)) {
-						try {
-							fr.close();
-							br.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
+		for(File searchFile : filesToSearch) {
+			readAndSearchFile(searchFile);
 		}
-		if(text.length == 2) {
-			File[] searchFiles = new File[files.size()];
-			searchFiles = files.toArray(searchFiles);
-			FileReader fr = null;
-			BufferedReader br = null;
-			
-			for(File searchFile : searchFiles)
-			{
-				try {
-					fr = new FileReader(searchFile);
-					br = new BufferedReader(fr);
-					String line = null;
 
-					while ((line = br.readLine()) != null) {
-						if ((line.contains(text[0])) && (line.contains(text[1]))) {
-							data.add(line + System.getProperty("line.separator"));
-						} else {
-							continue;
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if((fr != null) && (br != null)) {
-						try {
-							fr.close();
-							br.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-		if(text.length == 3)
-		{
-			File[] searchFiles = new File[files.size()];
-			searchFiles = files.toArray(searchFiles);
-			FileReader fr = null;
-			BufferedReader br = null;
-			
-			for(File searchFile : searchFiles)
-			{
-				try {
-					fr = new FileReader(searchFile);
-					br = new BufferedReader(fr);
-					String line = null;
-
-					while ((line = br.readLine()) != null) {
-						if ((line.contains(text[0])) && (line.contains(text[1])) && (line.contains(text[2]))) {
-							data.add(line + System.getProperty("line.separator"));
-						} else {
-							continue;
-						}
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if((fr != null) && (br != null)) {
-						try {
-							fr.close();
-							br.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
+		action.result = foundData;
+		action.run();
+	}
+	
+	private void readAndSearchFile(File file) {
+		FileReader fr = null;
+		BufferedReader br = null;
 		
-		action.result = data;
-		action.start();
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			String line = null;
+
+			while ((line = br.readLine()) != null) {
+				addToFoundDataIfContainsText(line);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if((fr != null) && (br != null)) {
+				try {
+					fr.close();
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private boolean lineContainsText(String line) {
+		if(text.length == 1) {
+			return line.contains(text[0]);
+		} else if(text.length == 2) {
+			return line.contains(text[0]) && line.contains(text[1]);
+		} else if(text.length == 3) {
+			return line.contains(text[0]) && line.contains(text[1]) && line.contains(text[2]);
+		} else {
+			return false;
+		}
+	}
+	
+	private void addToFoundDataIfContainsText(String line) {
+		if (lineContainsText(line)) {
+			foundData.add(line + System.getProperty("line.separator"));
+		}
 	}
 }

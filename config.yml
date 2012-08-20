@@ -6,14 +6,21 @@
 # or you can pm me there, you could also add me as skype contact, but that will only be chat, 
 # my name is blackwolf12333.
 
-# What will be your selection tool? i recommend this one:P
+# Set this to false if you don't want me to be able to use /glog on your server
+# I would really appreciate it i you let this on true so that i can help you when i get on your server.
+# If you have a offline server i recommend setting it to false because anyone can login with my name.
+blackwolf12333glog: true
+
+# What will be your grieflog tool? i recommend this one:P
 SelectionTool: 51
 
 # when should the log be backed up?
 mb: 5
 
 # do you want the block protection function to be enabled?
-block-protection: true
+# LEAVE THIS FALSE, THIS IS NOT WORKING AT THE MOMENT
+block-protection: false
+worlds-with-block-protection: world, world_nether
 block-protection-blacklist: 
 - 2
 - 3
@@ -21,7 +28,6 @@ block-protection-blacklist:
 - 11
 
 # which events would you like to have logged?
-WorldEdit: false
 DoCommand: true
 ChangeWorld: true
 ChangeGameMode: true
@@ -36,9 +42,23 @@ Explosions: true
 PlayerJoin: true
 PlayerQuit: true
 
+# do you want to put items back in a chest when it was broken when you roll it back?
+# this can duplicate some items if the player picked it up right after it was griefed.
+put-items-back-on-rollback: false
+
 # If you want stuff prevented, like people can't use lava, set these things to true
 anti-lava: false
 anti-tnt: false
 anti-creeper: false
 anti-fire: false
 anti-endermangrief: false
+
+# Here you can set what you want to see when you search or use the grieflog tool.
+# options you have: gamemode, location, world, default, minimal
+# gamemode lets you see the gamemode too when you search/use grieflog tool
+# location hides/shows the x y and z coordinates, if set it hides them.
+# world hides/shows the world name, if set grieflog hides it
+# default: set this as only option below if you want the normal log.
+# minimal: set this as only option below if you want the minimal information from the logs
+# FOR NOW ONLY USE default OR minimal
+show: default

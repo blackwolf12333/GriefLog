@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.SearchTask;
-import tk.blackwolf12333.grieflog.action.RollbackAction;
-import tk.blackwolf12333.grieflog.action.WorldEditFilterAction;
+import tk.blackwolf12333.grieflog.callback.RollbackCallback;
+import tk.blackwolf12333.grieflog.callback.WorldEditFilterCallback;
 import tk.blackwolf12333.grieflog.utils.ArgumentParser;
 
 public class GLogRollback {
@@ -50,7 +50,7 @@ public class GLogRollback {
 								if(parser.error) {
 									player.print(ChatColor.DARK_RED + "Sorry, an error occured. Please check if you formatted the arguments right.");
 								} else {
-									new SearchTask(player, new WorldEditFilterAction(player), parser.getResult());
+									new SearchTask(player, new WorldEditFilterCallback(player), parser.getResult());
 								}
 								
 								return true;
@@ -62,7 +62,7 @@ public class GLogRollback {
 					} else {
 						GLPlayer player = GLPlayer.getGLPlayer(sender);
 						if(player.isDoingRollback()) {
-							player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
+							player.print(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
 							return true;
 						} else {
 							ArgumentParser parser = new ArgumentParser(args);
@@ -70,7 +70,7 @@ public class GLogRollback {
 							if(parser.error) {
 								player.print(ChatColor.DARK_RED + "Sorry, an error occured. Please check if you formatted the arguments right.");
 							} else {
-								new SearchTask(player, new RollbackAction(player), parser.getResult());
+								new SearchTask(player, new RollbackCallback(player), parser.getResult());
 							}
 							
 							return true;

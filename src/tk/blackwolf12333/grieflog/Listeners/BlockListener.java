@@ -9,28 +9,34 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 
 import tk.blackwolf12333.grieflog.GLPlayer;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.GriefLogger;
 import tk.blackwolf12333.grieflog.SearchTask;
-import tk.blackwolf12333.grieflog.action.BlockProtectionAction;
+import tk.blackwolf12333.grieflog.callback.BlockProtectionCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
+import tk.blackwolf12333.grieflog.data.BlockBreakData;
+import tk.blackwolf12333.grieflog.data.BlockIgniteData;
+import tk.blackwolf12333.grieflog.data.BlockPlaceData;
+import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
+import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class BlockListener implements Listener {
 
 	GriefLog plugin;
 	
-	public static HashMap<String, Integer> tntIgnited = new HashMap<String, Integer>();
-	public HashMap<Player, ArrayList<Block>> igniterOfBlocks = new HashMap<Player, ArrayList<Block>>();
+	public HashMap<Block, String> igniterOfBlocks = new HashMap<Block, String>();
 	public static HashMap<Block, String> playerTNT = new HashMap<Block, String>();
 	public static HashMap<Block, String> playerTorch = new HashMap<Block, String>();
 	
@@ -41,80 +47,86 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(ConfigHandler.values.getBlockprotection()) {
-			if(!isBlockOnBlacklist(event.getBlock().getTypeId())) {
+			handleBlockBreakProtection(event);
+		}
+		
+		if(!event.isCancelled()) {
+			if(event.getBlock().getType().toString().equalsIgnoreCase("AIR")) {
+				handleBlockBreakAir(event);
+				return;
+			} else if(event.getBlock().getType() == Material.CHEST) {
+				handleBreakChest(event);
+			}
+			
+			String namePlayer = event.getPlayer().getName();
+			Integer gm = event.getPlayer().getGameMode().getValue();
+			BlockBreakData data = new BlockBreakData(event.getBlock(), namePlayer, gm);
+			
+			GriefLogger logger = new GriefLogger(data.toString());
+			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, logger);
+		}
+	}
+	
+	private void handleBlockBreakProtection(BlockBreakEvent event) {
+		if(!isBlockOnBlacklist(event.getBlock().getTypeId())) {
+			if(!GriefLog.permission.has(event.getPlayer(), "grieflog.blockprotection.bypass")) {
 				GLPlayer player = GriefLog.players.get(event.getPlayer().getName());
 				
 				int x = event.getBlock().getX();
 				int y = event.getBlock().getY();
 				int z = event.getBlock().getZ();
 				String world = event.getBlock().getWorld().getName();
-				String loc = x + ", " + y + ", " + z + " in: " + world;
-				String evt = "[BLOCK_PLACE]";
-				
-				new SearchTask(player, new BlockProtectionAction(player, event, null), loc, evt);
-				
-				/*if(player.result != null) {
-					String[] split1 = new String[player.result.size()];
-					for(int i = 0; i < split1.length; i++) {
-						split1[i] = player.result.get(i);
-					}
+				if(ConfigHandler.values.getWorlds().contains(world)) {
+					String loc = x + ", " + y + ", " + z + " in: " + world;
+					String evt = "[BLOCK_PLACE]";
 					
-					String[] split2 = null;
-					if(split1.length == 0) {
-						
-					} else if(split1.length == 1) {
-						split2 = split1[0].split(" ");
-					} else if(split1.length - 1 == -1) {
-						split2 = split1[0].split(" ");
-					} else {
-						split2 = split1[split1.length - 1].split(" ");
-					}
-					if(!(split2 == null)) {
-						String owner = split2[4];
-						boolean isOnFriendsList = ConfigHandler.isOnFriendsList(owner, event.getPlayer());
-						if(!isOnFriendsList) {
-							event.setCancelled(true);
-							event.getPlayer().sendMessage(ChatColor.DARK_GRAY + "Sorry this block is protected by " + owner + ".");
-						}
-					}
-				} else {
-					// if the search result is null ignore it because than nothing happened on that location
-				}*/
-			}
-		}
-		
-		if(!event.isCancelled()) {
-			Integer blockX = event.getBlock().getLocation().getBlockX();
-			Integer blockY = event.getBlock().getLocation().getBlockY();
-			Integer blockZ = event.getBlock().getLocation().getBlockZ();
-			Player player = event.getPlayer();
-			String type = event.getBlock().getType().toString();
-			String namePlayer = player.getName();
-			String worldName = player.getWorld().getName();
-			Integer gm = player.getGameMode().getValue();
-			
-			if(type.equalsIgnoreCase("AIR")) {
-				if(player.getGameMode() != GameMode.CREATIVE) {
-					for(Player p : plugin.getServer().getOnlinePlayers()) {
-						if(GriefLog.permission.has(p, "grieflog.getwarning.onbreakair")) {
-							p.sendMessage(ChatColor.DARK_RED + "[GriefLog] Player " + player.getName() + " might be a hacker, he tried to break air!");
-						} else {
-							continue;
-						}
-					}
+					new SearchTask(player, new BlockProtectionCallback(player, event, null), loc, evt);
 				}
-				return;
 			}
-
-			String data = " [BLOCK_BREAK] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
-			
-			GriefLogger logger = new GriefLogger(data);
-			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, logger);
 		}
+	}
+	
+	private void handleBlockBreakAir(BlockBreakEvent event) {
+		if(event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+			for(Player p : plugin.getServer().getOnlinePlayers()) {
+				if(GriefLog.permission.has(p, "grieflog.getwarning.onbreakair")) {
+					p.sendMessage(ChatColor.DARK_RED + "[GriefLog] Player " + event.getPlayer().getName() + " might be a hacker, he tried to break air!");
+				} else {
+					continue;
+				}
+			}
+		}
+		return;
+	}
+	
+	private void handleBreakChest(BlockBreakEvent event) {
+		Block b = event.getBlock();
+		Chest chest = (Chest) event.getBlock().getState();
+		String inv = InventoryStringDeSerializer.InventoryToString(chest.getBlockInventory());
+		String strChest = b.getX() + "#" + b.getY() + "#" + b.getZ() + "#" + b.getWorld().getName();
+		ChestConfig.addChest(strChest, inv);
+		return;
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
+		// due to limitations of the minecraft server i had to move this from the PlayerInteract to here:(
+		if(event.getPlayer().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
+			Block b = event.getBlock();
+			GLPlayer player = GLPlayer.getGLPlayer(event.getPlayer());
+
+			Integer x = b.getX();
+			Integer y = b.getY();
+			Integer z = b.getZ();
+			String world = b.getWorld().getName();
+
+			event.setCancelled(true);
+			
+			ArrayList<String> args = new ArrayList<String>();
+			args.add(x + ", " + y + ", " + z + " in: " + world);
+			new SearchTask(player, new SearchCallback(player), args);
+		}
+		
 		if(event.getBlock().getType() == Material.TNT) {
 			for(BlockFace face : BlockFace.values()) {
 				if(event.getBlock().getRelative(face).getType() == Material.REDSTONE_TORCH_ON) {
@@ -129,43 +141,22 @@ public class BlockListener implements Listener {
 			}
 		}
 		
-		if(!event.isCancelled()) {
-			Integer blockX = event.getBlock().getLocation().getBlockX();
-			Integer blockY = event.getBlock().getLocation().getBlockY();
-			Integer blockZ = event.getBlock().getLocation().getBlockZ();
-			Player player = event.getPlayer();
-			String type = event.getBlockPlaced().getType().toString();
-			String namePlayer = player.getName();
-			String worldName = player.getWorld().getName();
-			Integer gm = player.getGameMode().getValue();
+		if((!event.isCancelled())) {
+			String namePlayer = event.getPlayer().getName();
+			Integer gm = event.getPlayer().getGameMode().getValue();
 			
-			if (type.equalsIgnoreCase("FIRE")) {
+			if (event.getBlockPlaced().getType().toString().equalsIgnoreCase("FIRE")) {
 				// this gets handled by the onBlockIgnite() function
 				return;
 			}
 			
-			if(type.contains("redstone") || type.contains("REDSTONE")) {
-				Block b = event.getBlock();
-				for(BlockFace face : BlockFace.values()) {
-					Block relative = b.getRelative(face);
-					if(relative.getType() == Material.TNT) {
-						if(tntIgnited.get(namePlayer) == null) {
-							tntIgnited.put(namePlayer, 1);
-						} else {
-							tntIgnited.put(namePlayer, (tntIgnited.get(namePlayer)+1));
-						}
-					}
-				}
-			}
+			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, gm);
 			
-			// log it
-			String data = " [BLOCK_PLACE] By: " + namePlayer + " GM: " + gm + " What: " + type + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName + System.getProperty("line.separator");
-			
-			GriefLogger logger = new GriefLogger(data);
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, logger);
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockIgnite(BlockIgniteEvent event) {
 		if(ConfigHandler.values.getAntifire()) {
@@ -174,7 +165,7 @@ public class BlockListener implements Listener {
 		}
 		
 		if((ConfigHandler.values.getBlockIgnite()) && (!event.isCancelled())) {
-			String data = "";
+			BlockIgniteData data = null;
 			Player player = event.getPlayer();
 			
 			// check if it was the environment that ignited the block
@@ -182,68 +173,40 @@ public class BlockListener implements Listener {
 				if (ConfigHandler.values.getIgnoreEnvironment()) {
 					return;
 				} else {
-					IgniteCause ic = event.getCause();
-					String worldName = event.getBlock().getWorld().getName();
-					int x = event.getBlock().getX();
-					int y = event.getBlock().getY();
-					int z = event.getBlock().getZ();
-					
-					data = " [BLOCK_IGNITE] By: Environment" + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
+					data = new BlockIgniteData(event.getBlock(), event.getCause().toString(), "Environment", 0);
 				}
-			} else { // it is a player
+			} else {
 				if(event.getBlock().getType() == Material.TNT) {
 					GLPlayer p = new GLPlayer(plugin, player);
 					p.playersIgnitedTNT.put(event.getBlock().getLocation(), player.getName());
 				}
-				IgniteCause ic = event.getCause();
-				String playerName = player.getName();
-				String worldName = event.getBlock().getWorld().getName();
-				Integer gm = player.getGameMode().getValue();
-				int x = event.getBlock().getX();
-				int y = event.getBlock().getY();
-				int z = event.getBlock().getZ();
 				
-				if(!igniterOfBlocks.containsKey(playerName)) {
-					ArrayList<Block> blockList = new ArrayList<Block>();
-					blockList.add(event.getBlock());
-					igniterOfBlocks.put(player, blockList);
-				} else {
-					ArrayList<Block> blockList = igniterOfBlocks.get(playerName);
-					blockList.add(event.getBlock());
-					igniterOfBlocks.put(player, blockList);
+				if(!igniterOfBlocks.containsKey(event.getBlock())) {
+					igniterOfBlocks.put(event.getBlock(), player.getName());
 				}
 				
-
-				data = " [BLOCK_IGNITE] By: " + playerName + " GM: " + gm + " How: " + ic.toString() + " Where: " + x + ", " + y + ", " + z + " In: " + worldName + System.getProperty("line.separator");
+				data = new BlockIgniteData(event.getBlock(), event.getCause().toString(), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue());
 			}
 			
-			GriefLogger logger = new GriefLogger(data);
+			GriefLogger logger = new GriefLogger(data.toString());
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
 	}
 	
-	/*@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockSpread(BlockSpreadEvent event) {
-		// TODO: make sure the spreads are getting logged by the name of the igniter
-		Block from = event.getSource();
-		Block to = event.getBlock();
-		
-		for(Iterator<Player> it = igniterOfBlocks.keySet().iterator(); it.hasNext();) {
-			ArrayList<Block> blockList = igniterOfBlocks.get(it.next());
-			for(int i = 0; i < blockList.size(); i++) {
-				System.out.print("debugz");
-				if(from.getLocation() == blockList.get(i).getLocation()) {
-					blockList.add(to);
-					igniterOfBlocks.put(it.next(), blockList);
-					System.out.print("hoihoi");
-				}
-			}
+	@EventHandler
+	public void onFireSpread(BlockSpreadEvent event) {
+		Block b = event.getBlock();
+		Block source = event.getSource();
+		if(igniterOfBlocks.containsKey(source)) {
+			BlockIgniteData data = new BlockIgniteData(b, "Spread", igniterOfBlocks.get(source), 0);
+			GriefLogger logger = new GriefLogger(data.toString());
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
 		}
-	}*/
+	}
 	
 	public boolean isBlockOnBlacklist(int id) {
 		List<Integer> blacklist = ConfigHandler.values.getItemBlacklist();
-		if(blacklist.size() == -1) {
+		if(blacklist == null) {
 			return false;
 		}
 		

@@ -2,15 +2,12 @@ package tk.blackwolf12333.grieflog.utils.config;
 
 import java.util.List;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 public class ConfigValues {
 
-	FileConfiguration grieflogConfig = ConfigHandler.config;
-	
 	int tool;
 	int mb;
 	boolean blockprotection;
+	String worlds;
 	List<Integer> itemBlacklist;
 	boolean command;
 	boolean worldChange;
@@ -24,246 +21,293 @@ public class ConfigValues {
 	boolean explosions;
 	boolean playerJoin;
 	boolean playerQuit;
+	boolean putItemsBackOnRollback;
 	boolean antilava;
 	boolean antitnt;
 	boolean anticreeper;
 	boolean antifire;
 	boolean antienderman;
+	String show;
 	
-	/**
-	 * @return the grieflogConfig
-	 */
-	public FileConfiguration getGrieflogConfig() {
-		return grieflogConfig;
-	}
-	/**
-	 * @param grieflogConfig the grieflogConfig to set
-	 */
-	public void setGrieflogConfig(FileConfiguration grieflogConfig) {
-		this.grieflogConfig = grieflogConfig;
-	}
+	
 	/**
 	 * @return the tool
 	 */
 	public int getTool() {
-		return ConfigHandler.config.getInt("SelectionTool");
+		tool = ConfigHandler.config.getInt("SelectionTool");
+		return tool;
 	}
+	
 	/**
 	 * @param tool the tool to set
 	 */
 	public void setTool(int tool) {
 		this.tool = tool;
 	}
+	
 	/**
 	 * @return the mb
 	 */
 	public int getMb() {
-		return ConfigHandler.config.getInt("mb");
+		mb = ConfigHandler.config.getInt("mb");
+		return mb;
 	}
+	
 	/**
 	 * @param mb the mb to set
 	 */
 	public void setMb(int mb) {
 		this.mb = mb;
 	}
+	
 	/**
 	 * @return the blockprotection
 	 */
 	public boolean getBlockprotection() {
-		return ConfigHandler.config.getBoolean("block-protection");
+		blockprotection = ConfigHandler.config.getBoolean("block-protection");
+		return blockprotection;
 	}
+	
 	/**
 	 * @param blockprotection the blockprotection to set
 	 */
 	public void setBlockprotection(boolean blockprotection) {
 		this.blockprotection = blockprotection;
 	}
+	
 	/**
 	 * @return the itemBlacklist
 	 */
 	public List<Integer> getItemBlacklist() {
-		return ConfigHandler.config.getIntegerList("block-protection-blacklist");
+		itemBlacklist = ConfigHandler.config.getIntegerList("block-protection-blacklist");
+		return itemBlacklist;
 	}
+	
 	/**
 	 * @param itemBlacklist the itemBlacklist to set
 	 */
 	public void setItemBlacklist(List<Integer> itemBlacklist) {
 		this.itemBlacklist = itemBlacklist;
 	}
+	
 	/**
 	 * @return the command
 	 */
 	public boolean getCommand() {
-		return ConfigHandler.config.getBoolean("DoCommand");
+		command = ConfigHandler.config.getBoolean("DoCommand");
+		return command;
 	}
+	
 	/**
 	 * @param command the command to set
 	 */
 	public void setCommand(boolean command) {
 		this.command = command;
 	}
+	
 	/**
 	 * @return the worldChange
 	 */
 	public boolean getWorldChange() {
-		return ConfigHandler.config.getBoolean("ChangeWorld");
+		worldChange = ConfigHandler.config.getBoolean("ChangeWorld");
+		return worldChange;
 	}
+	
 	/**
 	 * @param worldChange the worldChange to set
 	 */
 	public void setWorldChange(boolean worldChange) {
 		this.worldChange = worldChange;
 	}
+	
 	/**
 	 * @return the gmChange
 	 */
 	public boolean getGmChange() {
-		return ConfigHandler.config.getBoolean("ChangeGameMode");
+		gmChange = ConfigHandler.config.getBoolean("ChangeGameMode");
+		return gmChange;
 	}
+	
 	/**
 	 * @param gmChange the gmChange to set
 	 */
 	public void setGmChange(boolean gmChange) {
 		this.gmChange = gmChange;
 	}
+	
 	/**
 	 * @return the blockIgnite
 	 */
 	public boolean getBlockIgnite() {
-		return ConfigHandler.config.getBoolean("BlockIgnite");
+		blockIgnite = ConfigHandler.config.getBoolean("BlockIgnite");
+		return blockIgnite;
 	}
+	
 	/**
 	 * @param blockIgnite the blockIgnite to set
 	 */
 	public void setBlockIgnite(boolean blockIgnite) {
 		this.blockIgnite = blockIgnite;
+		ConfigHandler.config.set("BlockIgnite", blockIgnite);
 	}
+	
 	/**
 	 * @return the ignoreEnvironment
 	 */
 	public boolean getIgnoreEnvironment() {
-		return ConfigHandler.config.getBoolean("IgnoreEnvironment");
+		ignoreEnvironment = ConfigHandler.config.getBoolean("IgnoreEnvironment");
+		return ignoreEnvironment;
 	}
+	
 	/**
 	 * @param ignoreEnvironment the ignoreEnvironment to set
 	 */
 	public void setIgnoreEnvironment(boolean ignoreEnvironment) {
 		this.ignoreEnvironment = ignoreEnvironment;
+		ConfigHandler.config.set("IgnoreEnvironment", ignoreEnvironment);
 	}
+	
 	/**
 	 * @return the bucketWater
 	 */
 	public boolean getBucketWater() {
 		return ConfigHandler.config.getBoolean("BucketWaterEmpty");
 	}
+	
 	/**
 	 * @param bucketWater the bucketWater to set
 	 */
 	public void setBucketWater(boolean bucketWater) {
 		this.bucketWater = bucketWater;
 	}
+	
 	/**
 	 * @return the bucketLava
 	 */
 	public boolean getBucketLava() {
 		return ConfigHandler.config.getBoolean("BucketLavaEmpty");
 	}
+	
 	/**
 	 * @param bucketLava the bucketLava to set
 	 */
 	public void setBucketLava(boolean bucketLava) {
 		this.bucketLava = bucketLava;
 	}
+	
 	/**
 	 * @return the enderman
 	 */
 	public boolean getEnderman() {
-		return ConfigHandler.config.getBoolean("EnderManPlaceAndPickup");
+		enderman = ConfigHandler.config.getBoolean("EnderManPlaceAndPickup");
+		return enderman;
 	}
+	
 	/**
 	 * @param enderman the enderman to set
 	 */
 	public void setEnderman(boolean enderman) {
 		this.enderman = enderman;
 	}
+	
 	/**
 	 * @return the zombie
 	 */
 	public boolean getZombie() {
-		return ConfigHandler.config.getBoolean("ZombieBreakDoor");
+		zombie = ConfigHandler.config.getBoolean("ZombieBreakDoor");
+		return zombie;
 	}
+	
 	/**
 	 * @param zombie the zombie to set
 	 */
 	public void setZombie(boolean zombie) {
 		this.zombie = zombie;
 	}
+	
 	/**
 	 * @return the explosions
 	 */
 	public boolean getExplosions() {
-		return ConfigHandler.config.getBoolean("Explosions");
+		explosions = ConfigHandler.config.getBoolean("Explosions");
+		return explosions;
 	}
+	
 	/**
 	 * @param explosions the explosions to set
 	 */
 	public void setExplosions(boolean explosions) {
 		this.explosions = explosions;
 	}
+	
 	/**
 	 * @return the playerJoin
 	 */
 	public boolean getPlayerJoin() {
-		return ConfigHandler.config.getBoolean("PlayerJoin");
+		playerJoin = ConfigHandler.config.getBoolean("PlayerJoin");
+		return playerJoin;
 	}
+	
 	/**
 	 * @param playerJoin the playerJoin to set
 	 */
 	public void setPlayerJoin(boolean playerJoin) {
 		this.playerJoin = playerJoin;
 	}
+	
 	/**
 	 * @return the antilava
 	 */
 	public boolean getAntilava() {
-		return ConfigHandler.config.getBoolean("anti-lava");
+		antilava = ConfigHandler.config.getBoolean("anti-lava");
+		return antilava;
 	}
+	
 	/**
 	 * @param antilava the antilava to set
 	 */
 	public void setAntilava(boolean antilava) {
 		this.antilava = antilava;
 	}
+	
 	/**
 	 * @return the antitnt
 	 */
 	public boolean getAntitnt() {
-		return ConfigHandler.config.getBoolean("anti-tnt");
+		antitnt = ConfigHandler.config.getBoolean("anti-tnt");
+		return antitnt;
 	}
+	
 	/**
 	 * @param antitnt the antitnt to set
 	 */
 	public void setAntitnt(boolean antitnt) {
 		this.antitnt = antitnt;
 	}
+	
 	/**
 	 * @return the anticreeper
 	 */
 	public boolean getAnticreeper() {
-		return ConfigHandler.config.getBoolean("anti-creeper");
+		anticreeper = ConfigHandler.config.getBoolean("anti-creeper");
+		return anticreeper;
 	}
+	
 	/**
 	 * @param anticreeper the anticreeper to set
 	 */
 	public void setAnticreeper(boolean anticreeper) {
 		this.anticreeper = anticreeper;
 	}
+	
 	/**
 	 * @return the antifire
 	 */
 	public boolean getAntifire() {
-		return ConfigHandler.config.getBoolean("anti-fire");
+		antifire = ConfigHandler.config.getBoolean("anti-fire");
+		return antifire;
 	}
+	
 	/**
 	 * @param antifire the antifire to set
 	 */
@@ -275,7 +319,8 @@ public class ConfigValues {
 	 * @return anti-endermangrief 
 	 */
 	public boolean getAntiEnderMan() {
-		return ConfigHandler.config.getBoolean("anti-endermangrief");
+		antienderman = ConfigHandler.config.getBoolean("anti-endermangrief");
+		return antienderman;
 	}
 	
 	public void setAntiEnderMan(boolean antienderman) {
@@ -283,8 +328,22 @@ public class ConfigValues {
 	}
 	
 	public boolean getPlayerQuit() {
-		return playerQuit = ConfigHandler.config.getBoolean("PlayerQuit");
+		playerQuit = ConfigHandler.config.getBoolean("PlayerQuit");
+		return playerQuit;
 	}
 	
+	public String getWhatToShow() {
+		show = ConfigHandler.config.getString("show");
+		return show;
+	}
 	
+	public boolean getPutItemsBackOnRollback() {
+		putItemsBackOnRollback = ConfigHandler.config.getBoolean("put-items-back-on-rollback");
+		return putItemsBackOnRollback;
+	}
+	
+	public String getWorlds() {
+		worlds = ConfigHandler.config.getString("worlds-with-block-protection");
+		return worlds;
+	}
 }

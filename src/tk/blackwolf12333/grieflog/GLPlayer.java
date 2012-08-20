@@ -3,6 +3,8 @@ package tk.blackwolf12333.grieflog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -12,9 +14,8 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-import tk.blackwolf12333.grieflog.action.RollbackAction;
-import tk.blackwolf12333.grieflog.action.SearchAction;
-import tk.blackwolf12333.grieflog.action.WorldEditFilterAction;
+import tk.blackwolf12333.grieflog.callback.RollbackCallback;
+import tk.blackwolf12333.grieflog.callback.WorldEditFilterCallback;
 
 public class GLPlayer {
 
@@ -46,15 +47,6 @@ public class GLPlayer {
 		this.plugin = plugin;
 	}
 	
-	public void search(boolean we, ArrayList<String> args) {
-		String[] arg = new String[args.size()];
-		for(int i = 0; i < args.size(); i++) {
-			arg[i] = args.get(i);
-		}
-		
-		new SearchTask(this, new SearchAction(this), arg);
-	}
-	
 	public void rollback(boolean we, ArrayList<String> args) {
 		String[] arg = new String[args.size()];
 		for(int i = 0; i < args.size(); i++) {
@@ -62,50 +54,29 @@ public class GLPlayer {
 		}
 		
 		if(we) {
-			new SearchTask(this, new WorldEditFilterAction(this), arg);
+			new SearchTask(this, new WorldEditFilterCallback(this), arg);
 		} else {
-			new SearchTask(this, new RollbackAction(this), arg);
+			new SearchTask(this, new RollbackCallback(this), arg);
 		}
 	}
 	
-	/*@SuppressWarnings("unused")
-	private boolean rollback2(boolean we, ArrayList<String> args) {
-		if(this.isSearching()) {
-			rollback2(we, args);
-			return false;
-		} else if(this.worldeditFilter.isAlive()) {
-			rollback2(we, args);
-			return false;
-		} else {
-			isDoingRollback = true;
-			
-			if(we) {
-				worldeditFilter = new Thread(new WorldEditFilter(result, plugin, this));
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, worldeditFilter);
-				
-				player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
-				Rollback rb = new Rollback(plugin, this);
-			} else {
-				player.sendMessage(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
-				Rollback rb = new Rollback(plugin, this);
-			}
-			result = null;
-			
-			isDoingRollback = false;
-			
-			return true;
-		}
-	}*/
-	
 	public void print(String msg) {
-		player.sendMessage(msg);
+		if(player == null) {
+			sender.sendMessage(msg);
+		} else {
+			player.sendMessage(msg);
+		}
 	}
 	
 	public void print(String[] msg) {
 		if(msg != null) {
 			for(int i = 0; i < msg.length; i++) {
 				if(msg[i] != null) {
-					player.sendMessage(msg[i]);
+					if(player == null) {
+						sender.sendMessage(msg[i]);
+					} else {
+						player.sendMessage(msg[i]);
+					}
 				}
 			}
 		}
@@ -115,10 +86,26 @@ public class GLPlayer {
 		if(msg != null) {
 			for(int i = 0; i < msg.size(); i++) {
 				if(msg.get(i) != null) {
-					player.sendMessage(msg.get(i));
+					if(player == null) {
+						sender.sendMessage(msg.get(i));
+					} else {
+						player.sendMessage(msg.get(i));
+					}
 				}
 			}
 		}
+	}
+	
+	public boolean cancelRollback() {
+		if(this.rollbackTaskID == null) {
+			this.print(ChatColor.YELLOW + "[GriefLog] You don't have any rollback's going on right now.");
+			return true;
+		}
+		Bukkit.getScheduler().cancelTask(this.getRollbackTaskID());
+		this.rollbackTaskID = null;
+		this.setDoingRollback(false);
+		this.print(ChatColor.YELLOW + "[GriefLog] Rollback cancelled.");
+		return true;
 	}
 	
 	public boolean teleport(Location to) {
@@ -208,6 +195,9 @@ public class GLPlayer {
 	
 	@Override
 	public String toString() {
+		if(player == null) {
+			return "{GLPlayer} name: " + sender.getName() + " rollback: " + isDoingRollback + " search: " + isSearching;
+		}
 		return "{GLPlayer} name: " + player.getName() + " rollback: " + isDoingRollback + " search: " + isSearching;
 	}
 	
@@ -229,5 +219,19 @@ public class GLPlayer {
 			}
 			return super.equals(obj);
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for(int i = 0; i < player.getName().length(); i++) {
+			hash += (int) player.getName().charAt(i);
+		}
+		if(isDoingRollback) {
+			hash += 1;
+		} else {
+			hash += 0;
+		}
+		return hash;
 	}
 }
