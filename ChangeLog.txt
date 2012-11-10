@@ -42,11 +42,38 @@
 
 4.7
 * Dropped rollback support for the older versions 2.* and 3.*, some might work, i don't know
-* Added "DataEntries" that are the classes in tk.blackwolf12333.grieflog.data
+* Added "DataEntries" that are the classes in tk.blackwolf12333.grieflog.data.*
 * Added loadFromString to BaseData classes to create a new instance of a DataEntry from a string from the logs
 * Added rollback function in the DataEntries for easier rollback
 * Improved the rollback
-* Added zombie and enderman grief rollback
+* Added zombie and enderman grief rollback(zombie doesn't work to well)
 * And as always, fixed lots of bugs:)
 * Fixed a very dumb bug, arrays don't go from 1 to 3 but from 0 to 2...
 * Added configuration change check to load the new configuration options while keeping the old ones intact
+
+4.8
+* Fixed a bug in the worldedit filter that caused a npe, just had to check if the world was null or not
+* Lots of bugfixes
+* Added user friendliness options, those include:
+		# Option to show really minimal info like this "10-10-12 19:45:23 player blackwolf12333 broke block." only used with the tool
+		# Option to add colors to the log showing up when using the default log.
+		# Nicer looking config:D
+		# You can now use /glog rb to rollback, when you do, grieflog will just ask for what you want to rollback:D
+		# Same for /glog search as above.
+* Rewrote the page management a bit.
+* Fixed ignition logging.
+* Changed some stuff in how commands are handled, looks neat now:D
+* Added undo for rollback's
+		# Do /glog undo after you did a rollback you don't like to undo the rollback
+		# Do /glog undo list to see all possible search arguments that you can undo after it was rolled back.
+		# Do /glog undo <id> to undo something from the list you got from /glog undo list
+* I think i made the search a little faster.
+* Fixed the PlayerCommandData not getting the whole command but just the beginning.
+* Removed block protection.
+* Added page numbers.
+
+4.8.3
+* Improved the searching algorithm a bit.
+* Improved logging and searching, now goes faster.
+* Improved rollback a lot, now only takes a few milliseconds to rollback a few thousand events.:D
+* Fixed bugs as usual.
