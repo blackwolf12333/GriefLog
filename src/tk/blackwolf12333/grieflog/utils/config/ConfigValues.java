@@ -11,7 +11,6 @@ public class ConfigValues {
 	boolean worldChange = ConfigHandler.config.getBoolean("events.changeworld");
 	boolean gmChange = ConfigHandler.config.getBoolean("events.changegamemode");
 	boolean blockIgnite = ConfigHandler.config.getBoolean("events.blockignite");
-	boolean ignoreEnvironment = ConfigHandler.config.getBoolean("events.ignoreenvironment");
 	boolean bucketWater = ConfigHandler.config.getBoolean("events.bucketwater");
 	boolean bucketLava = ConfigHandler.config.getBoolean("events.bucketlava");
 	boolean enderman = ConfigHandler.config.getBoolean("events.enderman");
@@ -35,8 +34,6 @@ public class ConfigValues {
 	String blockinfocolor = ConfigHandler.config.getString("colors.block-info");
 	String locationcolor = ConfigHandler.config.getString("colors.location");
 	String worldcolor = ConfigHandler.config.getString("colors.world");
-	
-	int searchingMaxFilesSearched = ConfigHandler.config.getInt("searching.max-files-searched");
 	
 	/**
 	 * @return the tool
@@ -130,21 +127,6 @@ public class ConfigValues {
 	public void setBlockIgnite(boolean blockIgnite) {
 		this.blockIgnite = blockIgnite;
 		ConfigHandler.config.set("events.blockignite", blockIgnite);
-	}
-
-	/**
-	 * @return the ignoreEnvironment
-	 */
-	public boolean getIgnoreEnvironment() {
-		return ignoreEnvironment;
-	}
-
-	/**
-	 * @param ignoreEnvironment the ignoreEnvironment to set
-	 */
-	public void setIgnoreEnvironment(boolean ignoreEnvironment) {
-		this.ignoreEnvironment = ignoreEnvironment;
-		ConfigHandler.config.set("events.ignore_environment", ignoreEnvironment);
 	}
 
 	/**
@@ -376,14 +358,6 @@ public class ConfigValues {
 
 	public void setPlayercolor(String playercolor) {
 		this.playercolor = playercolor;
-	}
-
-	public int getSearchingMaxFilesSearched() {
-		return searchingMaxFilesSearched;
-	}
-
-	public void setSearchingMaxFilesSearched(int searchingMaxFilesSearched) {
-		this.searchingMaxFilesSearched = searchingMaxFilesSearched;
 	}
 
 	public boolean getDebug() {
