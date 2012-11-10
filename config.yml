@@ -27,8 +27,6 @@ events:
     changeworld: true
     changegamemode: true
     blockignite: true
-    # would you like to not log the fire spread by the environment?
-    ignoreenvironment: false
     bucketwater: true
     bucketlava: true
     enderman: true
@@ -66,6 +64,3 @@ colors:
     block-info: white
     location: white
     world: white
-    
-searching:
-    maxfilessearched: 31
