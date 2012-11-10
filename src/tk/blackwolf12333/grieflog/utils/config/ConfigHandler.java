@@ -36,8 +36,8 @@ public class ConfigHandler {
 	public static void setupGriefLogConfig() {
 		configFile = new File(plugin.getDataFolder(), "config.yml");
 	    config = new YamlConfiguration();
-	    
-	    if(!configFile.exists()) {
+	    checkForChangesAndLoad();
+	    /*if(!configFile.exists()) {
 	    	configFile.getParentFile().mkdirs();
 	    	try {
 				configFile.createNewFile();
@@ -48,7 +48,7 @@ public class ConfigHandler {
 	        loadConfig();
 	    } else {
 	    	checkForChangesAndLoad();
-	    }
+	    }*/
 	}
 	
 	private static void copy(InputStream in, File file) {
@@ -99,9 +99,7 @@ public class ConfigHandler {
 			newconfig.load(plugin.getResource("config.yml"));
 			Map<String, Object> newConf = newconfig.getValues(true);
 			
-			if(newConf.size() > oldConf.size()) {
-				configFile.delete();
-				
+			if(newConf.size() != oldConf.size()) {
 				createNewConfigFileAndLoad();
 				List<String> contents = readFileAndPutContentsInList();
 				for(Iterator<String> it = oldConf.keySet().iterator(); it.hasNext();) {
