@@ -1,20 +1,19 @@
 package tk.blackwolf12333.grieflog.callback;
 
-import tk.blackwolf12333.grieflog.GLPlayer;
+import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
 
 public class RollbackCallback extends BaseCallback {
 
-	GLPlayer player;
+	PlayerSession player;
 	
-	public RollbackCallback(GLPlayer player) {
+	public RollbackCallback(PlayerSession player) {
 		this.player = player;
 	}
 	
 	@Override
 	public void start() {
 		player.setDoingRollback(true);
-		player.setSearchResult(result);
-		new Rollback(player);
+		new Rollback(player).run();
 	}
 }

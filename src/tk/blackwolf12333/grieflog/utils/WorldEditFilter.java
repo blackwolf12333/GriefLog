@@ -2,326 +2,41 @@ package tk.blackwolf12333.grieflog.utils;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 
-import tk.blackwolf12333.grieflog.GLPlayer;
+import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.BaseCallback;
+import tk.blackwolf12333.grieflog.data.BaseData;
+import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 public class WorldEditFilter implements Runnable {
 
-	public ArrayList<String> result = new ArrayList<String>();
-	ArrayList<String> searchResult;
+	public ArrayList<BaseData> filterResult = new ArrayList<BaseData>();
+	ArrayList<BaseData> searchResult;
 	World world;
-	GLPlayer player;
+	PlayerSession player;
 	BaseCallback action;
 	
-	public WorldEditFilter(BaseCallback action, GLPlayer player) {
+	public WorldEditFilter(PlayerSession player, BaseCallback action) {
 		this.searchResult = player.getSearchResult();
 		this.player = player;
 		this.action = action;
 		
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(player.getGriefLog(), this);
+		new Thread(this).start();
 	}
 	
-	@Override
 	public void run() {
 		for(int i = 0; i < searchResult.size(); i++) {
-			String line = searchResult.get(i);
+			BaseData data = searchResult.get(i);
 			
-			if(line == null) {
-				continue;
-			} else if(line.contains(Events.JOIN.getEventName())) {
-				continue;
-			} else if(line.contains(Events.QUIT.getEventName())) {
-				continue;
-			} else if(line.contains(Events.COMMAND.getEventName())) {
-				continue;
-			} else if(line.contains(Events.BREAK.getEventName())) {
-				String[] content = line.split("\\ ");
-				if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 14) {
-					String strX = content[9].replace(",", "");
-					String strY = content[10].replace(",", "");
-					String strZ = content[11].replace(",", "");
-					String worldname = content[13].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 15) {
-					String strX = content[10].replace(",", "");
-					String strY = content[11].replace(",", "");
-					String strZ = content[12].replace(",", "");
-					String worldname = content[14].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 16) {
-					String strX = content[11].replace(",", "");
-					String strY = content[12].replace(",", "");
-					String strZ = content[13].replace(",", "");
-					String worldname = content[15].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				}
-			} else if(line.contains(Events.EXPLODE.getEventName())) {
-				String[] content = line.split("\\ ");
-				
-				if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 14) {
-					String strX = content[9].replace(",", "");
-					String strY = content[10].replace(",", "");
-					String strZ = content[11].replace(",", "");
-					String worldname = content[13].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 15) {
-					String strX = content[10].replace(",", "");
-					String strY = content[11].replace(",", "");
-					String strZ = content[12].replace(",", "");
-					String worldname = content[14].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				}
-				
-			} else if(line.contains(Events.PLACE.getEventName())) {
-				String[] content = line.split("\\ ");
-				
-				if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 14) {
-					String strX = content[9].replace(",", "");
-					String strY = content[10].replace(",", "");
-					String strZ = content[11].replace(",", "");
-					String worldname = content[13].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 15) {
-					String strX = content[10].replace(",", "");
-					String strY = content[11].replace(",", "");
-					String strZ = content[12].replace(",", "");
-					String worldname = content[14].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 16) {
-					String strX = content[11].replace(",", "");
-					String strY = content[12].replace(",", "");
-					String strZ = content[13].replace(",", "");
-					String worldname = content[15].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				}
-			} else if(line.contains(Events.LAVA.getEventName())) {
-				String[] content = line.split("\\ ");
-				
-				if(content.length == 11) {
-					String strX = content[6].replace(",", "");
-					String strY = content[7].replace(",", "");
-					String strZ = content[8].replace(",", "");
-					String worldname = content[10].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 12) {
-					String strX = content[7].replace(",", "");
-					String strY = content[8].replace(",", "");
-					String strZ = content[9].replace(",", "");
-					String worldname = content[11].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				}
-			} else if(line.contains(Events.WATER.getEventName())) {
-				String[] content = line.split("\\ ");
-				
-				if(content.length == 11) {
-					String strX = content[6].replace(",", "");
-					String strY = content[7].replace(",", "");
-					String strZ = content[8].replace(",", "");
-					String worldname = content[10].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 12) {
-					String strX = content[7].replace(",", "");
-					String strY = content[8].replace(",", "");
-					String strZ = content[9].replace(",", "");
-					String worldname = content[11].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
-				} else if(content.length == 13) {
-					String strX = content[8].replace(",", "");
-					String strY = content[9].replace(",", "");
-					String strZ = content[10].replace(",", "");
-					String worldname = content[12].trim();
-					
-					int x = Integer.parseInt(strX);
-					int y = Integer.parseInt(strY);
-					int z = Integer.parseInt(strZ);
-
-					world = Bukkit.getWorld(worldname);
-					Location loc = new Location(world, x, y, z);
-					if(isInWorldEditSelection(loc)) {
-						result.add(line);
-					}
+			if(Events.getEvent(data.getEvent()).getCanRollback()) {
+				if(data.isInWorldEditSelectionOf(player)) {
+					filterResult.add(data);
 				}
 			}
 		}
 		
-		player.setSearchResult(result);
-		action.result = result;
+		player.setSearchResult(filterResult);
 		action.start();
-	}
-
-	private boolean isInWorldEditSelection(Location loc) {
-		return player.getWorldEditSelection().contains(loc);
 	}
 }

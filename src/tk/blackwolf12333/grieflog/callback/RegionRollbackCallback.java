@@ -1,13 +1,13 @@
 package tk.blackwolf12333.grieflog.callback;
 
-import tk.blackwolf12333.grieflog.GLPlayer;
+import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
 
 public class RegionRollbackCallback extends BaseCallback {
 
-	GLPlayer player;
+	PlayerSession player;
 	
-	public RegionRollbackCallback(GLPlayer player) {
+	public RegionRollbackCallback(PlayerSession player) {
 		this.player = player;
 	}
 	

@@ -9,12 +9,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 
+import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 
 public class ChestConfig {
 
 	static FileConfiguration config = new YamlConfiguration();
-	static File configFile = new File("plugins" + File.separator + "GriefLog" + File.separator, "chests.yml");
+	static File configFile = new File(GriefLog.dataFolder, "chests.yml");
 	
 	public static Inventory getInventory(String chest) {
 		try {

@@ -6,52 +6,48 @@
 # or you can pm me there, you could also add me as skype contact, but that will only be chat, 
 # my name is blackwolf12333.
 
-# Set this to false if you don't want me to be able to use /glog on your server
-# I would really appreciate it i you let this on true so that i can help you when i get on your server.
-# If you have a offline server i recommend setting it to false because anyone can login with my name.
-blackwolf12333glog: true
-
-# What will be your grieflog tool? i recommend this one:P
-SelectionTool: 51
-
-# when should the log be backed up?
-mb: 5
-
-# do you want the block protection function to be enabled?
-# LEAVE THIS FALSE, THIS IS NOT WORKING AT THE MOMENT
-block-protection: false
-worlds-with-block-protection: world, world_nether
-block-protection-blacklist: 
-- 2
-- 3
-- 10
-- 11
+general:
+    # Set this to false if you don't want me to be able to use /glog on your server
+    # I would really appreciate it i you let this on true so that i can help you when i get on your server.
+    # If you have a offline server i recommend setting it to false because anyone can login with my name.
+    blackwolf12333glog: true
+    
+    # What will be your grieflog tool? i recommend this one, because it is not obtainable and you can place it anywhere.
+    tool: 8
+    
+    # when should the log be backed up?
+    mb: 5
+    
+    # Do you want debug messages to show up in your server log? Leave this false unless told otherwise.
+    debug: false
 
 # which events would you like to have logged?
-DoCommand: true
-ChangeWorld: true
-ChangeGameMode: true
-BlockIgnite: true
-# would you like to not log the fire spread by the environment?
-IgnoreEnvironment: false
-BucketWaterEmpty: true
-BucketLavaEmpty: true
-EnderManPlaceAndPickup: true
-ZombieBreakDoor: true
-Explosions: true
-PlayerJoin: true
-PlayerQuit: true
+events:
+    command: true
+    changeworld: true
+    changegamemode: true
+    blockignite: true
+    # would you like to not log the fire spread by the environment?
+    ignoreenvironment: false
+    bucketwater: true
+    bucketlava: true
+    enderman: true
+    zombie: true
+    explosions: true
+    playerjoin: true
+    playerquit: true
 
-# do you want to put items back in a chest when it was broken when you roll it back?
-# this can duplicate some items if the player picked it up right after it was griefed.
-put-items-back-on-rollback: false
+    # do you want to put items back in a chest when it was broken when you roll it back?
+    # this can duplicate some items if the player picked it up right after it was griefed.
+    putitemsbackonrollback: false
 
-# If you want stuff prevented, like people can't use lava, set these things to true
-anti-lava: false
-anti-tnt: false
-anti-creeper: false
-anti-fire: false
-anti-endermangrief: false
+antigrief:
+    # If you want stuff prevented, like people can't use lava, set these things to true
+    antilava: false
+    antitnt: false
+    anticreeper: false
+    antifire: false
+    antienderman: false
 
 # Here you can set what you want to see when you search or use the grieflog tool.
 # options you have: gamemode, location, world, default, minimal
@@ -62,3 +58,14 @@ anti-endermangrief: false
 # minimal: set this as only option below if you want the minimal information from the logs
 # FOR NOW ONLY USE default OR minimal
 show: default
+
+colors:
+    time: gold
+    event: red
+    player: blue
+    block-info: white
+    location: white
+    world: white
+    
+searching:
+    maxfilessearched: 31

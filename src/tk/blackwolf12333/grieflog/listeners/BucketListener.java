@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.GriefLogger;
-import tk.blackwolf12333.grieflog.data.BucketData;
+import tk.blackwolf12333.grieflog.data.block.BucketData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
+import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
 public class BucketListener implements Listener {
 
@@ -22,7 +22,7 @@ public class BucketListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		if(ConfigHandler.values.getAntilava()) {
-			if((event.getBucket().toString().equals(Material.LAVA_BUCKET.toString())) && (!event.getPlayer().isOp())) {
+			if((event.getBucket().equals(Material.LAVA_BUCKET)) && (!event.getPlayer().isOp())) {
 				event.setCancelled(true);
 				return;
 			}
@@ -32,8 +32,7 @@ public class BucketListener implements Listener {
 				Material bucket = event.getBucket();
 				if (bucket == Material.WATER_BUCKET) {
 					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getBucket());
-					GriefLogger logger = new GriefLogger(data.toString());
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+					new GriefLogger(data);
 				}
 			}
 			if (ConfigHandler.values.getBucketLava()) {
@@ -41,8 +40,7 @@ public class BucketListener implements Listener {
 
 				if (bucket == Material.LAVA_BUCKET) {
 					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getBucket());
-					GriefLogger logger = new GriefLogger(data.toString());
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+					new GriefLogger(data);
 				}
 			}
 		}

@@ -18,7 +18,6 @@ import java.util.Map;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 
@@ -26,11 +25,9 @@ public class ConfigHandler {
 
 	public static GriefLog plugin;
 	public static File configFile;
-	public static File friendsFile;
 	public static FileConfiguration config;
-	public static FileConfiguration friendsConfig;
 	
-	public static ConfigValues values = new ConfigValues();
+	public static ConfigValues values;
 	
 	public ConfigHandler(GriefLog plugin) {
 		ConfigHandler.plugin = plugin;
@@ -51,19 +48,6 @@ public class ConfigHandler {
 	        loadConfig();
 	    } else {
 	    	checkForChangesAndLoad();
-	    }
-	}
-	
-	public static void setupFriendsConfig() {
-		friendsFile = new File(plugin.getDataFolder(), "friends.yml");
-	    friendsConfig = new YamlConfiguration();
-
-	    if(!friendsFile.exists()) {
-	    	friendsFile.getParentFile().mkdirs();
-	        copy(plugin.getResource("friends.yml"), friendsFile);
-	        loadFriendsConfig();
-	    } else {
-	    	loadFriendsConfig();
 	    }
 	}
 	
@@ -91,14 +75,6 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void saveFriendsConfig() {
-	    try {
-	        friendsConfig.save(friendsFile);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
-	
 	public static void loadConfig() {
 	    try {
 	        config.load(configFile);
@@ -109,20 +85,9 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public static void loadFriendsConfig() {
-	    try {
-	        friendsConfig.load(friendsFile);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
-	
 	public static void reloadConfig() {
 		loadConfig();
-	}
-	
-	public static void reloadFriendsConfig() {
-		loadFriendsConfig();
+		ConfigHandler.values = new ConfigValues();
 	}
 	
 	private static void checkForChangesAndLoad() {
@@ -192,25 +157,5 @@ public class ConfigHandler {
 		}
         copy(plugin.getResource("config.yml"), configFile);
         loadConfig();
-	}
-	
-	public static List<String> getFriends(String player) {
-		if(friendsConfig.getStringList(player) == null) {
-			return new ArrayList<String>();
-		}
-		return friendsConfig.getStringList(player);
-	}
-	
-	public static boolean isOnFriendsList(String player, Player friend) {
-		if(friend.isOp()) {
-			return true;
-		} else if(friend.getName().equalsIgnoreCase(player)) {
-			return true;
-		} else {
-			if(ConfigHandler.getFriends(player) != null) {
-				return ConfigHandler.getFriends(player).contains(friend.getName());
-			}
-			return false;
-		}
 	}
 }

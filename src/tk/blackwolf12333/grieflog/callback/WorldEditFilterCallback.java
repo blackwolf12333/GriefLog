@@ -1,19 +1,20 @@
 package tk.blackwolf12333.grieflog.callback;
 
-import tk.blackwolf12333.grieflog.GLPlayer;
+import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.utils.WorldEditFilter;
 
 public class WorldEditFilterCallback extends BaseCallback {
 
-	GLPlayer player;
+	PlayerSession player;
+	BaseCallback action;
 	
-	public WorldEditFilterCallback(GLPlayer player) {
+	public WorldEditFilterCallback(PlayerSession player, BaseCallback action) {
 		this.player = player;
+		this.action = action;
 	}
 	
 	@Override
 	public void start() {
-		player.setSearchResult(result);
-		new WorldEditFilter(new RegionRollbackCallback(player), player);
+		new WorldEditFilter(player, action);
 	}
 }

@@ -18,17 +18,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.GriefLogger;
-import tk.blackwolf12333.grieflog.data.EntityBreakDoorData;
-import tk.blackwolf12333.grieflog.data.EntityEndermanData;
-import tk.blackwolf12333.grieflog.data.EntityExplodeData;
+import tk.blackwolf12333.grieflog.data.entity.EntityBreakDoorData;
+import tk.blackwolf12333.grieflog.data.entity.EntityEndermanData;
+import tk.blackwolf12333.grieflog.data.entity.EntityExplodeData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
+import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
 public class EntityListener implements Listener {
 
 	GriefLog plugin;
 	
-	HashMap<UUID, String> playerCI = new HashMap<UUID, String>();
+	HashMap<UUID, String> playerEI = new HashMap<UUID, String>();
 
 	public EntityListener(GriefLog instance) {
 		plugin = instance;
@@ -36,51 +36,55 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		try {
-			// check if the event is not canceled
-			if(!event.isCancelled()) {
-				if(event.getEntityType() == EntityType.CREEPER) {
-					if(ConfigHandler.values.getAnticreeper()) {
-						event.setCancelled(true);
-						return;
-					}
-				} else if(event.getEntityType() == EntityType.PRIMED_TNT) {
-					if(ConfigHandler.values.getAntitnt()) {
-						event.setCancelled(true);
-						return;
-					}
+		if((!event.isCancelled()) && (event.getEntity() != null)) {
+			if(event.getEntityType() == EntityType.CREEPER) {
+				if(ConfigHandler.values.getAnticreeper()) {
+					event.setCancelled(true);
+					return;
 				}
-				
-				if (ConfigHandler.values.getExplosions()) {
-					List<Block> blocks = event.blockList();
-					
-					// get the player who ingited this tnt
-					String player = BlockListener.playerTorch.get(event.getLocation().getBlock());
-					if(player == null) {
-						player = BlockListener.playerTNT.get(event.getLocation().getBlock());
-						if(player == null) {
-							player = PlayerListener.playerFAS.get(event.getLocation().getBlock());
-							if(player == null) {
-								player = playerCI.get(event.getEntity().getUniqueId());
-							}
-						}
-					}
-					
-					for (int i = 0; i < blocks.size(); i++) {
-						int x = blocks.get(i).getX();
-						int y = blocks.get(i).getY();
-						int z = blocks.get(i).getZ();
-
-						EntityExplodeData data = new EntityExplodeData(x, y, z, event.getEntity().getWorld().getName(), event.blockList().get(i).getType().toString(), event.blockList().get(i).getData(), event.getEntityType().toString(), player);
-
-						GriefLogger logger = new GriefLogger(data.toString());
-						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
-					}
+			} else if(event.getEntityType() == EntityType.PRIMED_TNT) {
+				if(ConfigHandler.values.getAntitnt()) {
+					event.setCancelled(true);
+					return;
 				}
 			}
-		} catch(NullPointerException e) {
-			// just let this happen, i have no other way to prevent this
+			
+			if (ConfigHandler.values.getExplosions()) {
+				List<Block> blocks = event.blockList();
+				
+				// get the player who ingited this tnt
+				String player = getIgniter(event);
+				
+				for (int i = 0; i < blocks.size(); i++) {
+					int x = blocks.get(i).getX();
+					int y = blocks.get(i).getY();
+					int z = blocks.get(i).getZ();
+					
+					EntityExplodeData data = new EntityExplodeData(x, y, z, event.getEntity().getWorld().getName(), event.blockList().get(i).getType().toString(), event.blockList().get(i).getData(), event.getEntityType().toString(), player);
+					new GriefLogger(data);
+				}
+			}
 		}
+	}
+	
+	private String getIgniter(EntityExplodeEvent event) {
+		String player = Tracker.playerTorch.get(event.getLocation().getBlock());
+		if(player == null) {
+			player = Tracker.playerTNT.get(event.getLocation().getBlock());
+			if(player == null) {
+				player = Tracker.playerFAS.get(event.getLocation().getBlock());
+				if(player == null) {
+					player = playerEI.get(event.getEntity().getUniqueId());
+				} else {
+					Tracker.playerFAS.remove(event.getLocation().getBlock());
+				}
+			} else {
+				Tracker.playerTNT.remove(event.getLocation().getBlock());
+			}
+		} else {
+			Tracker.playerTorch.remove(event.getLocation().getBlock());
+		}
+		return player;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -92,8 +96,7 @@ public class EntityListener implements Listener {
 			
 			EntityBreakDoorData data = new EntityBreakDoorData(x, y, z, event.getBlock().getWorld().getName(), event.getEntityType().toString());
 
-			GriefLogger logger = new GriefLogger(data.toString());
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+			new GriefLogger(data);
 		}
 	}
 
@@ -115,8 +118,7 @@ public class EntityListener implements Listener {
 					boolean pickup = (event.getTo() == Material.AIR);
 					EntityEndermanData data = new EntityEndermanData(x, y, z, event.getBlock().getWorld().getName(), event.getBlock().getType().toString(), event.getBlock().getData(), pickup);					
 					
-					GriefLogger logger = new GriefLogger(data.toString());
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, logger);
+					new GriefLogger(data);
 				} else {
 					return;
 				}
@@ -127,11 +129,11 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerInteractWithCreeper(EntityDamageByEntityEvent event) {
 		if(event.getDamager().getType() == EntityType.PLAYER) {
-			if(event.getEntity().getType() == EntityType.CREEPER) {
+			if((event.getEntity().getType() == EntityType.CREEPER) || (event.getEntity().getType() == EntityType.WITHER)) {
 				UUID entity = event.getEntity().getUniqueId();
 				Player player = (Player) event.getDamager();
 				String pName = player.getName();
-				playerCI.put(entity, pName);
+				playerEI.put(entity, pName);
 			}
 		}
 	}

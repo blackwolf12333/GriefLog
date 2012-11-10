@@ -1,17 +1,9 @@
 package tk.blackwolf12333.grieflog.callback;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public abstract class BaseCallback {
 
 	/**
-	 * The search result
-	 */
-	public ArrayList<String> result;
-	
-	/**
-	 * Called if the sort is done.
+	 * Called when the sort is done.
 	 */
 	public abstract void start();
 	
@@ -20,7 +12,6 @@ public abstract class BaseCallback {
 	}
 	
 	protected void sortResult() {
-		Collections.sort(result, Collections.reverseOrder());
 		start();
 	}
 }

@@ -1,20 +1,19 @@
 package tk.blackwolf12333.grieflog.callback;
 
-import tk.blackwolf12333.grieflog.GLPlayer;
-import tk.blackwolf12333.grieflog.utils.PageManager;
+import tk.blackwolf12333.grieflog.PlayerSession;
+import tk.blackwolf12333.grieflog.utils.searching.PageManager;
 
 public class SearchCallback extends BaseCallback {
 
-	GLPlayer player;
+	PlayerSession player;
 	
-	public SearchCallback(GLPlayer player) {
+	public SearchCallback(PlayerSession player) {
 		this.player = player;
 	}
 	
 	@Override
 	public void start() {
-		player.setSearchResult(result);
 		player.setSearching(false);
-		PageManager.printPage(player, 0);
+		PageManager.printPageNormal(player, 0);
 	}
 }
