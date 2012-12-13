@@ -34,6 +34,7 @@ public class ConfigValues {
 	String blockinfocolor = ConfigHandler.config.getString("colors.block-info");
 	String locationcolor = ConfigHandler.config.getString("colors.location");
 	String worldcolor = ConfigHandler.config.getString("colors.world");
+        String logsDir = ConfigHandler.config.getString("path-to-logs");
 	
 	/**
 	 * @return the tool
