@@ -28,7 +28,7 @@ public class GriefLog extends JavaPlugin {
 	public static Debug log;
 	public static File dataFolder;
 		
-	public static File logsDir = new File("logs");
+	public static File logsDir = new File(ConfigHandler.values.getPathToLogs());
 	public static Time t = new Time();
 	public static FileIO fileIO = new FileIO();
 	public static UndoConfig undoConfig = new UndoConfig();
