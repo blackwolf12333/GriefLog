@@ -1,18 +1,12 @@
 package tk.blackwolf12333.grieflog.utils.config;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -36,8 +30,7 @@ public class ConfigHandler {
 	public static void setupGriefLogConfig() {
 		configFile = new File(plugin.getDataFolder(), "config.yml");
 	    config = new YamlConfiguration();
-	    checkForChangesAndLoad();
-	    /*if(!configFile.exists()) {
+	    if(!configFile.exists()) {
 	    	configFile.getParentFile().mkdirs();
 	    	try {
 				configFile.createNewFile();
@@ -48,7 +41,7 @@ public class ConfigHandler {
 	        loadConfig();
 	    } else {
 	    	checkForChangesAndLoad();
-	    }*/
+	    }
 	}
 	
 	private static void copy(InputStream in, File file) {
@@ -93,67 +86,39 @@ public class ConfigHandler {
 	private static void checkForChangesAndLoad() {
 		try {
 			loadConfig();
-			Map<String, Object> oldConf = config.getValues(true);
-			
 			FileConfiguration newconfig = new YamlConfiguration();
 			newconfig.load(plugin.getResource("config.yml"));
-			Map<String, Object> newConf = newconfig.getValues(true);
+			ArrayList<String> currentEntries = getAllEntries(config);
+			ArrayList<String> newEntries = getAllEntries(newconfig);
 			
-			if(newConf.size() != oldConf.size()) {
-				createNewConfigFileAndLoad();
-				List<String> contents = readFileAndPutContentsInList();
-				for(Iterator<String> it = oldConf.keySet().iterator(); it.hasNext();) {
-		        	String next = it.next();
-		        	
-		        	String newNode = next + ": " + oldConf.get(next);
-		        	for(int i = 0; i < contents.size(); i++) {
-		        		String line = contents.get(i);
-		        		if(line.contains(next)) {
-		        			contents.set(i, newNode);
-		    			} else {
-		    				continue;
-		    			}
-		        	}
-		    		
-		        }
-				writeListToFileAndLoad(contents);
+			for(String s : newEntries) {
+				if(!currentEntries.contains(s)) {
+					System.out.print(s);
+					config.set(s, newconfig.get(s));
+				}
 			}
-		} catch (IOException e) {
+			
+			for(String s : currentEntries) {
+				if(!newEntries.contains(s)) {
+					System.out.print(s);
+					config.set(s, null);
+				}
+			}
+			config.save(configFile);
+		} catch(Exception e) {
 			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			// ignore this exception
 		}
 	}
 	
-	private static List<String> readFileAndPutContentsInList() throws IOException, FileNotFoundException {
-		BufferedReader reader = new BufferedReader(new FileReader(configFile));
-		String line = null;
-		List<String> contents = new ArrayList<String>();
-		while((line = reader.readLine()) != null) {
-			contents.add(line);
-		}
-		reader.close();
+	private static ArrayList<String> getAllEntries(FileConfiguration config) {
+		ArrayList<String> entries = new ArrayList<String>();
+		Map<String, Object> contents = config.getValues(true);
 		
-		return contents;
-	}
-	
-	private static void writeListToFileAndLoad(List<String> list) throws IOException, InvalidConfigurationException {
-		BufferedWriter bw = new BufferedWriter(new FileWriter(configFile));
-		for(int i = 0; i < list.size(); i++) {
-			bw.append(list.get(i));
-			bw.newLine();
+		for(Iterator<String> it = contents.keySet().iterator(); it.hasNext();) {
+			String s = it.next();
+			if(s != null) entries.add(s);
 		}
-		bw.close();
-		loadConfig();
-	}
-	
-	private static void createNewConfigFileAndLoad() {
-		try {
-			configFile.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        copy(plugin.getResource("config.yml"), configFile);
-        loadConfig();
+		
+		return entries;
 	}
 }

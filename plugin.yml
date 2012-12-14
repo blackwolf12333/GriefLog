@@ -1,20 +1,10 @@
 name: GriefLog
 version: 4.9beta
 main: tk.blackwolf12333.grieflog.GriefLog
-softdepend: [PermissionsEx,Permissions,GroupManager,bPermissions,Vault]
 commands:
     glog:
         description: Main command, type /glog help for more info.
         usage: /glog <option> <arguments>
-    addfriend:
-        description: Add a friend so he can break your blocks.
-        usage: /addfriend <playername>
-    removefriend:
-        description: Remove a player from your friend list so he can't break your blocks.
-        usage: /removefriend <playername>
-    listfriends:
-        description: List your friends you added to your friend list.
-        usage: /listfriends
 permissions:
     grieflog.*:
         description: Gives access to all GriefLog commands

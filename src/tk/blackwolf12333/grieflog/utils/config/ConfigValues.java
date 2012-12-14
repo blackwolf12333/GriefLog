@@ -6,6 +6,7 @@ public class ConfigValues {
 	int mb = ConfigHandler.config.getInt("general.mb");
 	boolean bw12333glog = ConfigHandler.config.getBoolean("general.blackwolf12333glog");
 	boolean debug = ConfigHandler.config.getBoolean("general.debug");
+	String logsDir = ConfigHandler.config.getString("general.path");
 	
 	boolean command = ConfigHandler.config.getBoolean("events.command");
 	boolean worldChange = ConfigHandler.config.getBoolean("events.changeworld");
@@ -34,7 +35,6 @@ public class ConfigValues {
 	String blockinfocolor = ConfigHandler.config.getString("colors.block-info");
 	String locationcolor = ConfigHandler.config.getString("colors.location");
 	String worldcolor = ConfigHandler.config.getString("colors.world");
-        String logsDir = ConfigHandler.config.getString("path-to-logs");
 	
 	/**
 	 * @return the tool
@@ -365,4 +365,11 @@ public class ConfigValues {
 		return debug;
 	}
 
+	public String getLogsDir() {
+		return logsDir;
+	}
+	
+	public void setLogsDir(String logsDir) {
+		this.logsDir = logsDir;
+	}
 }

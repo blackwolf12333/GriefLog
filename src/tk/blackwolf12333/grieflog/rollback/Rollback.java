@@ -3,13 +3,13 @@ package tk.blackwolf12333.grieflog.rollback;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import net.minecraft.server.ChunkCoordIntPair;
-import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.v1_4_5.ChunkCoordIntPair;
+import net.minecraft.server.v1_4_5.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

@@ -26,9 +26,8 @@ import tk.blackwolf12333.grieflog.utils.logging.Time;
 public class GriefLog extends JavaPlugin {
 	
 	public static Debug log;
-	public static File dataFolder;
-		
-	public static File logsDir = new File(ConfigHandler.values.getPathToLogs());
+	public static File logsDir;
+	
 	public static Time t = new Time();
 	public static FileIO fileIO = new FileIO();
 	public static UndoConfig undoConfig = new UndoConfig();
@@ -57,7 +56,7 @@ public class GriefLog extends JavaPlugin {
 		
 		log.info("GriefLog Disabled!!!");
 		log = null; // has to be done after the message above, otherwise you get an npe
-		System.gc(); // just hoping it will collect all my stuff that is not loaded anymore
+		System.gc();
 	}
 
 	private void garbageListeners() {
@@ -74,11 +73,11 @@ public class GriefLog extends JavaPlugin {
 		t = null;
 		fileIO = null;
 		glogCommand = null;
+		logsDir = null;
 	}
 
 	@Override
 	public void onEnable() {
-		dataFolder = new File("plugins" + File.separator + "GriefLog" + File.separator);
 		setupConfig();
 		registerListeners();
 		getCommand("glog").setExecutor(glogCommand);
@@ -118,6 +117,7 @@ public class GriefLog extends JavaPlugin {
 		new ConfigHandler(this);
 		ConfigHandler.setupGriefLogConfig();
 		ConfigHandler.values = new ConfigValues();
+		logsDir = new File(ConfigHandler.values.getLogsDir());
 		if(ConfigHandler.values.getPutItemsBackOnRollback()) {
 			ChestConfig.setup();
 		}

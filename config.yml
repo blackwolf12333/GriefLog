@@ -18,6 +18,8 @@ general:
     # when should the log be backed up?
     mb: 5
     
+    path: logs/
+    
     # Do you want debug messages to show up in your server log? Leave this false unless told otherwise.
     debug: false
 
@@ -64,5 +66,3 @@ colors:
     block-info: white
     location: white
     world: white
-
-path: logs/

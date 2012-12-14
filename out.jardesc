@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="/home/XXXXX/Documents/Test Server/plugins/GriefLog.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/GriefLogBlockProtection/out.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="/home/peter/Documents/Test Server/plugins/GriefLog.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/GriefLog/out.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -11,10 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=GriefLogBlockProtection/src"/>
-        <file path="/GriefLogBlockProtection/ChangeLog.txt"/>
-        <file path="/GriefLogBlockProtection/friends.yml"/>
-        <file path="/GriefLogBlockProtection/plugin.yml"/>
-        <file path="/GriefLogBlockProtection/config.yml"/>
+        <file path="/GriefLog/plugin.yml"/>
+        <file path="/GriefLog/config.yml"/>
+        <javaElement handleIdentifier="=GriefLog/src"/>
+        <file path="/GriefLog/ChangeLog.txt"/>
     </selectedElements>
 </jardesc>
