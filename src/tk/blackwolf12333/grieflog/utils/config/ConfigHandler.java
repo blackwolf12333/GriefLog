@@ -93,14 +93,12 @@ public class ConfigHandler {
 			
 			for(String s : newEntries) {
 				if(!currentEntries.contains(s)) {
-					System.out.print(s);
 					config.set(s, newconfig.get(s));
 				}
 			}
 			
 			for(String s : currentEntries) {
 				if(!newEntries.contains(s)) {
-					System.out.print(s);
 					config.set(s, null);
 				}
 			}
