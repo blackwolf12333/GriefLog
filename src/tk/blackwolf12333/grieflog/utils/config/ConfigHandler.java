@@ -40,7 +40,7 @@ public class ConfigHandler {
 	        copy(plugin.getResource("config.yml"), configFile);
 	        loadConfig();
 	    } else {
-	    	checkForChangesAndLoad();
+	    	mergeConfig();
 	    }
 	}
 	
@@ -83,7 +83,7 @@ public class ConfigHandler {
 		ConfigHandler.values = new ConfigValues();
 	}
 	
-	private static void checkForChangesAndLoad() {
+	private static void mergeConfig() {
 		try {
 			loadConfig();
 			FileConfiguration newconfig = new YamlConfiguration();
@@ -103,6 +103,7 @@ public class ConfigHandler {
 				}
 			}
 			config.save(configFile);
+			reloadConfig();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
