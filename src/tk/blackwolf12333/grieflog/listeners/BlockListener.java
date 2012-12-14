@@ -1,7 +1,6 @@
 package tk.blackwolf12333.grieflog.listeners;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -33,9 +32,9 @@ public class BlockListener implements Listener {
 
 	GriefLog plugin;
 	
-	public HashMap<String, Long> breakTimes = new HashMap<String, Long>();
+	/*public HashMap<String, Long> breakTimes = new HashMap<String, Long>();
 	public HashMap<String, Integer> fastbreakTimes = new HashMap<String, Integer>();
-	public static final float BLOCK_RATE = 1000000;
+	public static final float BLOCK_RATE = 1000000;*/
 	
 	public BlockListener(GriefLog plugin) {
 		this.plugin = plugin;
