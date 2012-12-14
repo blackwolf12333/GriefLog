@@ -64,3 +64,5 @@ colors:
     block-info: white
     location: white
     world: white
+
+path: logs/
