@@ -13,13 +13,14 @@ import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.listeners.BlockListener;
 import tk.blackwolf12333.grieflog.listeners.BucketListener;
 import tk.blackwolf12333.grieflog.listeners.EntityListener;
+import tk.blackwolf12333.grieflog.listeners.HangingListener;
 import tk.blackwolf12333.grieflog.listeners.PlayerListener;
 import tk.blackwolf12333.grieflog.listeners.WorldListener;
+import tk.blackwolf12333.grieflog.listeners.inventory.InventoryListener;
 import tk.blackwolf12333.grieflog.utils.Debug;
 import tk.blackwolf12333.grieflog.utils.FileIO;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
-import tk.blackwolf12333.grieflog.utils.config.ConfigValues;
 import tk.blackwolf12333.grieflog.utils.config.UndoConfig;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
 
@@ -39,6 +40,10 @@ public class GriefLog extends JavaPlugin {
 	private EntityListener eListener = new EntityListener(this);
 	private BucketListener bucketListener = new BucketListener(this);
 	private WorldListener wListener = new WorldListener();
+	@SuppressWarnings("unused")
+	private HangingListener hListener = new HangingListener();
+	@SuppressWarnings("unused")
+	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
 	
@@ -64,6 +69,9 @@ public class GriefLog extends JavaPlugin {
 		pListener = null;
 		eListener = null;
 		bucketListener = null;
+		wListener = null;
+		hListener = null;
+		iListener = null;
 	}
 
 	private void garbageStatics() {
@@ -111,12 +119,13 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		pm.registerEvents(wListener, this);
+//		pm.registerEvents(hListener, this);
+//		pm.registerEvents(iListener, this);
 	}
 
 	private void setupConfig() {
 		new ConfigHandler(this);
 		ConfigHandler.setupGriefLogConfig();
-		ConfigHandler.values = new ConfigValues();
 		logsDir = new File(ConfigHandler.values.getLogsDir());
 		if(ConfigHandler.values.getPutItemsBackOnRollback()) {
 			ChestConfig.setup();

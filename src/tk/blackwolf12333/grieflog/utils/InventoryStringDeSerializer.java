@@ -18,7 +18,7 @@ public class InventoryStringDeSerializer {
             ItemStack is = invInventory.getItem(i);
             if (is != null)
             {
-                String serializedItemStack = new String();
+                /*String serializedItemStack = new String();
                
                 String isType = String.valueOf(is.getType().getId());
                 serializedItemStack += "t@" + isType;
@@ -43,8 +43,8 @@ public class InventoryStringDeSerializer {
                         serializedItemStack += ":e@" + ench.getKey().getId() + "@" + ench.getValue();
                     }
                 }
-               
-                serialization += i + "#" + serializedItemStack + ";";
+               */
+                serialization += i + "#" + itemToString(is) + ";";
             }
         }
         return serialization;
@@ -75,7 +75,7 @@ public class InventoryStringDeSerializer {
                 String[] itemAttribute = itemInfo.split("@");
                 if (itemAttribute[0].equals("t"))
                 {
-                    is = new ItemStack(Material.getMaterial(Integer.valueOf(itemAttribute[1])));
+                    is = new ItemStack(Material.getMaterial(itemAttribute[1]));
                     createdItemStack = true;
                 }
                 else if (itemAttribute[0].equals("d") && createdItemStack)
@@ -95,5 +95,39 @@ public class InventoryStringDeSerializer {
         }
        
         return deserializedInventory;
+    }
+    
+    public static String itemToString(ItemStack is) {
+    	String serializedItemStack = new String();
+    	if(is != null) {
+    		int isType = is.getTypeId();
+    		serializedItemStack += "t@" + isType;
+        	
+        	if (is.getDurability() != 0)
+        	{
+        		String isDurability = String.valueOf(is.getDurability());
+        		serializedItemStack += ":d@" + isDurability;
+        	}
+        	
+        	if (is.getAmount() != 1)
+        	{
+        		String isAmount = String.valueOf(is.getAmount());
+        		serializedItemStack += ":a@" + isAmount;
+        	}
+        	
+        	Map<Enchantment,Integer> isEnch = is.getEnchantments();
+        	if (isEnch.size() > 0)
+        	{
+        		for (Entry<Enchantment,Integer> ench : isEnch.entrySet())
+        		{
+        			serializedItemStack += ":e@" + ench.getKey().getId() + "@" + ench.getValue();
+        		}
+        	}
+    	}
+        return serializedItemStack;
+    }
+    
+    public static ItemStack stringToItem(String str) {
+    	return null; //TODO: implement the stringToItem function in InventoryStringDeSerializer
     }
 }
