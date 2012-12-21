@@ -40,6 +40,9 @@ events:
     # do you want to put items back in a chest when it was broken when you roll it back?
     # this can duplicate some items if the player picked it up right after it was griefed.
     putitemsbackonrollback: false
+    
+    # Define commands here that will be ignored when logging commands.
+    ignored-commands: login,register
 
 antigrief:
     # If you want stuff prevented, like people can't use lava, set these things to true

@@ -199,7 +199,7 @@ public abstract class BaseBlockData extends BaseData {
 		return null;
 	}
 	
-	private static BaseBlockData handleBlockBreakData(String[] data)/* throws OldVersionException*/ {
+	private static BaseBlockData handleBlockBreakData(String[] data) throws OldVersionException {
 		try {
 			String time = data[0] + " " + data[1];
 			String strX = data[11].replace(",", "");

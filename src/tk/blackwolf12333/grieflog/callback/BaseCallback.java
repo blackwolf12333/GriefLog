@@ -8,10 +8,6 @@ public abstract class BaseCallback {
 	public abstract void start();
 	
 	public final void run() {
-		sortResult();
-	}
-	
-	protected void sortResult() {
 		start();
 	}
 }

@@ -20,6 +20,7 @@ public class ConfigValues {
 	boolean playerJoin = ConfigHandler.config.getBoolean("events.playerjoin");
 	boolean playerQuit = ConfigHandler.config.getBoolean("events.playerquit");;
 	boolean putItemsBackOnRollback = ConfigHandler.config.getBoolean("events.putitemsbackonrollback");
+	String ignoredCommands = ConfigHandler.config.getString("events.ignored-commands");
 	
 	boolean antilava = ConfigHandler.config.getBoolean("antigrief.antilava");
 	boolean antitnt = ConfigHandler.config.getBoolean("antigrief.antitnt");
@@ -371,5 +372,13 @@ public class ConfigValues {
 	
 	public void setLogsDir(String logsDir) {
 		this.logsDir = logsDir;
+	}
+	
+	public String getIgnoredCommands() {
+		return ignoredCommands;
+	}
+	
+	public void setIgnoredCommands(String ignoredCommands) {
+		this.ignoredCommands = ignoredCommands;
 	}
 }
