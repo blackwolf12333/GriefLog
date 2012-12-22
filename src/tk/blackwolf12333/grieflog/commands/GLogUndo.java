@@ -23,7 +23,10 @@ public class GLogUndo {
 					return true;
 				} else {
 					ArrayList<String> arguments = GriefLog.undoConfig.get(args[1]);
-					if(arguments.get(0).equals("we")) {
+					if(arguments == null) {
+						player.print(ChatColor.DARK_RED + "You have no rollback's I can undo!");
+						return true;
+					} else if(arguments.get(0).equals("we")) {
 						new SearchTask(player, new WorldEditFilterCallback(player, new UndoCallback(player)), arguments, arguments.get(3));
 						return true;
 					} else {

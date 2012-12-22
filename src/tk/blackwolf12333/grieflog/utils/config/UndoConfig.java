@@ -43,19 +43,23 @@ public class UndoConfig {
 		save();
 	}
 	
-	public ArrayList<String> get(String key) {
-		ArrayList<String> list = new ArrayList<String>();
-		String[] split = config.getString(key).split(":");
-		for(String i : split) {
-			if(!i.equals("null")) {
-				if(Events.isEvent(i)) {
-					list.add(Events.getEvent(i).getEventName());
-				} else {
-					list.add(i);
+	public ArrayList<String> get(String key) {//TODO: don't throw a nullpointer when config.getString returns null;line 48
+		try {
+			ArrayList<String> list = new ArrayList<String>();
+			String[] split = config.getString(key).split(":");
+			for(String i : split) {
+				if(!i.equals("null")) {
+					if(Events.isEvent(i)) {
+						list.add(Events.getEvent(i).getEventName());
+					} else {
+						list.add(i);
+					}
 				}
 			}
+			return list;
+		} catch(NullPointerException e) {
+			return null;
 		}
-		return list;
 	}
 	
 	public ArrayList<String> getAll() {
