@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 
@@ -48,10 +49,11 @@ public class EntityExplodeData extends BaseEntityData {
 	}
 	
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		World w = Bukkit.getWorld(worldName);
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
 		w.getBlockAt(loc).setType(Material.AIR);
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	@Override

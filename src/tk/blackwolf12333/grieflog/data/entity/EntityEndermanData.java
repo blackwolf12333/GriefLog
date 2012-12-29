@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 
@@ -59,7 +60,7 @@ public class EntityEndermanData extends BaseEntityData {
 	}
 	
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		World w = Bukkit.getWorld(worldName);
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
 		if(pickup) {
@@ -67,6 +68,7 @@ public class EntityEndermanData extends BaseEntityData {
 		} else {
 			w.getBlockAt(loc).setTypeIdAndData(Material.getMaterial(blockType).getId(), blockData, true);
 		}
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	public String getMinimal() {

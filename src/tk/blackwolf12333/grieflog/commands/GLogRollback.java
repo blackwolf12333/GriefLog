@@ -40,9 +40,8 @@ public class GLogRollback {
 						
 						if(checkParserErrors(parser, player)) {
 							if(parser.blockFilter != null) {
-								GriefLog.debug("block filter");
 								addParserResultsToUndoConfig(parser, true);
-								new SearchTask(player, new RollbackCallback(player), parser, new BlockFilter(player, parser.blockFilter));
+								new SearchTask(player, new RollbackCallback(player), parser, new WorldEditFilter(player), new BlockFilter(player, parser.blockFilter));
 							} else {
 								addParserResultsToUndoConfig(parser, true);
 								new SearchTask(player, new RollbackCallback(player), parser, new WorldEditFilter(player));
@@ -51,14 +50,13 @@ public class GLogRollback {
 						return true;
 					}
 				} else {
-					player.print(ChatColor.DARK_RED + "You can't have a worldedit selection so you can't use this events_command!");
+					player.print(ChatColor.DARK_RED + "You can't have a worldedit selection so you can't use this command!");
 					return true;
 				}
 			} else {
 				ArgumentParser parser = new ArgumentParser(args);
 				if(checkParserErrors(parser, player)) {
 					if(parser.blockFilter != null) {
-						GriefLog.debug("block filter");
 						addParserResultsToUndoConfig(parser, false);
 						new SearchTask(player, new RollbackCallback(player), parser, new BlockFilter(player, parser.blockFilter));
 					} else {

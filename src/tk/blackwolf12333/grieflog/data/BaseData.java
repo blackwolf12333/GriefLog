@@ -15,6 +15,7 @@ import tk.blackwolf12333.grieflog.data.entity.BaseEntityData;
 import tk.blackwolf12333.grieflog.data.hanging.BaseHangingData;
 import tk.blackwolf12333.grieflog.data.player.BasePlayerData;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
 
@@ -152,7 +153,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 * This undoes a rollback done before.
 	 * This set's the block like it became after the event happened.
 	 */
-	public abstract void undo();
+	public abstract void undo(Undo undo);
 	
 	/**
 	 * Teleports the PlayerSession to the location of this event.

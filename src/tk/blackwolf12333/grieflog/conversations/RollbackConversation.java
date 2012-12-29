@@ -106,7 +106,7 @@ public class RollbackConversation extends BaseConversation implements Conversati
 		}
 	}
 	
-	@SuppressWarnings("unused") // TODO: implement this
+	@SuppressWarnings("unused") // TODO: implement exluded types
 	private class RollbackExcludeTypesQuestionPrompt extends BooleanPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {

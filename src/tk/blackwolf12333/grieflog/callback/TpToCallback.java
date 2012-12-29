@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
 
-public class TpToCallback extends BaseCallback {
+public class TpToCallback implements BaseCallback {
 
 	PlayerSession player;
 	

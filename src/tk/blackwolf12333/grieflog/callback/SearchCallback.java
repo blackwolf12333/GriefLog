@@ -3,7 +3,7 @@ package tk.blackwolf12333.grieflog.callback;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
 
-public class SearchCallback extends BaseCallback {
+public class SearchCallback implements BaseCallback {
 
 	PlayerSession player;
 	

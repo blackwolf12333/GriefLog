@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.BlockUtils;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
@@ -78,13 +79,14 @@ public class BucketData extends BaseBlockData {
 	}
 	
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
 		if(bucket == Material.WATER_BUCKET) {
 			Bukkit.getWorld(worldName).getBlockAt(loc).setType(Material.WATER);
 		} else {
 			Bukkit.getWorld(worldName).getBlockAt(loc).setType(Material.LAVA);
 		}
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	@Override

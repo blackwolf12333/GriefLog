@@ -10,6 +10,7 @@ import org.bukkit.entity.EntityType;
 
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 public class HangingBreakData extends BaseHangingData {
@@ -46,9 +47,10 @@ public class HangingBreakData extends BaseHangingData {
 	}
 
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		Location loc = new Location(Bukkit.getWorld(worldName), this.blockX, this.blockY, this.blockZ);
 		getEntityAt(loc).remove();
+		undo.chunks.add(loc.getChunk());
 	}
 
 	private Entity getEntityAt(Location loc) {

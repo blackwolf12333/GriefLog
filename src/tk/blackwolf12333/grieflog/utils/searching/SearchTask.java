@@ -10,6 +10,7 @@ import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.BaseCallback;
 import tk.blackwolf12333.grieflog.data.BaseData;
+import tk.blackwolf12333.grieflog.utils.filters.Filter;
 
 public class SearchTask implements Runnable {
 
@@ -21,6 +22,7 @@ public class SearchTask implements Runnable {
 	ArrayList<String> args = new ArrayList<String>();
 	PlayerSession p;
 	BaseCallback action;
+	Filter[] filters;
 	
 	/**
 	 * The search task that will search the files for the specified arugments.
@@ -74,6 +76,44 @@ public class SearchTask implements Runnable {
 	}
 	
 	/**
+	 * The search task that will search the files for the specified arugments.
+	 * @param p The PlayerSession of the player that requested the search.
+	 * @param action The callback that should happen after the search has been completed.
+	 * @param parser The {@link ArgumentParser} that contains the arguments to search for.
+	 * @param filter The filter to apply after the search is done.
+	 */
+	public SearchTask(PlayerSession p, BaseCallback action, ArgumentParser parser, Filter... filter) {
+		this.p = p;
+		this.action = action;
+		this.args = parser.getResult();
+		this.world = parser.world;
+		this.filters = filter;
+		
+		addFilesToList();
+		new Thread(this).start();
+		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
+	}
+	
+	/**
+	 * The search task that will search the files for the specified arugments.
+	 * @param p The PlayerSession of the player that requested the search.
+	 * @param action The callback that should happen after the search has been completed.
+	 * @param args The arguments to search for.
+	 * @param world The world where the PlayerSession wants to search in.
+	 */
+	public SearchTask(PlayerSession p, BaseCallback action, ArrayList<String> args, String world, Filter... filter) {
+		this.p = p;
+		this.action = action;
+		this.args = args;
+		this.world = world;
+		this.filters = filter;
+		
+		addFilesToList();
+		new Thread(this).start();
+		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
+	}
+	
+	/**
 	 * This function add's all the files we need to search through to {@code filesToSearch}
 	 */
 	public void addFilesToList() {
@@ -119,7 +159,8 @@ public class SearchTask implements Runnable {
 			}
 		}
 	}
-
+	
+	@Override
 	public void run() {
 		for(File searchFile : filesToSearch) {
 			GriefLog.debug("Searching file: " + searchFile.getName() + " Size: " + GriefLog.fileIO.getFileSize(searchFile));
@@ -131,7 +172,7 @@ public class SearchTask implements Runnable {
 		
 		Collections.sort(foundData);
 		p.setSearchResult(foundData);
-		action.run();
+		action.start();
 	}
 	
 	/**
@@ -156,10 +197,26 @@ public class SearchTask implements Runnable {
 	 */
 	private void addToFoundDataIfContainsText(String line) {
 		if (lineContainsText(line)) {
-			foundData.add(BaseData.loadFromString(line));
+			BaseData data;
+			if(doesComeThroughFilter((data = BaseData.loadFromString(line)))) {
+				foundData.add(data);
+			}
 		}
 	}
 	
+	private boolean doesComeThroughFilter(BaseData data) {
+		if(this.filters != null) {
+			for(Filter filter : filters) {
+				if(filter.doFilter(data)) {
+					continue;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Check's if this line contains the arguments for the search.
 	 * @param line The line to check.

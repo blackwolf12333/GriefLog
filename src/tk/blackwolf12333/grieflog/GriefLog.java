@@ -92,6 +92,7 @@ public class GriefLog extends JavaPlugin {
 		onReloadLoadPlayerSessions();
 		setupMetrics();
 		
+		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
 	}
 

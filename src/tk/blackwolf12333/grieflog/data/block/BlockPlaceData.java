@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 
@@ -60,17 +61,14 @@ public class BlockPlaceData extends BaseBlockData {
 	}
 	
 	@Override
-	public void undo() {
-		try {
-			World w = Bukkit.getWorld(worldName);
-			Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
-			w.getBlockAt(loc).setTypeIdAndData(Material.getMaterial(blockType).getId(), blockData, true);
-			if(blockType.contains("DOOR")) {
-				w.getBlockAt(getOtherDoorBlock(w.getBlockAt(loc))).setTypeIdAndData(Material.getMaterial(blockType).getId(), blockData, true);
-			}
-		} catch(Exception e) {
-			
+	public void undo(Undo undo) {
+		World w = Bukkit.getWorld(worldName);
+		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
+		w.getBlockAt(loc).setTypeIdAndData(Material.getMaterial(blockType).getId(), blockData, true);
+		if(blockType.contains("DOOR")) {
+			w.getBlockAt(getOtherDoorBlock(w.getBlockAt(loc))).setTypeIdAndData(Material.getMaterial(blockType).getId(), blockData, true);
 		}
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	@Override

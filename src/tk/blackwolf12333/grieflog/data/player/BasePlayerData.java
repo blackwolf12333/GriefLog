@@ -8,6 +8,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.data.OldVersionException;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 public abstract class BasePlayerData extends BaseData {
@@ -37,7 +38,7 @@ public abstract class BasePlayerData extends BaseData {
 	}
 	
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		// cannot undo player data
 	}
 	

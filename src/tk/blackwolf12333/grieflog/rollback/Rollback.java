@@ -3,16 +3,9 @@ package tk.blackwolf12333.grieflog.rollback;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import net.minecraft.server.v1_4_6.ChunkCoordIntPair;
-import net.minecraft.server.v1_4_6.EntityPlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -24,7 +17,6 @@ public class Rollback implements Runnable {
 	PlayerSession player;
 	ArrayList<BaseData> result;
 	long current;
-	boolean ranOnce = false;
 	
 	public HashSet<Chunk> chunks = new HashSet<Chunk>();
 	
@@ -46,14 +38,12 @@ public class Rollback implements Runnable {
 	
 	@Override
 	public synchronized void run() {
-		if(!ranOnce) {
-			GriefLog.debug("Going to rollback: " + result.size());
-			for(int i = 0; i < result.size(); i++) {
-				rollback(result.get(i));
-			}
-			Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), new SendChangesTask(chunks), 0L);
-			ranOnce = true;
+		GriefLog.debug("Going to rollback: " + result.size());
+		for(int i = 0; i < result.size(); i++) {
+			rollback(result.get(i));
 		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), new SendChangesTask(chunks, player), 0L);
+		finishRollback();
 	}
 	
 	/**
@@ -84,56 +74,5 @@ public class Rollback implements Runnable {
 		long seconds = totalseconds % 60;
 		long millis = totalmillis % 1000;
 		return minutes + " min " + seconds + " sec " + millis + "ms.";
-	}
-	
-	private class SendChangesTask implements Runnable {
-		
-		public HashSet<Chunk> chunks = new HashSet<Chunk>();
-		
-		public SendChangesTask(HashSet<Chunk> chunks) {
-			this.chunks = chunks;
-		}
-		
-		@Override
-		@SuppressWarnings("unchecked")
-		public void run() {
-			HashSet<ChunkCoordIntPair> pairs = new HashSet<ChunkCoordIntPair>();
-			for(Chunk c : this.chunks) {
-				pairs.add(new ChunkCoordIntPair(c.getX(), c.getZ()));
-			}
-			
-			for(Player p : getPlayers()) {
-				HashSet<ChunkCoordIntPair> queued = new HashSet<ChunkCoordIntPair>();
-				if(p != null) {
-					EntityPlayer ep = ((CraftPlayer) p).getHandle();
-					for(Object o : ep.chunkCoordIntPairQueue) {
-						queued.add((ChunkCoordIntPair) o);
-					}
-					for(ChunkCoordIntPair pair : pairs) {
-						if(!queued.contains(pair)) {
-							ep.chunkCoordIntPairQueue.add(pair);
-						}
-					}
-				}
-			}
-			finishRollback();
-		}
-
-		private HashSet<Player> getPlayers() {
-			HashSet<Player> ret = new HashSet<Player>();
-			
-			for(Chunk c : chunks) {
-				if(c.isLoaded()) {
-					for(Entity e : c.getEntities()) {
-						if(e.getType() == EntityType.PLAYER) {
-							ret.add((Player) e);
-						}
-					}
-				}
-			}
-			ret.add(player.getPlayer());
-			
-			return ret;
-		}
 	}
 }

@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 public class BlockBreakData extends BaseBlockData {
@@ -57,14 +58,11 @@ public class BlockBreakData extends BaseBlockData {
 	}
 	
 	@Override
-	public void undo() {
-		try {
-			World w = Bukkit.getWorld(worldName);
-			Location loc = new Location(w, blockX, blockY, blockZ);
-			setBlockFast(loc, Material.AIR.getId(), (byte)0);
-		} catch(Exception e) {
-			
-		}
+	public void undo(Undo undo) {
+		World w = Bukkit.getWorld(worldName);
+		Location loc = new Location(w, blockX, blockY, blockZ);
+		setBlockFast(loc, Material.AIR.getId(), (byte)0);
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	@Override

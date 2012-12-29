@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
 import tk.blackwolf12333.grieflog.rollback.Rollback;
+import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
 
@@ -42,10 +43,11 @@ public class EntityBreakDoorData extends BaseEntityData {
 	}
 	
 	@Override
-	public void undo() {
+	public void undo(Undo undo) {
 		World w = Bukkit.getWorld(worldName);
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
 		w.getBlockAt(loc).setType(Material.AIR);
+		undo.chunks.add(loc.getChunk());
 	}
 	
 	public String getMinimal() {
