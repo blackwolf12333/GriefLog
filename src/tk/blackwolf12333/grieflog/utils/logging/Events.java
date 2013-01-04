@@ -15,7 +15,8 @@ public enum Events {
 	COMMAND ("[PLAYER_COMMAND]",false, "player_command", "command"),
 	GAMEMODE ("[GAMEMODE_CHANGE]", false, "gamemode_change", "gamemode"),
 	WORLDCHANGE ("[WORLD_CHANGE]", false, "world_change", "world"),
-	PAINTINGBREAK ("[PAINTING_BREAK]", true, "paintingbreak", "painting_break", "pbreak");
+	PAINTINGBREAK ("[PAINTING_BREAK]", true, "paintingbreak", "painting_break", "pbreak"),
+	PAINTINGPLACE ("[PAINTING_PLACE]", true, "paintingplace", "painting_place", "pplace");
 	
 	private final String event;
 	private final String[] alias;
