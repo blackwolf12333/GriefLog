@@ -18,7 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.ToolCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.block.BlockBreakData;
 import tk.blackwolf12333.grieflog.data.block.BlockIgniteData;
 import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
@@ -131,7 +131,7 @@ public class BlockListener implements Listener {
 			
 			ArrayList<String> args = new ArrayList<String>();
 			args.add(x + ", " + y + ", " + z);
-			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new ToolCallback(PlayerSession.getGLPlayer(event.getPlayer())), args, world);
+			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer())), args, world);
 		}
 		
 		if((!event.isCancelled())) {
