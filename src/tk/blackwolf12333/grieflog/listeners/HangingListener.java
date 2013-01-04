@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 
-import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
 import tk.blackwolf12333.grieflog.data.hanging.HangingBreakData;
+import tk.blackwolf12333.grieflog.data.hanging.HangingPlaceData;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
 public class HangingListener implements Listener {
@@ -35,11 +35,10 @@ public class HangingListener implements Listener {
 			int blockY = event.getEntity().getLocation().getBlockY();
 			int blockZ = event.getEntity().getLocation().getBlockZ();
 			String world = event.getEntity().getWorld().getName();
-			String blockType = event.getEntity().getType().toString();
-			byte blockData = 0x0;
 			String playerName = event.getPlayer().getName();
+			String hangingType = event.getEntity().getType().toString();
 			Integer gamemode = event.getPlayer().getGameMode().getValue();
-			BlockPlaceData data = new BlockPlaceData(blockX, blockY, blockZ, blockType, blockData, world, playerName, gamemode);
+			HangingPlaceData data = new HangingPlaceData(blockX, blockY, blockZ, world, playerName, gamemode, hangingType);
 			new GriefLogger(data);
 		}
 	}

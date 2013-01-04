@@ -44,6 +44,7 @@ public class HangingBreakData extends BaseHangingData {
 	public void rollback(Rollback rollback) {
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
 		Bukkit.getWorld(worldName).spawnEntity(loc, EntityType.fromName(this.hangingType)); //TODO: bukkit can't spawn paintings this way
+		rollback.chunks.add(loc.getChunk());
 	}
 
 	@Override
