@@ -98,10 +98,28 @@ public abstract class BaseHangingData extends BaseData {
 	public static BaseHangingData loadFromString(String data) {
 		if(data.contains(Events.PAINTINGBREAK.getEventName())) {
 			return handleHangingBreakData(data.split(" "));
+		} else if(data.contains(Events.PAINTINGPLACE.getEventName())) {
+			return handleHangingPlaceData(data.split(" "));
 		}
 		return null;
 	}
 	
+	private static BaseHangingData handleHangingPlaceData(String[] data) {
+		try {
+			String time = data[0] + " " + data[1];
+			int x = Integer.parseInt(data[10].replaceAll(",", ""));
+			int y = Integer.parseInt(data[11].replaceAll(",", ""));
+			int z = Integer.parseInt(data[12].replaceAll(",", ""));
+			String worldName = data[14].trim();
+			String playerName = data[4];
+			String hangingType = data[8];
+			int gm = Integer.parseInt(data[6]);
+			return new HangingPlaceData(time, x, y, z, worldName, playerName, gm, hangingType);
+		} catch(ArrayIndexOutOfBoundsException e) {
+			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
+		}
+	}
+
 	private static BaseHangingData handleHangingBreakData(String[] data) throws OldVersionException {
 		try {
 			String time = data[0] + " " + data[1];

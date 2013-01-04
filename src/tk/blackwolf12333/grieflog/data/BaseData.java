@@ -109,9 +109,9 @@ public abstract class BaseData implements Comparable<BaseData> {
 			if(Time.getTimeStamp(time).equals(Time.getTimeStamp(o.getTime())))
 				return 0;
 			else if(Time.getTimeStamp(time).before(Time.getTimeStamp(o.getTime()))) 
-				return -1/*(Time.getTimeStamp(time) - Time.getTimeStamp(o.getTime()))*/;
+				return -1;
 			else if(Time.getTimeStamp(time).after(Time.getTimeStamp(o.getTime())))
-				return 1/*(Time.getTimeStamp(time) - Time.getTimeStamp(o.getTime()))*/;
+				return 1;
 			else
 				return 0;
 		} catch(Exception e) {
@@ -133,7 +133,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 				return BaseEntityData.loadFromString(line);
 			} else if(line.contains(Events.LAVA.getEventName()) || line.contains(Events.WATER.getEventName())) {
 				return BucketData.loadFromString(line);
-			} else if(line.contains(Events.PAINTINGBREAK.getEventName())) {
+			} else if(line.contains(Events.PAINTINGBREAK.getEventName()) || line.contains(Events.PAINTINGPLACE.getEventName())) {
 				return BaseHangingData.loadFromString(line);
 			} else {
 				return BasePlayerData.loadFromString(line);
