@@ -67,7 +67,7 @@ public class SearchTask implements Runnable {
 	public SearchTask(PlayerSession p, BaseCallback action, ArgumentParser parser) {
 		this.p = p;
 		this.action = action;
-		this.args = parser.getResult();
+		this.args = getParserResult(parser);
 		this.world = parser.world;
 		
 		addFilesToList();
@@ -85,7 +85,7 @@ public class SearchTask implements Runnable {
 	public SearchTask(PlayerSession p, BaseCallback action, ArgumentParser parser, Filter... filter) {
 		this.p = p;
 		this.action = action;
-		this.args = parser.getResult();
+		this.args = getParserResult(parser);
 		this.world = parser.world;
 		this.filters = filter;
 		
@@ -94,6 +94,21 @@ public class SearchTask implements Runnable {
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
 	}
 	
+	private ArrayList<String> getParserResult(ArgumentParser parser) {
+		ArrayList<String> result = new ArrayList<String>(4);
+		addToListIfNotNull(parser.world, result);
+		addToListIfNotNull(parser.player, result);
+		addToListIfNotNull(parser.event, result);
+		addToListIfNotNull(parser.blockFilter, result);
+		return result;
+	}
+	
+	 private void addToListIfNotNull(String value, ArrayList<String> list) {
+		 if(!(value == null)) {
+			 list.add(value);
+		 }
+	 }
+
 	/**
 	 * The search task that will search the files for the specified arugments.
 	 * @param p The PlayerSession of the player that requested the search.
@@ -150,7 +165,7 @@ public class SearchTask implements Runnable {
 	}
 	
 	/**
-	 * Add's all the files in the directory {@code logs/} to keep compatibility with older versions.
+	 * Add's all the files in the logs directory to keep compatibility with older versions.
 	 */
 	private void addFilesInLogsDir() {
 		for(File f : GriefLog.logsDir.listFiles()) {
@@ -214,7 +229,7 @@ public class SearchTask implements Runnable {
 				}
 			}
 		}
-		return true;
+		return data != null;
 	}
 
 	/**
