@@ -31,7 +31,7 @@ public class FileIO {
 			try {
 				fw = new FileWriter(file, true);
 				bw = new BufferedWriter(fw);
-				removeChatColors(data);
+				data = ChatColor.stripColor(data);
 				bw.write(data);
 				bw.close();
 				fw.close();
@@ -141,29 +141,5 @@ public class FileIO {
 		String name = file.getName().substring(0, file.getName().indexOf(".")) + GriefLog.t.now() + ".txt";
 		file.renameTo(new File(file.getParent(), name));
 		GriefLog.debug("backup!!");
-		/*File backupdir = new File("logs" + File.separator);
-		if (!backupdir.exists()) {
-			backupdir.mkdir();
-		}
-		File backup = new File("logs" + File.separator + "GriefLog" + GriefLog.t.now() + ".txt");
-		if (!backup.exists()) {
-			try {
-				backup.createNewFile();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			copy(GriefLog.file, backup);
-			GriefLog.log.info("Log file moved to logs/");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-	}
-	
-	private void removeChatColors(String data) {
-		for(ChatColor cc : ChatColor.values()) {
-			data = data.replaceAll(cc.toString(), "");
-		}
 	}
 }
