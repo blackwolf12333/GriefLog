@@ -27,7 +27,6 @@ public class BaseConversation {
 	}
 	
 	private class GriefLogPrefix implements ConversationPrefix {
-
 		@Override
 		public String getPrefix(ConversationContext context) {
 			return ChatColor.GOLD + "[GriefLog] " + ChatColor.BLUE;
