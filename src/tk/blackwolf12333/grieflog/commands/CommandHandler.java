@@ -32,7 +32,7 @@ public class CommandHandler {
 	
 	public CommandHandler(PlayerSession sender) {
 		this.sender = sender;
-		this.plugin = sender.getGriefLog();
+		this.plugin = GriefLog.getGriefLog();
 	}
 	
 	public boolean getVersion() {

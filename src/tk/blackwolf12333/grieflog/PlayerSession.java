@@ -3,6 +3,7 @@ package tk.blackwolf12333.grieflog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -31,7 +32,6 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 public class PlayerSession implements Conversable {
 
 	Player player;
-	GriefLog plugin;
 	ConsoleCommandSender sender;
 	HashMap<Integer, ResultPage> pages;
 	Conversation conversation;
@@ -43,16 +43,13 @@ public class PlayerSession implements Conversable {
 	boolean isUsingTool = false;
 	public ArrayList<BaseData> searchResult = new ArrayList<BaseData>();
 	
-	public PlayerSession(GriefLog plugin, Player player) {
+	public PlayerSession(Player player) {
 		this.player = player;
-		this.plugin = plugin;
 	}
 	
-	public PlayerSession(GriefLog plugin, ConsoleCommandSender sender) {
+	public PlayerSession(ConsoleCommandSender sender) {
 		this.sender = sender;
-		this.plugin = plugin;
-	}
-	
+	}	
 	/**
 	 * Show this instance a message.
 	 * If the {@code player} equals to {@code null} the message will be send to {@code sender}.
@@ -177,10 +174,6 @@ public class PlayerSession implements Conversable {
 		return player != null ? player.isOp() : true;
 	}
 	
-	public GriefLog getGriefLog() {
-		return plugin;
-	}
-	
 	public World getWorld() {
 		return player.getWorld();
 	}
@@ -202,7 +195,7 @@ public class PlayerSession implements Conversable {
 	}
 
 	public Selection getWorldEditSelection() {
-		WorldEditPlugin we = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+		WorldEditPlugin we = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 		return we.getSelection(player);
 	}
 	

@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
+import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
@@ -25,7 +26,7 @@ public class Undo implements Runnable {
 		this.lineCount = 0;
 		
 		player.print(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
-		player.rollbackTaskID = Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), this, 0);
+		player.rollbackTaskID = Bukkit.getScheduler().scheduleSyncDelayedTask(GriefLog.getGriefLog(), this, 0);
 	}
 	
 	@Override
@@ -33,14 +34,14 @@ public class Undo implements Runnable {
 		for(int i = 0; i < result.size(); i++) {
 			undo(result.get(i));
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), new SendChangesTask(chunks, player), 0L);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(GriefLog.getGriefLog(), new SendChangesTask(chunks, player), 0L);
 		finishUndo();
 	}
 	
 	private void undo(BaseData baseData) {
 		Events event = Events.getEvent(baseData.getEvent());
 		if(event != null) {
-			if(event.getCanRollback()) { // TODO: don't rollback excluded types
+			if(event.getCanRollback()) {
 				baseData.undo(this);
 			}
 		}

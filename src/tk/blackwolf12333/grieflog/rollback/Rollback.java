@@ -27,7 +27,7 @@ public class Rollback implements Runnable {
 		
 		player.print(ChatColor.YELLOW + "[GriefLog] Now going to rollback " + result.size() + " events!");
 		
-		player.rollbackTaskID = Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), this, 0);
+		player.rollbackTaskID = Bukkit.getScheduler().scheduleSyncDelayedTask(GriefLog.getGriefLog(), this, 0);
 		current = System.currentTimeMillis();
 		GriefLog.debug("Starting rollback @: " + current);
 	}
@@ -42,7 +42,7 @@ public class Rollback implements Runnable {
 		for(int i = 0; i < result.size(); i++) {
 			rollback(result.get(i));
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(player.getGriefLog(), new SendChangesTask(chunks, player), 0L);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(GriefLog.getGriefLog(), new SendChangesTask(chunks, player), 0L);
 		finishRollback();
 	}
 	

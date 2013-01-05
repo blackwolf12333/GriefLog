@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -40,7 +41,6 @@ public class GriefLog extends JavaPlugin {
 	private EntityListener eListener = new EntityListener(this);
 	private BucketListener bucketListener = new BucketListener(this);
 	private WorldListener wListener = new WorldListener();
-	@SuppressWarnings("unused")
 	private HangingListener hListener = new HangingListener();
 	@SuppressWarnings("unused")
 	private InventoryListener iListener = new InventoryListener(this);
@@ -107,10 +107,10 @@ public class GriefLog extends JavaPlugin {
 
 	private void onReloadLoadPlayerSessions() {
 		for(Player p : getServer().getOnlinePlayers()) {
-			sessions.put(p.getName(), new PlayerSession(this, p));
+			sessions.put(p.getName(), new PlayerSession(p));
 		}
 		ConsoleCommandSender console = this.getServer().getConsoleSender();
-		sessions.put(console.getName(), new PlayerSession(this, console));
+		sessions.put(console.getName(), new PlayerSession(console));
 	}
 
 	private void registerListeners() {
@@ -120,7 +120,7 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		pm.registerEvents(wListener, this);
-//		pm.registerEvents(hListener, this);
+		pm.registerEvents(hListener, this);
 //		pm.registerEvents(iListener, this);
 	}
 
@@ -135,5 +135,9 @@ public class GriefLog extends JavaPlugin {
 
 	public static void debug(Object msg) {
 		log.log(msg, true);
+	}
+	
+	public static GriefLog getGriefLog() {
+		return (GriefLog) Bukkit.getServer().getPluginManager().getPlugin("GriefLog");
 	}
 }
