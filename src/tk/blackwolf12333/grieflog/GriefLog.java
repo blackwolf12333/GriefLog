@@ -3,6 +3,7 @@ package tk.blackwolf12333.grieflog;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -41,8 +42,9 @@ public class GriefLog extends JavaPlugin {
 	private EntityListener eListener = new EntityListener(this);
 	private BucketListener bucketListener = new BucketListener(this);
 	private WorldListener wListener = new WorldListener();
-	private HangingListener hListener = new HangingListener();
 	@SuppressWarnings("unused")
+	private HangingListener hListener = new HangingListener();
+//	@SuppressWarnings("unused")
 	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
@@ -120,8 +122,8 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		pm.registerEvents(wListener, this);
-		pm.registerEvents(hListener, this);
-//		pm.registerEvents(iListener, this);
+//		pm.registerEvents(hListener, this);
+		pm.registerEvents(iListener, this);
 	}
 
 	private void setupConfig() {
@@ -134,7 +136,14 @@ public class GriefLog extends JavaPlugin {
 	}
 
 	public static void debug(Object msg) {
-		log.log(msg, true);
+		if(msg instanceof List<?>) {
+			List<?> list = (List<?>) msg;
+			for(int i = 0; i < list.size(); i++) {
+				log.log(list.get(i), true);
+			}
+		} else {
+			log.log(msg, true);
+		}
 	}
 	
 	public static GriefLog getGriefLog() {
