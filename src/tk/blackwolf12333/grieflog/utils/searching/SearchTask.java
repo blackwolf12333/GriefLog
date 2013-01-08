@@ -35,6 +35,11 @@ public class SearchTask implements Runnable {
 		this.action = action;
 		this.args = args;
 		
+		if(!(this.args.size() > 0)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] No valid arguments given, nothing to search for.");
+			return;
+		}
+		
 		addFilesToList();
 		new Thread(this).start();
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
@@ -53,6 +58,11 @@ public class SearchTask implements Runnable {
 		this.args = args;
 		this.world = world;
 		
+		if(!(this.args.size() > 0)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] No valid arguments given, nothing to search for.");
+			return;
+		}
+		
 		addFilesToList();
 		new Thread(this).start();
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
@@ -69,6 +79,11 @@ public class SearchTask implements Runnable {
 		this.action = action;
 		this.args = getParserResult(parser);
 		this.world = parser.world;
+		
+		if(!(this.args.size() > 0)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] No valid arguments given, nothing to search for.");
+			return;
+		}
 		
 		addFilesToList();
 		new Thread(this).start();
@@ -88,6 +103,11 @@ public class SearchTask implements Runnable {
 		this.args = getParserResult(parser);
 		this.world = parser.world;
 		this.filters = filter;
+		
+		if(!(this.args.size() > 0)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] No valid arguments given, nothing to search for.");
+			return;
+		}
 		
 		addFilesToList();
 		new Thread(this).start();
@@ -122,6 +142,11 @@ public class SearchTask implements Runnable {
 		this.args = args;
 		this.world = world;
 		this.filters = filter;
+		
+		if(!(this.args.size() > 0)) {
+			p.print(ChatColor.YELLOW + "[GriefLog] No valid arguments given, nothing to search for.");
+			return;
+		}
 		
 		addFilesToList();
 		new Thread(this).start();
