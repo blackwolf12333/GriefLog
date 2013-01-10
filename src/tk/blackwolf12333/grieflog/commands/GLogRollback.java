@@ -11,7 +11,8 @@ import tk.blackwolf12333.grieflog.conversations.RollbackConversation;
 import tk.blackwolf12333.grieflog.utils.filters.BlockFilter;
 import tk.blackwolf12333.grieflog.utils.filters.WorldEditFilter;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.FilteredSearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class GLogRollback {
 	
@@ -41,10 +42,10 @@ public class GLogRollback {
 						if(checkParserErrors(parser, player)) {
 							if(parser.blockFilter != null) {
 								addParserResultsToUndoConfig(parser, true);
-								new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player), new BlockFilter(player, parser.blockFilter));
+								new FilteredSearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player), new BlockFilter(player, parser.blockFilter));
 							} else {
 								addParserResultsToUndoConfig(parser, true);
-								new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player));
+								new FilteredSearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player));
 							}
 						}
 						return true;
@@ -58,7 +59,7 @@ public class GLogRollback {
 				if(checkParserErrors(parser, player)) {
 					if(parser.blockFilter != null) {
 						addParserResultsToUndoConfig(parser, false);
-						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new BlockFilter(player, parser.blockFilter));
+						new FilteredSearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new BlockFilter(player, parser.blockFilter));
 					} else {
 						addParserResultsToUndoConfig(parser, false);
 						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser);
@@ -105,9 +106,9 @@ public class GLogRollback {
 	private void addParserResultsToUndoConfig(ArgumentParser parser, boolean we) {
 		String parsedArgs;
 		if(we)
-			parsedArgs = "we:" + parser.event + ":" + parser.player + ":" + parser.world;
+			parsedArgs = "we:" + parser.event + ":" + parser.player + ":" + parser.world + ":" + parser.blockFilter;
 		else
-			parsedArgs = parser.event + ":" + parser.player + ":" + parser.world;
+			parsedArgs = parser.event + ":" + parser.player + ":" + parser.world + ":" + parser.blockFilter;
 		GriefLog.undoConfig.add(parsedArgs);
 	}
 }

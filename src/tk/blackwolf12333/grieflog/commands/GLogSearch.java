@@ -7,7 +7,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.conversations.SearchConversation;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class GLogSearch {
 
@@ -37,9 +37,6 @@ public class GLogSearch {
 						return true;
 					}
 					
-					return true;
-				} else if((args.length == 2) && args[1].equals("we")) {
-					new SearchConversation(plugin, player);
 					return true;
 				} else {
 					ArgumentParser parser = new ArgumentParser(args);

@@ -9,12 +9,14 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.filters.WorldEditFilter;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.FilteredSearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class GLogUndo {
 
 	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry Dave, but i cannot let you do that! You don't have permission.";
 	
+	//TODO: add blockFilter to undo!!
 	public boolean onCommand(PlayerSession player, String[] args) {
 		if (player.hasPermission("grieflog.rollback")) {
 			if(args.length == 2) {
@@ -27,7 +29,7 @@ public class GLogUndo {
 						player.print(ChatColor.DARK_RED + "You have no rollback's I can undo!");
 						return true;
 					} else if(arguments.get(0).equals("we")) {
-						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.UNDO), arguments, arguments.get(3), new WorldEditFilter(player));
+						new FilteredSearchTask(player, new SearchCallback(player, SearchCallback.Type.UNDO), arguments, arguments.get(3), new WorldEditFilter(player));
 						return true;
 					} else {
 						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.UNDO), arguments, arguments.get(2));

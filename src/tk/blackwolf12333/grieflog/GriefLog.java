@@ -44,7 +44,7 @@ public class GriefLog extends JavaPlugin {
 	private WorldListener wListener = new WorldListener();
 	@SuppressWarnings("unused")
 	private HangingListener hListener = new HangingListener();
-//	@SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
@@ -123,7 +123,7 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(bucketListener, this);
 		pm.registerEvents(wListener, this);
 //		pm.registerEvents(hListener, this);
-		pm.registerEvents(iListener, this);
+//		pm.registerEvents(iListener, this);
 	}
 
 	private void setupConfig() {
