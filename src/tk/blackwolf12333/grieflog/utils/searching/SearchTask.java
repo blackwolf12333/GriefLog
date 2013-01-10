@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.BaseCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.utils.filters.Filter;
 
@@ -21,7 +21,7 @@ public class SearchTask implements Runnable {
 	
 	ArrayList<String> args = new ArrayList<String>();
 	PlayerSession p;
-	BaseCallback action;
+	SearchCallback action;
 	Filter[] filters;
 	
 	/**
@@ -30,7 +30,7 @@ public class SearchTask implements Runnable {
 	 * @param action The callback that should happen after the search has been completed.
 	 * @param args The arguments to search for.
 	 */
-	public SearchTask(PlayerSession p, BaseCallback action, ArrayList<String> args) {
+	public SearchTask(PlayerSession p, SearchCallback action, ArrayList<String> args) {
 		this.p = p;
 		this.action = action;
 		this.args = args;
@@ -52,7 +52,7 @@ public class SearchTask implements Runnable {
 	 * @param args The arguments to search for.
 	 * @param world The world where the PlayerSession wants to search in.
 	 */
-	public SearchTask(PlayerSession p, BaseCallback action, ArrayList<String> args, String world) {
+	public SearchTask(PlayerSession p, SearchCallback action, ArrayList<String> args, String world) {
 		this.p = p;
 		this.action = action;
 		this.args = args;
@@ -74,7 +74,7 @@ public class SearchTask implements Runnable {
 	 * @param action The callback that should happen after the search has been completed.
 	 * @param parser The {@link ArgumentParser} that contains the arguments to search for.
 	 */
-	public SearchTask(PlayerSession p, BaseCallback action, ArgumentParser parser) {
+	public SearchTask(PlayerSession p, SearchCallback action, ArgumentParser parser) {
 		this.p = p;
 		this.action = action;
 		this.args = getParserResult(parser);
@@ -97,7 +97,7 @@ public class SearchTask implements Runnable {
 	 * @param parser The {@link ArgumentParser} that contains the arguments to search for.
 	 * @param filter The filter to apply after the search is done.
 	 */
-	public SearchTask(PlayerSession p, BaseCallback action, ArgumentParser parser, Filter... filter) {
+	public SearchTask(PlayerSession p, SearchCallback action, ArgumentParser parser, Filter... filter) {
 		this.p = p;
 		this.action = action;
 		this.args = getParserResult(parser);
@@ -136,7 +136,7 @@ public class SearchTask implements Runnable {
 	 * @param args The arguments to search for.
 	 * @param world The world where the PlayerSession wants to search in.
 	 */
-	public SearchTask(PlayerSession p, BaseCallback action, ArrayList<String> args, String world, Filter... filter) {
+	public SearchTask(PlayerSession p, SearchCallback action, ArrayList<String> args, String world, Filter... filter) {
 		this.p = p;
 		this.action = action;
 		this.args = args;

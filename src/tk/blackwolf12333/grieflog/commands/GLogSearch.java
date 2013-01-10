@@ -33,7 +33,7 @@ public class GLogSearch {
 					} else if(parser.eventNullError) { 
 						player.print(ChatColor.DARK_RED + "You misspelled the event, try again.");
 					} else {
-						new SearchTask(player, new SearchCallback(player), parser);
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
 						return true;
 					}
 					
@@ -44,7 +44,7 @@ public class GLogSearch {
 				} else {
 					ArgumentParser parser = new ArgumentParser(args);
 					
-					new SearchTask(player, new SearchCallback(player), parser);
+					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
 					return true;
 				}
 			}

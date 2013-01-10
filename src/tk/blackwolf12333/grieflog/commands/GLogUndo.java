@@ -6,8 +6,7 @@ import org.bukkit.ChatColor;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.RollbackCallback;
-import tk.blackwolf12333.grieflog.callback.UndoCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.filters.WorldEditFilter;
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
@@ -28,10 +27,10 @@ public class GLogUndo {
 						player.print(ChatColor.DARK_RED + "You have no rollback's I can undo!");
 						return true;
 					} else if(arguments.get(0).equals("we")) {
-						new SearchTask(player, new RollbackCallback(player), arguments, arguments.get(3), new WorldEditFilter(player));
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.UNDO), arguments, arguments.get(3), new WorldEditFilter(player));
 						return true;
 					} else {
-						new SearchTask(player, new UndoCallback(player), arguments, arguments.get(2));
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.UNDO), arguments, arguments.get(2));
 						return true;
 					}
 				}

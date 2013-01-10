@@ -14,7 +14,7 @@ import org.bukkit.conversations.ValidatingPrompt;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.RollbackCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
@@ -38,7 +38,7 @@ public class RollbackConversation extends BaseConversation implements Conversati
 			addToListIfNotNull(eventName, args);
 			addToListIfNotNull(world, args);
 			if((event.getContext().getForWhom() instanceof PlayerSession)) {
-				new SearchTask(p, new RollbackCallback(p), args);
+				new SearchTask(p, new SearchCallback(p, SearchCallback.Type.ROLLBACK), args);
 			} else {
 				event.getContext().getForWhom().sendRawMessage("Failed to send your rollback request, to solve this you could try to reconnect.");
 			}

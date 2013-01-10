@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.RollbackCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.conversations.RollbackConversation;
 import tk.blackwolf12333.grieflog.utils.filters.BlockFilter;
 import tk.blackwolf12333.grieflog.utils.filters.WorldEditFilter;
@@ -41,10 +41,10 @@ public class GLogRollback {
 						if(checkParserErrors(parser, player)) {
 							if(parser.blockFilter != null) {
 								addParserResultsToUndoConfig(parser, true);
-								new SearchTask(player, new RollbackCallback(player), parser, new WorldEditFilter(player), new BlockFilter(player, parser.blockFilter));
+								new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player), new BlockFilter(player, parser.blockFilter));
 							} else {
 								addParserResultsToUndoConfig(parser, true);
-								new SearchTask(player, new RollbackCallback(player), parser, new WorldEditFilter(player));
+								new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new WorldEditFilter(player));
 							}
 						}
 						return true;
@@ -58,10 +58,10 @@ public class GLogRollback {
 				if(checkParserErrors(parser, player)) {
 					if(parser.blockFilter != null) {
 						addParserResultsToUndoConfig(parser, false);
-						new SearchTask(player, new RollbackCallback(player), parser, new BlockFilter(player, parser.blockFilter));
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser, new BlockFilter(player, parser.blockFilter));
 					} else {
 						addParserResultsToUndoConfig(parser, false);
-						new SearchTask(player, new RollbackCallback(player), parser);
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser);
 					}
 				}
 				

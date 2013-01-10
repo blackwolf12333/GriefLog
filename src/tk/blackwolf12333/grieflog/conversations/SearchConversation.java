@@ -35,7 +35,7 @@ public class SearchConversation extends BaseConversation implements Conversation
 			addToListIfNotNull(eventName, args);
 			addToListIfNotNull(world, args);
 			if((event.getContext().getForWhom() instanceof PlayerSession)) {
-				new SearchTask(p, new SearchCallback(p), args);
+				new SearchTask(p, new SearchCallback(p, SearchCallback.Type.SEARCH), args);
 			} else {
 				event.getContext().getForWhom().sendRawMessage("Failed to send your search request, to solve this you could try to reconnect.");
 			}

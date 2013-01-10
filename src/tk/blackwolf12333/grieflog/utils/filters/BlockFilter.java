@@ -10,7 +10,7 @@ import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.data.block.BaseBlockData;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
-public class BlockFilter extends Filter {
+public class BlockFilter implements Filter {
 
 	PlayerSession player;
 	ArrayList<Material> allowed;

@@ -16,7 +16,6 @@ import org.bukkit.inventory.PlayerInventory;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
-import tk.blackwolf12333.grieflog.callback.TpToCallback;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
@@ -146,7 +145,7 @@ public class CommandHandler {
 		int z = p.getLocation().getBlockZ();
 		
 		searchArgs.add(x + ", " + y + ", " + z);
-		new SearchTask(sender, new SearchCallback(sender), searchArgs);
+		new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.SEARCH), searchArgs);
 		return true;
 	}
 	
@@ -166,7 +165,7 @@ public class CommandHandler {
 				arg.add(Events.QUIT.getEventName());
 				arg.add(to);
 				
-				new SearchTask(sender, new TpToCallback(sender), arg);
+				new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), arg);
 				return true;
 			}
 		} else {
@@ -178,7 +177,7 @@ public class CommandHandler {
 	public boolean getXYZ(String x, String y, String z) {
 		if(sender.hasPermission("grieflog.get.xyz")) {
 			searchArgs.add(x + ", " + y + ", " + z);
-			new SearchTask(sender, new SearchCallback(sender), searchArgs);
+			new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.SEARCH), searchArgs);
 			
 			return true;
 		} else {

@@ -7,7 +7,7 @@ public enum Events {
 	WATER ("[BUCKET_WATER_EMPTY]", true, "water", "water_bucket"),
 	IGNITE ("[BLOCK_IGNITE]", false, "fire", "ignite", "block_ignite"),
 	ENDERMAN_PICKUP ("[ENDERMAN_PICKUP]", true, "pickup", "enderman_pickup", "events_enderman", "endermangrief"),
-	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", true, "place", "enderman_place", "events_enderman", "endermangrief"),
+	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", true, "enderman_place", "events_enderman", "endermangrief"),
 	ZOMBIEBREAKDOOR ("[ENTITY_BREAK_DOOR]", true, "zombiebreakdoor"),
 	EXPLODE ("[ENTITY_EXPLODE]", true, "explode", "explosion"),
 	JOIN ("[PLAYER_LOGIN]", false, "player_join", "player_login", "login", "join"),
@@ -15,8 +15,9 @@ public enum Events {
 	COMMAND ("[PLAYER_COMMAND]",false, "player_command", "command"),
 	GAMEMODE ("[GAMEMODE_CHANGE]", false, "gamemode_change", "gamemode"),
 	WORLDCHANGE ("[WORLD_CHANGE]", false, "world_change", "world"),
-	PAINTINGBREAK ("[PAINTING_BREAK]", true, "paintingbreak", "painting_break", "pbreak"),
-	PAINTINGPLACE ("[PAINTING_PLACE]", true, "paintingplace", "painting_place", "pplace");
+	HANGINGBREAK ("[HANGING_BREAK]", true, "hangingbreak", "hanging_break", "hbreak"),
+	HANGINGPLACE ("[HANGING_PLACE]", true, "hangingplace", "hanging_place", "hplace"),
+	CHESTACCESS ("[CHEST_ACCESS]", true, "chestaccess", "chest");
 	
 	private final String event;
 	private final String[] alias;

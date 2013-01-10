@@ -4,7 +4,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
-public class WorldEditFilter extends Filter {
+public class WorldEditFilter implements Filter {
 
 	PlayerSession player;
 	
