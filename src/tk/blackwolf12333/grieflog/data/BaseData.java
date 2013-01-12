@@ -133,7 +133,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 				return BaseEntityData.loadFromString(line);
 			} else if(line.contains(Events.LAVA.getEventName()) || line.contains(Events.WATER.getEventName())) {
 				return BucketData.loadFromString(line);
-			} else if(line.contains(Events.PAINTINGBREAK.getEventName()) || line.contains(Events.PAINTINGPLACE.getEventName())) {
+			} else if(line.contains(Events.HANGINGBREAK.getEventName()) || line.contains(Events.HANGINGPLACE.getEventName())) {
 				return BaseHangingData.loadFromString(line);
 			} else {
 				return BasePlayerData.loadFromString(line);
@@ -184,4 +184,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 * @return Returns the name of the player involved in this event.
 	 */
 	public abstract String getPlayerName();
+	
+	@Override
+	public abstract String toString();
 }

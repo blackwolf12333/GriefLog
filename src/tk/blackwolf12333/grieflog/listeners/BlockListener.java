@@ -26,7 +26,7 @@ import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class BlockListener implements Listener {
 
@@ -131,7 +131,7 @@ public class BlockListener implements Listener {
 			
 			ArrayList<String> args = new ArrayList<String>();
 			args.add(x + ", " + y + ", " + z);
-			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer())), args, world);
+			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer()), SearchCallback.Type.SEARCH), args, world);
 		}
 		
 		if((!event.isCancelled())) {

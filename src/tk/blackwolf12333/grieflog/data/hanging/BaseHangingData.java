@@ -1,11 +1,14 @@
 package tk.blackwolf12333.grieflog.data.hanging;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
@@ -20,6 +23,7 @@ public abstract class BaseHangingData extends BaseData {
 	protected String xyz;
 	protected String playerName;
 	protected String hangingType;
+	protected String art;
 	protected Integer gamemode;
 	
 	@Override
@@ -66,6 +70,16 @@ public abstract class BaseHangingData extends BaseData {
 		return xyz;
 	}
 	
+	protected Entity getEntityAt(Location loc) {
+		Collection<Hanging> hanging = Bukkit.getWorld(worldName).getEntitiesByClass(Hanging.class);
+		for(Hanging h : hanging) {
+			if(h.getLocation().equals(loc)) {
+				return h;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public void tpto(PlayerSession who) {
 		World world = Bukkit.getServer().getWorld(worldName);
@@ -96,9 +110,9 @@ public abstract class BaseHangingData extends BaseData {
 	}
 	
 	public static BaseHangingData loadFromString(String data) {
-		if(data.contains(Events.PAINTINGBREAK.getEventName())) {
+		if(data.contains(Events.HANGINGBREAK.getEventName())) {
 			return handleHangingBreakData(data.split(" "));
-		} else if(data.contains(Events.PAINTINGPLACE.getEventName())) {
+		} else if(data.contains(Events.HANGINGPLACE.getEventName())) {
 			return handleHangingPlaceData(data.split(" "));
 		}
 		return null;

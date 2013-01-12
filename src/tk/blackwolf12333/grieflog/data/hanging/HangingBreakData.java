@@ -5,8 +5,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.Material;
 
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
@@ -24,7 +23,7 @@ public class HangingBreakData extends BaseHangingData {
 		this.playerName = player;
 		this.hangingType = hangingType;
 		this.gamemode = gm;
-		this.event = Events.PAINTINGBREAK.getEventName();
+		this.event = Events.HANGINGBREAK.getEventName();
 	}
 	
 	public HangingBreakData(String time, int x, int y, int z, String world, String player, int gm, String hangingType) {
@@ -37,13 +36,13 @@ public class HangingBreakData extends BaseHangingData {
 		this.playerName = player;
 		this.hangingType = hangingType;
 		this.gamemode = gm;
-		this.event = Events.PAINTINGBREAK.getEventName();
+		this.event = Events.HANGINGBREAK.getEventName();
 	}
 	
 	@Override
 	public void rollback(Rollback rollback) {
 		Location loc = new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
-		Bukkit.getWorld(worldName).spawnEntity(loc, EntityType.fromName(this.hangingType)); //TODO: bukkit can't spawn paintings this way
+		setBlockFast(loc, Material.getMaterial(hangingType).getId(), (byte) 0x0);
 		rollback.chunks.add(loc.getChunk());
 	}
 
@@ -52,13 +51,6 @@ public class HangingBreakData extends BaseHangingData {
 		Location loc = new Location(Bukkit.getWorld(worldName), this.blockX, this.blockY, this.blockZ);
 		getEntityAt(loc).remove();
 		undo.chunks.add(loc.getChunk());
-	}
-
-	private Entity getEntityAt(Location loc) {
-		for(Entity e : loc.getWorld().getEntities()) {
-			e.getLocation().equals(loc);
-		}
-		return null;
 	}
 
 	@Override

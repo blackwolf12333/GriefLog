@@ -18,32 +18,6 @@ public class InventoryStringDeSerializer {
             ItemStack is = invInventory.getItem(i);
             if (is != null)
             {
-                /*String serializedItemStack = new String();
-               
-                String isType = String.valueOf(is.getType().getId());
-                serializedItemStack += "t@" + isType;
-               
-                if (is.getDurability() != 0)
-                {
-                    String isDurability = String.valueOf(is.getDurability());
-                    serializedItemStack += ":d@" + isDurability;
-                }
-               
-                if (is.getAmount() != 1)
-                {
-                    String isAmount = String.valueOf(is.getAmount());
-                    serializedItemStack += ":a@" + isAmount;
-                }
-               
-                Map<Enchantment,Integer> isEnch = is.getEnchantments();
-                if (isEnch.size() > 0)
-                {
-                    for (Entry<Enchantment,Integer> ench : isEnch.entrySet())
-                    {
-                        serializedItemStack += ":e@" + ench.getKey().getId() + "@" + ench.getValue();
-                    }
-                }
-               */
                 serialization += i + "#" + itemToString(is) + ";";
             }
         }
@@ -72,7 +46,7 @@ public class InventoryStringDeSerializer {
             String[] serializedItemStack = serializedBlock[1].split(":");
             for (String itemInfo : serializedItemStack)
             {
-                String[] itemAttribute = itemInfo.split("@");
+                String[] itemAttribute = itemInfo.split("=");
                 if (itemAttribute[0].equals("t"))
                 {
                     is = new ItemStack(Material.getMaterial(itemAttribute[1]));
@@ -101,18 +75,18 @@ public class InventoryStringDeSerializer {
     	String serializedItemStack = new String();
     	if(is != null) {
     		int isType = is.getTypeId();
-    		serializedItemStack += "t@" + isType;
+    		serializedItemStack += "t=" + isType;
         	
         	if (is.getDurability() != 0)
         	{
         		String isDurability = String.valueOf(is.getDurability());
-        		serializedItemStack += ":d@" + isDurability;
+        		serializedItemStack += ":d=" + isDurability;
         	}
         	
         	if (is.getAmount() != 1)
         	{
         		String isAmount = String.valueOf(is.getAmount());
-        		serializedItemStack += ":a@" + isAmount;
+        		serializedItemStack += ":a=" + isAmount;
         	}
         	
         	Map<Enchantment,Integer> isEnch = is.getEnchantments();
@@ -120,7 +94,7 @@ public class InventoryStringDeSerializer {
         	{
         		for (Entry<Enchantment,Integer> ench : isEnch.entrySet())
         		{
-        			serializedItemStack += ":e@" + ench.getKey().getId() + "@" + ench.getValue();
+        			serializedItemStack += ":e=" + ench.getKey().getId() + "=" + ench.getValue();
         		}
         	}
     	}
@@ -128,6 +102,31 @@ public class InventoryStringDeSerializer {
     }
     
     public static ItemStack stringToItem(String str) {
-    	return null; //TODO: implement the stringToItem function in InventoryStringDeSerializer
+    	ItemStack is = null;
+        Boolean createdItemStack = false;
+       
+        String[] serializedItemStack = str.split(":");
+        for (String itemInfo : serializedItemStack)
+        {
+            String[] itemAttribute = itemInfo.split("=");
+            if (itemAttribute[0].equals("t"))
+            {
+                is = new ItemStack(Material.getMaterial(itemAttribute[1]));
+                createdItemStack = true;
+            }
+            else if (itemAttribute[0].equals("d") && createdItemStack)
+            {
+                is.setDurability(Short.valueOf(itemAttribute[1]));
+            }
+            else if (itemAttribute[0].equals("a") && createdItemStack)
+            {
+                is.setAmount(Integer.valueOf(itemAttribute[1]));
+            }
+            else if (itemAttribute[0].equals("e") && createdItemStack)
+            {
+                is.addEnchantment(Enchantment.getById(Integer.valueOf(itemAttribute[1])), Integer.valueOf(itemAttribute[2]));
+            }
+        }
+    	return is; //TODO: implement the stringToItem function in InventoryStringDeSerializer
     }
 }

@@ -115,7 +115,11 @@ public class PlayerListener implements Listener {
 				
 				ArrayList<String> args = new ArrayList<String>();
 				args.add(x + ", " + y + ", " + z);
+<<<<<<< HEAD
 				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), args, world);
+=======
+				new SearchTask(player, new SearchCallback(player), args, world);
+>>>>>>> b72a6e8156a4ffe473266872bc48d4b20b0c9e10
 			}
 		} else if(a == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getPlayer().getInventory().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
