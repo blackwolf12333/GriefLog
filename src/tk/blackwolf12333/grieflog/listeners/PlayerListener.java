@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
-import tk.blackwolf12333.grieflog.callback.ToolCallback;
+import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.player.PlayerChangedGamemodeData;
 import tk.blackwolf12333.grieflog.data.player.PlayerChangedWorldData;
 import tk.blackwolf12333.grieflog.data.player.PlayerCommandData;
@@ -26,7 +26,7 @@ import tk.blackwolf12333.grieflog.data.player.PlayerJoinData;
 import tk.blackwolf12333.grieflog.data.player.PlayerQuitData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class PlayerListener implements Listener {
 
@@ -57,6 +57,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (ConfigHandler.values.getCommand()) {
+			if(ConfigHandler.values.getIgnoredCommands().contains(event.getMessage().split(" ")[0].trim())) return;
 			PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
 			
 			new GriefLogger(data);
@@ -67,7 +68,7 @@ public class PlayerListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		if (ConfigHandler.values.getPlayerJoin()) {
 			Player p = event.getPlayer();
-			GriefLog.sessions.put(p.getName(), new PlayerSession(plugin, p));
+			GriefLog.sessions.put(p.getName(), new PlayerSession(p));
 			
 			String address = event.getPlayer().getAddress().getAddress().getHostAddress();
 			int x = p.getLocation().getBlockX();
@@ -114,7 +115,7 @@ public class PlayerListener implements Listener {
 				
 				ArrayList<String> args = new ArrayList<String>();
 				args.add(x + ", " + y + ", " + z);
-				new SearchTask(player, new ToolCallback(player), args, world);
+				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), args, world);
 			}
 		} else if(a == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getPlayer().getInventory().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
