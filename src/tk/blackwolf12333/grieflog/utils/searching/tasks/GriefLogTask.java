@@ -112,6 +112,7 @@ public abstract class GriefLogTask implements Runnable {
 		String l = line.trim();
 		for(String arg : args) {
 			if(l.contains(arg)) {
+				GriefLog.debug(arg);
 				continue;
 			} else {
 				return false;

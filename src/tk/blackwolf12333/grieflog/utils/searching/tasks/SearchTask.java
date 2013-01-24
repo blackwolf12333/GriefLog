@@ -1,6 +1,5 @@
 package tk.blackwolf12333.grieflog.utils.searching.tasks;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
@@ -80,58 +79,12 @@ public class SearchTask extends GriefLogTask implements Runnable {
 	}
 	
 	/**
-	 * This function add's all the files we need to search through to {@code filesToSearch}
-	 */
-	public void addFilesToList() {
-		if(GriefLog.logsDir.exists()) {
-			if((world != null) && (!world.equalsIgnoreCase("null"))) {
-				File f = new File(GriefLog.logsDir, world);
-				addFilesInsideToFilesToSearch(f);
-				addFilesInLogsDir();
-			} else {
-				File[] list = GriefLog.logsDir.listFiles();
-				for (File f : list) {
-					if(f.isFile()) {
-						filesToSearch.add(f);
-					} else if(f.isDirectory()) {
-						addFilesInsideToFilesToSearch(f);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Add's all the files inside the directory file {@code f}.
-	 * @param f The directory file.
-	 */
-	private void addFilesInsideToFilesToSearch(File f) {
-		f.mkdir();
-		File[] dircontents = f.listFiles();
-		for(File file : dircontents) {
-			if(file.isFile()) {
-				filesToSearch.add(file);
-			}
-		}
-	}
-	
-	/**
-	 * Add's all the files in the logs directory to keep compatibility with older versions.
-	 */
-	private void addFilesInLogsDir() {
-		for(File f : GriefLog.logsDir.listFiles()) {
-			if(f.isFile()) {
-				filesToSearch.add(f);
-			}
-		}
-	}
-	
-	/**
 	 * Add's the parsed result of BaseData.loadFromString(line) to {@code foundData} if the line contained the search arguments.
 	 * @param line The line to check.
 	 */
 	protected void addToFoundDataIfContainsArguments(String line) {
 		if (lineContainsArguments(line)) {
+			GriefLog.debug(line);
 			foundData.add(BaseData.loadFromString(line));
 		}
 	}
