@@ -47,7 +47,7 @@ public class ArgumentParser {
 					player = split1[1];
 					break;
 				case 'e':
-					event = split1[1];
+					event = getEventFromAlias(split1[1]);
 					break;
 				case 'w':
 					world = split1[1];
@@ -68,7 +68,7 @@ public class ArgumentParser {
 					player = split1[1];
 					break;
 				case 'e':
-					event = split1[1];
+					event = getEventFromAlias(split1[1]);
 					break;
 				case 'w':
 					world = split1[1];
@@ -84,7 +84,7 @@ public class ArgumentParser {
 					player = split2[1];
 					break;
 				case 'e':
-					event = split2[1];
+					event = getEventFromAlias(split2[1]);
 					break;
 				case 'w':
 					world = split2[1];
@@ -107,7 +107,7 @@ public class ArgumentParser {
 					player = split1[1];
 					break;
 				case 'e':
-					event = split1[1];
+					event = getEventFromAlias(split1[1]);
 					break;
 				case 'w':
 					world = split1[1];
@@ -123,7 +123,7 @@ public class ArgumentParser {
 					player = split2[1];
 					break;
 				case 'e':
-					event = split2[1];
+					event = getEventFromAlias(split2[1]);
 					break;
 				case 'w':
 					world = split2[1];
@@ -139,7 +139,7 @@ public class ArgumentParser {
 					player = split3[1];
 					break;
 				case 'e':
-					event = split3[1];
+					event = getEventFromAlias(split3[1]);
 					break;
 				case 'w':
 					world = split3[1];
@@ -164,7 +164,7 @@ public class ArgumentParser {
 					player = split1[1];
 					break;
 				case 'e':
-					event = split1[1];
+					event = getEventFromAlias(split1[1]);
 					break;
 				case 'w':
 					world = split1[1];
@@ -180,7 +180,7 @@ public class ArgumentParser {
 					player = split2[1];
 					break;
 				case 'e':
-					event = split2[1];
+					event = getEventFromAlias(split2[1]);
 					break;
 				case 'w':
 					world = split2[1];
@@ -196,7 +196,7 @@ public class ArgumentParser {
 					player = split3[1];
 					break;
 				case 'e':
-					event = split3[1];
+					event = getEventFromAlias(split3[1]);
 					break;
 				case 'w':
 					world = split3[1];
@@ -212,7 +212,7 @@ public class ArgumentParser {
 					player = split4[1];
 					break;
 				case 'e':
-					event = split4[1];
+					event = getEventFromAlias(split4[1]);
 					break;
 				case 'w':
 					world = split4[1];

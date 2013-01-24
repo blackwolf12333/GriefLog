@@ -127,6 +127,6 @@ public class InventoryStringDeSerializer {
                 is.addEnchantment(Enchantment.getById(Integer.valueOf(itemAttribute[1])), Integer.valueOf(itemAttribute[2]));
             }
         }
-    	return is; //TODO: implement the stringToItem function in InventoryStringDeSerializer
+    	return is; //TODO: Test this: implement the stringToItem function in InventoryStringDeSerializer
     }
 }
