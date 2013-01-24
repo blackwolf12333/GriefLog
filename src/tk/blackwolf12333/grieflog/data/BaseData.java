@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_4_6.CraftChunk;
+import org.bukkit.craftbukkit.v1_4_R1.CraftChunk;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.block.BaseBlockData;
@@ -99,7 +99,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 */
 	public void setBlockFast(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
-		net.minecraft.server.v1_4_6.Chunk chunk = ((CraftChunk) c).getHandle();
+		net.minecraft.server.v1_4_R1.Chunk chunk = ((CraftChunk) c).getHandle();
 		chunk.a(x & 15, y, z & 15, typeID, data);
 	}
 	
