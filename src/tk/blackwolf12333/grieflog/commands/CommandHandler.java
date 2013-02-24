@@ -187,7 +187,7 @@ public class CommandHandler {
 	}
 	
 	public boolean page(String page) {
-		if(sender.hasPermission("grieflog.search")) {
+		if(sender.hasPermission("grieflog.page")) {
 			if(PageManager.pages.size() <= 0) {
 				sender.print(ChatColor.RED + "No pages found, Sorry.");
 				return true;
