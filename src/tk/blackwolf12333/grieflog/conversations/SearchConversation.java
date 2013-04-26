@@ -1,7 +1,5 @@
 package tk.blackwolf12333.grieflog.conversations;
 
-import java.util.ArrayList;
-
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationContext;
@@ -13,6 +11,7 @@ import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
+import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
 public class SearchConversation extends BaseConversation implements ConversationAbandonedListener {
@@ -27,15 +26,12 @@ public class SearchConversation extends BaseConversation implements Conversation
 	@Override
 	public void conversationAbandoned(ConversationAbandonedEvent event) {
 		if(event.gracefulExit()) {
-			ArrayList<String> args = new ArrayList<String>();
-			String player = event.getContext().getSessionData("player").toString();
-			String eventName = event.getContext().getSessionData("event").toString();
-			String world = event.getContext().getSessionData("world").toString();
-			addToListIfNotNull(player, args);
-			addToListIfNotNull(eventName, args);
-			addToListIfNotNull(world, args);
+			ArgumentParser parser = new ArgumentParser(null);
+			parser.player = event.getContext().getSessionData("player").toString();
+			parser.event = event.getContext().getSessionData("event").toString();
+			parser.world = event.getContext().getSessionData("world").toString();
 			if((event.getContext().getForWhom() instanceof PlayerSession)) {
-				new SearchTask(p, new SearchCallback(p, SearchCallback.Type.SEARCH), args);
+				new SearchTask(p, new SearchCallback(p, SearchCallback.Type.SEARCH), parser);
 			} else {
 				event.getContext().getForWhom().sendRawMessage("Failed to send your search request, to solve this you could try to reconnect.");
 			}

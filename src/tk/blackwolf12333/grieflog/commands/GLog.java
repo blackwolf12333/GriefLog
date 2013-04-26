@@ -19,10 +19,7 @@ public class GLog implements CommandExecutor {
 			"Commands:",
 			ChatColor.GOLD + "/glog: " + ChatColor.DARK_GRAY + "This gets the current version of GriefLog.",
 			ChatColor.GOLD + "/glog help: " + ChatColor.DARK_GRAY + "Shows this help text.",
-			ChatColor.GOLD + "/glog get here: " + ChatColor.DARK_GRAY + "This gets the events from the block you are currently standing in.",
-			ChatColor.GOLD + "/glog get blockX blockY blockZ: " + ChatColor.DARK_GRAY + "Here you have to fill in the x y and z coordinates yourself.",
 			ChatColor.GOLD + "/glog rollback <options>: " + ChatColor.DARK_GRAY + "Rolls the actions from the given options.",
-			ChatColor.GOLD + "/glog pos:" + ChatColor.DARK_GRAY + " Gets your current position.",
 			ChatColor.GOLD + "/glog tool: " + ChatColor.DARK_GRAY + "Gives you the grieflog tool with what you can check who griefed something.",
 			ChatColor.GOLD + "/glog search <options>: " + ChatColor.DARK_GRAY + "This lets you search for the specified arguments, these work the same as with the rollback arguments.",
 			ChatColor.GOLD + "/glog tpto <player>: " + ChatColor.DARK_GRAY + "This teleports you to <player>, if he is offline you will teleport to his/her last location.",
@@ -56,23 +53,11 @@ public class GLog implements CommandExecutor {
 					return handler.reload();
 				} else if (args[0].equalsIgnoreCase("tool")) {
 					return handler.giveTool();
-				} else if (args[0].equalsIgnoreCase("pos")) {
-					return handler.getPosition();
 				}
 			} 
 			if (args.length == 2) {
-				if (args[0].equalsIgnoreCase("get")) {
-					if(args[1].equalsIgnoreCase("here"))
-						return handler.getHere();
-				}  else if (args[0].equalsIgnoreCase("pos")) {
-					return handler.getPositionOf(args[1]);
-				} else if(args[0].equalsIgnoreCase("tpto")) {
+				if(args[0].equalsIgnoreCase("tpto")) {
 					return handler.tpto(args[1]);
-				}
-			}
-			if (args.length == 4) {
-				if (args[0].equalsIgnoreCase("get")) {
-					return handler.getXYZ(args[1], args[2], args[3]);
 				}
 			}
 			if(args.length > 0) {

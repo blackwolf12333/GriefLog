@@ -15,15 +15,14 @@ import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.listeners.BlockListener;
 import tk.blackwolf12333.grieflog.listeners.BucketListener;
 import tk.blackwolf12333.grieflog.listeners.EntityListener;
-import tk.blackwolf12333.grieflog.listeners.HangingListener;
 import tk.blackwolf12333.grieflog.listeners.PlayerListener;
 import tk.blackwolf12333.grieflog.listeners.WorldListener;
 import tk.blackwolf12333.grieflog.listeners.inventory.InventoryListener;
 import tk.blackwolf12333.grieflog.utils.Debug;
 import tk.blackwolf12333.grieflog.utils.FileIO;
+import tk.blackwolf12333.grieflog.utils.UndoSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
-import tk.blackwolf12333.grieflog.utils.config.UndoConfig;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
 
 public class GriefLog extends JavaPlugin {
@@ -33,17 +32,14 @@ public class GriefLog extends JavaPlugin {
 	
 	public static Time t = new Time();
 	public static FileIO fileIO = new FileIO();
-	public static UndoConfig undoConfig = new UndoConfig();
 	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
-	
+	public static UndoSerializer undoSerializer;
 	
 	private BlockListener bListener = new BlockListener(this);
 	private PlayerListener pListener = new PlayerListener(this);
 	private EntityListener eListener = new EntityListener(this);
 	private BucketListener bucketListener = new BucketListener(this);
 	private WorldListener wListener = new WorldListener();
-	@SuppressWarnings("unused")
-	private HangingListener hListener = new HangingListener();
 	@SuppressWarnings("unused")
 	private InventoryListener iListener = new InventoryListener(this);
 	
@@ -56,8 +52,8 @@ public class GriefLog extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		undoConfig.save();
 		sessions.clear();
+		undoSerializer.save();
 		garbageStatics();
 		garbageListeners();
 		
@@ -72,18 +68,17 @@ public class GriefLog extends JavaPlugin {
 		eListener = null;
 		bucketListener = null;
 		wListener = null;
-		hListener = null;
 		iListener = null;
 	}
 
 	private void garbageStatics() {
 		sessions = null;
-		undoConfig = null;
 		sessions = null;
 		t = null;
 		fileIO = null;
 		glogCommand = null;
 		logsDir = null;
+		undoSerializer = null;
 	}
 
 	@Override
@@ -93,9 +88,15 @@ public class GriefLog extends JavaPlugin {
 		getCommand("glog").setExecutor(glogCommand);
 		onReloadLoadPlayerSessions();
 		setupMetrics();
+		loadUndo();
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void loadUndo() {
+		undoSerializer = new UndoSerializer();
+		undoSerializer.load();
 	}
 
 	private void setupMetrics() {
@@ -122,7 +123,6 @@ public class GriefLog extends JavaPlugin {
 		pm.registerEvents(eListener, this);
 		pm.registerEvents(bucketListener, this);
 		pm.registerEvents(wListener, this);
-//		pm.registerEvents(hListener, this);
 //		pm.registerEvents(iListener, this);
 	}
 
@@ -143,6 +143,12 @@ public class GriefLog extends JavaPlugin {
 			}
 		} else {
 			log.log(msg, true);
+		}
+	}
+	
+	public static void debug(String args[]) {
+		for(String s : args) {
+			log.log(s, true);
 		}
 	}
 	

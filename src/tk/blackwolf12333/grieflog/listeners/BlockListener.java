@@ -1,7 +1,5 @@
 package tk.blackwolf12333.grieflog.listeners;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -25,6 +23,7 @@ import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
+import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
@@ -129,9 +128,7 @@ public class BlockListener implements Listener {
 
 			event.setCancelled(true);
 			
-			ArrayList<String> args = new ArrayList<String>();
-			args.add(x + ", " + y + ", " + z);
-			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer()), SearchCallback.Type.SEARCH), args, world);
+			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer()), SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
 		}
 		
 		if((!event.isCancelled())) {

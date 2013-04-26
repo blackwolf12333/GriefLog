@@ -1,7 +1,5 @@
 package tk.blackwolf12333.grieflog.listeners;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -25,6 +23,7 @@ import tk.blackwolf12333.grieflog.data.player.PlayerCommandData;
 import tk.blackwolf12333.grieflog.data.player.PlayerJoinData;
 import tk.blackwolf12333.grieflog.data.player.PlayerQuitData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
+import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
@@ -111,12 +110,8 @@ public class PlayerListener implements Listener {
 				String world = b.getWorld().getName();
 
 				event.setCancelled(true);
-				p.getInventory().setMaxStackSize(64);
 				
-				ArrayList<String> args = new ArrayList<String>();
-				args.add(x + ", " + y + ", " + z);
-				
-				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), args, world);
+				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
 			}
 		} else if(a == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getPlayer().getInventory().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {

@@ -18,6 +18,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
+import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
 import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
 
@@ -133,22 +134,6 @@ public class CommandHandler {
 		}
 	}
 	
-	public boolean getHere() {
-		if (sender.getPlayer() == null) {
-			sender.print(ChatColor.RED + "[GriefLog] This command is only for ingame sessions!");
-			return true;
-		}
-		
-		Player p = sender.getPlayer();
-		int x = p.getLocation().getBlockX();
-		int y = p.getLocation().getBlockY();
-		int z = p.getLocation().getBlockZ();
-		
-		searchArgs.add(x + ", " + y + ", " + z);
-		new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.SEARCH), searchArgs);
-		return true;
-	}
-	
 	public boolean tpto(String to) {
 		if(sender.hasPermission("grieflog.tpto")) {
 			if(sender.getPlayer() == null) {
@@ -160,28 +145,16 @@ public class CommandHandler {
 				sender.print("error");
 				return true;
 			} else {
-				ArrayList<String> arg = new ArrayList<String>();
+				ArgumentParser parser = new ArgumentParser(null);
 				
-				arg.add(Events.QUIT.getEventName());
-				arg.add(to);
+				parser.event = Events.QUIT.getEventName();
+				parser.player = to;
 				
-				new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), arg);
+				new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), parser);
 				return true;
 			}
 		} else {
 			sender.print(noPermsMsg);
-			return true;
-		}
-	}
-	
-	public boolean getXYZ(String x, String y, String z) {
-		if(sender.hasPermission("grieflog.get.xyz")) {
-			searchArgs.add(x + ", " + y + ", " + z);
-			new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.SEARCH), searchArgs);
-			
-			return true;
-		} else {
-			sender.print(ChatColor.YELLOW + "Sorry the admins have decided that you can't use this command, use /glog get here instead.");
 			return true;
 		}
 	}

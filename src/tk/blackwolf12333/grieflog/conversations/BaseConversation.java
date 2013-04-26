@@ -1,7 +1,5 @@
 package tk.blackwolf12333.grieflog.conversations;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -30,14 +28,6 @@ public class BaseConversation {
 		@Override
 		public String getPrefix(ConversationContext context) {
 			return ChatColor.GOLD + "[GriefLog] " + ChatColor.BLUE;
-		}
-	}
-	
-	protected void addToListIfNotNull(String value, ArrayList<String> list) {
-		if(!(value == null)) {
-			if(!value.equals("null")) {
-				list.add(value);
-			}
 		}
 	}
 }
