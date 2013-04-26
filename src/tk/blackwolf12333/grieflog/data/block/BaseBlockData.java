@@ -173,6 +173,10 @@ public abstract class BaseBlockData extends BaseData {
 		return this;
 	}
 	
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
+	}
+	
 	protected Location getOtherDoorBlock(Block door) {
 		BlockFace[] faces = new BlockFace[] {BlockFace.DOWN, BlockFace.UP};
 		for(BlockFace face : faces) {

@@ -62,6 +62,11 @@ public class EntityExplodeData extends BaseEntityData {
 	}
 	
 	@Override
+	public String getPlayerName() {
+		return activator;
+	}
+	
+	@Override
 	public String toString() {
 		if(time != null) {
 			return time + " " + event + " By: " + activator + " EntityType: " + entityType + " Block: " + blockType + ":" + blockData + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;

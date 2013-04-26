@@ -87,6 +87,11 @@ public class PlayerJoinData extends BasePlayerData {
 	}
 	
 	@Override
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(worldName), x, y, z);
+	}
+	
+	@Override
 	public String toString() {
 		if(time != null) {
 			return time + " " + event + " " + playerName + " On: " + ipaddress + " With GameMode: " + gamemode + " " + x + ", " + y + ", " + z + " in: " + worldName;

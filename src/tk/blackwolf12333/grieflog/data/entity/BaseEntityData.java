@@ -120,6 +120,11 @@ public abstract class BaseEntityData extends BaseData {
 		return this;
 	}
 	
+	@Override
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(worldName), blockX, blockY, blockZ);
+	}
+	
 	public static BaseEntityData loadFromString(String line) {
 		try {
 			if(line.contains(Events.EXPLODE.getEventName())) {

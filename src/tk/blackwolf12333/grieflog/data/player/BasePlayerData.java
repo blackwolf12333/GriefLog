@@ -3,6 +3,7 @@ package tk.blackwolf12333.grieflog.data.player;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
@@ -49,7 +50,6 @@ public abstract class BasePlayerData extends BaseData {
 	
 	public abstract void tpto(PlayerSession who);
 	
-	
 	@Override
 	public BaseData applyColors(HashMap<String, ChatColor> colors) {
 		this.time = colors.get("time") + time + ChatColor.WHITE;
@@ -57,6 +57,11 @@ public abstract class BasePlayerData extends BaseData {
 		this.playerName = colors.get("player") + playerName + ChatColor.WHITE;
 		this.worldName = colors.get("world") + worldName + ChatColor.WHITE;
 		return this;
+	}
+	
+	@Override
+	public Location getLocation() {
+		return null;
 	}
 	
 	public static BasePlayerData loadFromString(String line) {

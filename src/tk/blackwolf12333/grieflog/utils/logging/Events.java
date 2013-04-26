@@ -15,8 +15,6 @@ public enum Events {
 	COMMAND ("[PLAYER_COMMAND]",false, "player_command", "command"),
 	GAMEMODE ("[GAMEMODE_CHANGE]", false, "gamemode_change", "gamemode"),
 	WORLDCHANGE ("[WORLD_CHANGE]", false, "world_change", "world"),
-	HANGINGBREAK ("[HANGING_BREAK]", true, "hangingbreak", "hanging_break", "hbreak"),
-	HANGINGPLACE ("[HANGING_PLACE]", true, "hangingplace", "hanging_place", "hplace"),
 	CHESTACCESS ("[CHEST_ACCESS]", true, "chestaccess", "chest");
 	
 	private final String event;

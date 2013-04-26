@@ -3,11 +3,13 @@ package tk.blackwolf12333.grieflog.utils.searching.tasks;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.BaseData;
+import tk.blackwolf12333.grieflog.utils.filters.Filter;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 
 public abstract class GriefLogTask implements Runnable {
@@ -16,6 +18,7 @@ public abstract class GriefLogTask implements Runnable {
 	ArrayList<File> filesToSearch = new ArrayList<File>();
 	ArrayList<String> args = new ArrayList<String>();
 	ArrayList<BaseData> foundData = new ArrayList<BaseData>();
+	List<Filter> filters = new ArrayList<Filter>();
 	PlayerSession p;
 	SearchCallback action;
 	Thread searchThread;
@@ -94,8 +97,8 @@ public abstract class GriefLogTask implements Runnable {
 	protected void searchFile(File file) {
 		try {
 			String query = GriefLog.fileIO.read2String(file);
-			String[] result = query.split(System.getProperty("line.separator"));
-			for(String line : result) {
+			String[] lines = query.split(System.getProperty("line.separator"));
+			for(String line : lines) {
 				addToFoundDataIfContainsArguments(line);
 			}
 		} catch (Exception e) {

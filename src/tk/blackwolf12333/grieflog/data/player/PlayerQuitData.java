@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.data.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -71,6 +72,11 @@ public class PlayerQuitData extends BasePlayerData {
 	@Override
 	public String getMinimal() {
 		return time + " " + playerName + " quit the server.";
+	}
+	
+	@Override
+	public Location getLocation() {
+		return new Location(Bukkit.getWorld(worldName), x, y, z);
 	}
 	
 	@Override
