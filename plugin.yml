@@ -11,27 +11,12 @@ permissions:
         default: op
         children:
             grieflog.search: true
-            grieflog.report: true
-            grieflog.reports: true
             grieflog.rollback: true
             grieflog.tool: true
             grieflog.reload: true
-            grieflog.get.xyz: true
             grieflog.page: true
             grieflog.getwarning: true
             grieflog.tpto: true
-    grieflog.reports.*:
-        description: Permission to use the /glog read command.
-        default: false
-        children:
-            grieflog.reports.read: true
-            grieflog.reports.delete: true
-    grieflog.report.*:
-        description: Permission to use the /glog report command.
-        default: false
-        children:
-            grieflog.reports.xyz: true
-            grieflog.reports.here: true
     grieflog.getwarning.*:
         description: Permission to get a warning when someone does something that indicates that he has a modified client.
         default: false
