@@ -35,7 +35,7 @@ public class ArgumentParser implements Serializable {
 					this.worldedit = true;
 					return; // this is not possible!
 				} else {
-					parse1Argument(args.get(1));
+					parse1Argument(args.get(0));
 				}
 			} else if(args.size() == 2) {
 				if(args.get(0).equalsIgnoreCase("we")) {
