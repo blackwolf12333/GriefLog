@@ -138,7 +138,7 @@ public class FileIO {
 	//
 	
 	private void autoBackup(File file) {
-		String name = file.getName().substring(0, file.getName().indexOf(".")) + GriefLog.t.now() + ".txt";
+		String name = file.getName().substring(0, file.getName().indexOf(".")) + GriefLog.time.now() + ".txt";
 		file.renameTo(new File(file.getParent(), name));
 		GriefLog.debug("backup!!");
 	}

@@ -9,6 +9,7 @@ import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.BaseData;
+import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.Filter;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 
@@ -96,32 +97,21 @@ public abstract class GriefLogTask implements Runnable {
 	 */
 	protected void searchFile(File file) {
 		try {
-			String query = GriefLog.fileIO.read2String(file);
-			String[] lines = query.split(System.getProperty("line.separator"));
-			for(String line : lines) {
-				addToFoundDataIfContainsArguments(line);
+			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
+				List<BaseData> lines = GriefLog.csvIO.read(file);
+				for(BaseData data : lines) {
+					addToFoundDataIfContainsArguments(data);
+				}
+			} else {
+				String query = GriefLog.fileIO.read2String(file);
+				String[] lines = query.split(System.getProperty("line.separator"));
+				for(String line : lines) {
+					addToFoundDataIfContainsArguments(BaseData.loadFromString(line));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Check's if this line contains the arguments for the search.
-	 * @param line The line to check.
-	 * @return Returns true if the line contains all the arguments from {@code args}
-	 */
-	protected boolean lineContainsArguments(String line) {
-		String l = line.trim();
-		for(String arg : args) {
-			if(l.contains(arg)) {
-				GriefLog.debug(arg);
-				continue;
-			} else {
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	@Override
@@ -139,5 +129,5 @@ public abstract class GriefLogTask implements Runnable {
 		action.start();
 	}
 	
-	protected abstract void addToFoundDataIfContainsArguments(String line);
+	protected abstract void addToFoundDataIfContainsArguments(BaseData line);
 }

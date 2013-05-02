@@ -20,28 +20,33 @@ public class GLogRollback {
 	}
 	
 	public boolean onCommand(PlayerSession player, String[] args) {
-		if (player.hasPermission("grieflog.rollback")) {
-			if(player.isDoingRollback()) {
-				player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
-				return true;
-			}
-			if(args.length == 1) {
-				return useConversations(player);
-			} else if((args[1].equalsIgnoreCase("we")) && (args.length == 2) && (player.getPlayer() != null)) {
-				return useConversations(player);
-			} else {
-				ArgumentParser parser = new ArgumentParser(args);
-				if(checkParserErrors(parser, player)) {
-					addParserResultsToUndoConfig(parser);
-					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser);
+		//if(GriefLog.enableRollback) {
+			if (player.hasPermission("grieflog.rollback")) {
+				if(player.isDoingRollback()) {
+					player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
+					return true;
 				}
-				
+				if(args.length == 1) {
+					return useConversations(player);
+				} else if((args[1].equalsIgnoreCase("we")) && (args.length == 2) && (player.getPlayer() != null)) {
+					return useConversations(player);
+				} else {
+					ArgumentParser parser = new ArgumentParser(args);
+					if(checkParserErrors(parser, player)) {
+						addParserResultsToUndoConfig(parser);
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser);
+					}
+					
+					return true;
+				}
+			} else {
+				player.print(noPermsMsg);
 				return true;
 			}
-		} else {
-			player.print(noPermsMsg);
+		/*} else {
+			player.print(ChatColor.DARK_RED + "Rollbacks are disabled because your CraftBukkit is not compatible!");
 			return true;
-		}
+		}*/
 	}
 	
 	private boolean useConversations(PlayerSession player) {

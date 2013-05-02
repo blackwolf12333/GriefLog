@@ -2,6 +2,9 @@ package tk.blackwolf12333.grieflog;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,17 +26,21 @@ import tk.blackwolf12333.grieflog.utils.FileIO;
 import tk.blackwolf12333.grieflog.utils.UndoSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
+import tk.blackwolf12333.grieflog.utils.csv.CSVIO;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
 
 public class GriefLog extends JavaPlugin {
 	
 	public static Debug log;
 	public static File logsDir;
+	private static final String craftbukkitVersion = "1.5.1-R0.2";
 	
-	public static Time t = new Time();
+	public static Time time = new Time();
 	public static FileIO fileIO = new FileIO();
+	public static CSVIO csvIO;
 	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
 	public static UndoSerializer undoSerializer;
+	public static boolean enableRollback = true;
 	
 	private BlockListener bListener = new BlockListener(this);
 	private PlayerListener pListener = new PlayerListener(this);
@@ -74,8 +81,9 @@ public class GriefLog extends JavaPlugin {
 	private void garbageStatics() {
 		sessions = null;
 		sessions = null;
-		t = null;
+		time = null;
 		fileIO = null;
+		csvIO = null;
 		glogCommand = null;
 		logsDir = null;
 		undoSerializer = null;
@@ -85,13 +93,50 @@ public class GriefLog extends JavaPlugin {
 	public void onEnable() {
 		setupConfig();
 		registerListeners();
+		setupLogging();
 		getCommand("glog").setExecutor(glogCommand);
 		onReloadLoadPlayerSessions();
 		setupMetrics();
 		loadUndo();
+		checkVersionCompatibility();
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void setupLogging() {
+		if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
+			loadJCSV();
+			csvIO = new CSVIO();
+		}
+	}
+
+	private void loadJCSV() {
+		File libFolder = new File(this.getDataFolder(), "libs");
+		File jCSVlib = new File(libFolder, "jcsv-1.4.0.jar");
+		try {
+			JCSVLoader.extractFromJar(jCSVlib, this.getDataFolder().getName());
+			URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+	        Class<URLClassLoader> sysclass = URLClassLoader.class;
+	        try {
+	            Method method = sysclass.getDeclaredMethod("addURL", new Class[] { URL.class });
+	            method.setAccessible(true);
+	            method.invoke(sysloader, new Object[] { JCSVLoader.getJarUrl(jCSVlib) });
+	        } catch (final Throwable t) {
+	            t.printStackTrace();
+	            throw new IOException("Error adding " + JCSVLoader.getJarUrl(jCSVlib) + " to system classloader");
+	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void checkVersionCompatibility() {
+		String version = this.getServer().getVersion();
+		if(!version.contains(craftbukkitVersion)) {
+			log.warning("Rollback will not be possible with your version of CraftBukkit!");
+			enableRollback = false;
+		}
 	}
 
 	private void loadUndo() {

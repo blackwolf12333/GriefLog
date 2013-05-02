@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.data.BaseData;
+import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class GriefLogger implements Runnable {
 
@@ -29,15 +30,21 @@ public class GriefLogger implements Runnable {
 				log.createNewFile();
 			}
 			
-			String strData = data.toString();
-			if(!strData.endsWith(System.getProperty("line.separator"))) {
-				strData += System.getProperty("line.separator");
+			//TODO: add cvs logging here
+			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
+				data.setTime(GriefLog.time.now());
+				GriefLog.debug("logging: " + data.toString());
+				GriefLog.csvIO.write(log, data.toString().split(" "));
+			} else {
+				String strData = data.toString();
+				if(!strData.endsWith(System.getProperty("line.separator"))) {
+					strData += System.getProperty("line.separator");
+				}
+				
+				String ret = GriefLog.time.now() + strData;
+				
+				GriefLog.fileIO.write(ret, log);
 			}
-			
-			String ret = GriefLog.t.now() + strData;
-			
-			GriefLog.fileIO.write(ret, log);
-
 		} catch (IOException e) {
 			GriefLog.log.warning(e.toString());
 		}

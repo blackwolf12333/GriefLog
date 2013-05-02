@@ -76,12 +76,9 @@ public class SearchTask extends GriefLogTask implements Runnable {
 	 * @param line The line to check.
 	 */
 	@Override
-	protected void addToFoundDataIfContainsArguments(String line) {
-		if (lineContainsArguments(line)) {
-			BaseData data;
-			if(doesComeThroughFilter((data = BaseData.loadFromString(line)))) {
-				foundData.add(data);
-			}
+	protected void addToFoundDataIfContainsArguments(BaseData line) {
+		if(doesComeThroughFilter(line)) {
+			foundData.add(line);
 		}
 	}
 	

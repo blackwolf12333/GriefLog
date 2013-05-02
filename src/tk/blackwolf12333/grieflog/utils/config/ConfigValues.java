@@ -4,6 +4,7 @@ public class ConfigValues {
 
 	int tool = ConfigHandler.config.getInt("general.tool");
 	int mb = ConfigHandler.config.getInt("general.mb");
+	String loggingMethod = ConfigHandler.config.getString("general.logging-method");
 	boolean bw12333glog = ConfigHandler.config.getBoolean("general.blackwolf12333glog");
 	boolean debug = ConfigHandler.config.getBoolean("general.debug");
 	String logsDir = ConfigHandler.config.getString("general.path");
@@ -380,5 +381,13 @@ public class ConfigValues {
 	
 	public void setIgnoredCommands(String ignoredCommands) {
 		this.ignoredCommands = ignoredCommands;
+	}
+	
+	public String getLoggingMethod() {
+		return loggingMethod;
+	}
+	
+	public void setLoggingMethod(String loggingMethod) {
+		this.loggingMethod = loggingMethod;
 	}
 }
