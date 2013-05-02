@@ -74,7 +74,7 @@ public class InventoryStringDeSerializer {
     public static String itemToString(ItemStack is) {
     	String serializedItemStack = new String();
     	if(is != null) {
-    		int isType = is.getTypeId();
+    		String isType = is.getType().toString();
     		serializedItemStack += "t=" + isType;
         	
         	if (is.getDurability() != 0)
