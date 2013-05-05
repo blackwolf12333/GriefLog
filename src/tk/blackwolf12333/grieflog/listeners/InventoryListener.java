@@ -1,4 +1,4 @@
-package tk.blackwolf12333.grieflog.listeners.inventory;
+package tk.blackwolf12333.grieflog.listeners;
 
 import java.util.HashMap;
 
@@ -45,41 +45,12 @@ public class InventoryListener implements Listener {
 			String before = inventories.get(player);
 			String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());
 			result = difference(before, after);
-			/*final ItemStack[] after = compressInventory(event.getView().getTopInventory().getContents());
-			final ItemStack[] before = inventories.get(player);
-			if(before != null) {
-				final ItemStack[] diff = compareInventories(before, after);
-				result = getDifferenceResultInString(diff);
-				if(result == null) {
-					inventories.remove(event.getPlayer().getName());
-					return;
-				}
-			}*/
 			GriefLog.debug("Transaction by: " + player + " with " + result);
 			new GriefLogger(new InventoryTransactionData(player, chestX, chestY, chestZ, chestWorld, result));
 		}
 		inventories.remove(event.getPlayer().getName());
 	}
 
-	/*private String getDifferenceResultInString(ItemStack[] diff) {
-		String taken = new String("Taken: ");
-		String put = new String("Put: ");
-		
-		if(diff.length == 0) {
-			return null;
-		}
-		for(ItemStack is : diff) {
-			if(is.getAmount() < 0) {
-				is.setAmount(-is.getAmount());
-				taken += InventoryStringDeSerializer.itemToString(is) + "|";
-			} else {
-				put += InventoryStringDeSerializer.itemToString(is) + "|";
-			}
-		}
-		
-		return taken + " " + put;
-	}*/
-	
 	public String difference(String str1, String str2) {
 	    if (str1 == null) {
 	        return str2;

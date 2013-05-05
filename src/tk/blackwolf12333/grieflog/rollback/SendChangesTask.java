@@ -2,16 +2,13 @@ package tk.blackwolf12333.grieflog.rollback;
 
 import java.util.HashSet;
 
-import net.minecraft.server.v1_5_R2.ChunkCoordIntPair;
-import net.minecraft.server.v1_5_R2.EntityPlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 
 public class SendChangesTask implements Runnable {
@@ -25,30 +22,11 @@ public class SendChangesTask implements Runnable {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void run() {
-		HashSet<ChunkCoordIntPair> pairs = new HashSet<ChunkCoordIntPair>();
-		for(Chunk c : this.chunks) {
-			pairs.add(new ChunkCoordIntPair(c.getX(), c.getZ()));
-		}
-		
-		for(Player p : getPlayers()) {
-			HashSet<ChunkCoordIntPair> queued = new HashSet<ChunkCoordIntPair>();
-			if(p != null) {
-				EntityPlayer ep = ((CraftPlayer) p).getHandle();
-				for(Object o : ep.chunkCoordIntPairQueue) {
-					queued.add((ChunkCoordIntPair) o);
-				}
-				for(ChunkCoordIntPair pair : pairs) {
-					if(!queued.contains(pair)) {
-						ep.chunkCoordIntPairQueue.add(pair);
-					}
-				}
-			}
-		}
+		GriefLog.compatibility.sendChanges(this, chunks);
 	}
 
-	private HashSet<Player> getPlayers() {
+	public HashSet<Player> getPlayers() {
 		HashSet<Player> ret = new HashSet<Player>();
 		
 		for(Chunk c : chunks) {

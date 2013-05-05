@@ -2,12 +2,10 @@ package tk.blackwolf12333.grieflog.data;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_5_R2.CraftChunk;
 
+import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.block.BaseBlockData;
 import tk.blackwolf12333.grieflog.data.block.BucketData;
@@ -97,9 +95,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 * @param data The new data.
 	 */
 	public void setBlockFast(int x, int y, int z, String world, int typeID, byte data) {
-		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
-		net.minecraft.server.v1_5_R2.Chunk chunk = ((CraftChunk) c).getHandle();
-		chunk.a(x & 15, y, z & 15, typeID, data);
+		GriefLog.compatibility.setBlockFast(x, y, z, world, typeID, data);
 	}
 	
 	@Override

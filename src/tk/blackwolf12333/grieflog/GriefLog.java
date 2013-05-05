@@ -18,9 +18,10 @@ import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.listeners.BlockListener;
 import tk.blackwolf12333.grieflog.listeners.BucketListener;
 import tk.blackwolf12333.grieflog.listeners.EntityListener;
+import tk.blackwolf12333.grieflog.listeners.InventoryListener;
 import tk.blackwolf12333.grieflog.listeners.PlayerListener;
 import tk.blackwolf12333.grieflog.listeners.WorldListener;
-import tk.blackwolf12333.grieflog.listeners.inventory.InventoryListener;
+import tk.blackwolf12333.grieflog.utils.CompatibilityWrapper;
 import tk.blackwolf12333.grieflog.utils.Debug;
 import tk.blackwolf12333.grieflog.utils.FileIO;
 import tk.blackwolf12333.grieflog.utils.UndoSerializer;
@@ -33,21 +34,19 @@ public class GriefLog extends JavaPlugin {
 	
 	public static Debug log;
 	public static File logsDir;
-	private static final String craftbukkitVersion = "1.5.1-R0.2";
-	
 	public static Time time = new Time();
 	public static FileIO fileIO = new FileIO();
 	public static CSVIO csvIO;
 	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
+	public static CompatibilityWrapper compatibility = new CompatibilityWrapper();
 	
 	private BlockListener bListener = new BlockListener(this);
 	private PlayerListener pListener = new PlayerListener(this);
 	private EntityListener eListener = new EntityListener(this);
 	private BucketListener bucketListener = new BucketListener(this);
 	private WorldListener wListener = new WorldListener();
-	//@SuppressWarnings("unused")
 	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
@@ -87,6 +86,7 @@ public class GriefLog extends JavaPlugin {
 		glogCommand = null;
 		logsDir = null;
 		undoSerializer = null;
+		compatibility = null;
 	}
 
 	@Override
@@ -98,7 +98,6 @@ public class GriefLog extends JavaPlugin {
 		onReloadLoadPlayerSessions();
 		setupMetrics();
 		loadUndo();
-		checkVersionCompatibility();
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
@@ -128,14 +127,6 @@ public class GriefLog extends JavaPlugin {
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void checkVersionCompatibility() {
-		String version = this.getServer().getVersion();
-		if(!version.contains(craftbukkitVersion)) {
-			log.warning("Rollback will not be possible with your version of CraftBukkit!");
-			enableRollback = false;
 		}
 	}
 
