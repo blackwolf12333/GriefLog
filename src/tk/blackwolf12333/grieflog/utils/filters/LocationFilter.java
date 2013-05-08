@@ -21,8 +21,12 @@ public class LocationFilter implements Filter {
 	public boolean doFilter(BaseData data) {
 		if(Events.getEvent(data.getEvent()).getCanRollback()) {
 			Location loc = data.getLocation();
-			if((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world))) {
-				return true;
+			if(loc != null) {
+				if((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world))) {
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return false;
 			}

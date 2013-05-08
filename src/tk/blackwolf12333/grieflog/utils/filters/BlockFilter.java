@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 
-import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.data.block.BaseBlockData;
@@ -49,9 +48,12 @@ public class BlockFilter implements Filter {
 
 	public boolean doFilter(BaseData data) {
 		if(Events.getEvent(data.getEvent()).getCanRollback()) {
-			BaseBlockData d = (BaseBlockData) data;
-			GriefLog.debug(d.getBlockType());
-			return allowed.contains(Material.getMaterial(d.getBlockType()));
+			if(data instanceof BaseBlockData) {
+				BaseBlockData d = (BaseBlockData) data;
+				return allowed.contains(Material.getMaterial(d.getBlockType()));
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

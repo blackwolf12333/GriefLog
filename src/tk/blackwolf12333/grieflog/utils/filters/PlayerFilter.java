@@ -12,6 +12,6 @@ public class PlayerFilter implements Filter {
 	
 	@Override
 	public boolean doFilter(BaseData data) {
-		return data.getPlayerName().equals(player);
+		return (data.getPlayerName() != null) ? data.getPlayerName().equals(player) : false;
 	}
 }
