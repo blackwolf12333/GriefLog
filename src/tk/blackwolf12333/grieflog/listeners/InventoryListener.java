@@ -3,11 +3,13 @@ package tk.blackwolf12333.grieflog.listeners;
 import java.util.HashMap;
 
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.InventoryHolder;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.data.player.InventoryTransactionData;
@@ -33,11 +35,25 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 		if(event.getInventory().getType() == InventoryType.CHEST) {
-			Chest chest = (Chest) event.getInventory().getHolder();
-			Integer chestX = chest.getX();
-			Integer chestY = chest.getY();
-			Integer chestZ = chest.getZ();
-			String chestWorld = chest.getWorld().getName();
+			InventoryHolder holder = event.getInventory().getHolder();
+			Integer chestX;
+			Integer chestY;
+			Integer chestZ;
+			String chestWorld;
+			
+			if(holder instanceof DoubleChest) {
+				DoubleChest chest = (DoubleChest) holder;
+				chestX = chest.getLocation().getBlockX();
+				chestY = chest.getLocation().getBlockY();
+				chestZ = chest.getLocation().getBlockZ();
+				chestWorld = chest.getWorld().getName();
+			} else {
+				Chest chest = (Chest) holder;
+				chestX = chest.getX();
+				chestY = chest.getY();
+				chestZ = chest.getZ();
+				chestWorld = chest.getWorld().getName();
+			}
 			
 			String player = event.getPlayer().getName();
 			String result = null;
