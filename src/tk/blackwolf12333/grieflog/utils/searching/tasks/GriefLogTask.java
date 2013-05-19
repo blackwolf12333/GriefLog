@@ -100,13 +100,13 @@ public abstract class GriefLogTask implements Runnable {
 			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
 				List<BaseData> lines = GriefLog.csvIO.read(file);
 				for(BaseData data : lines) {
-					addToFoundDataIfContainsArguments(data);
+					addToFoundDataIfComesThroughFilters(data);
 				}
 			} else {
 				String query = GriefLog.fileIO.read2String(file);
 				String[] lines = query.split(System.getProperty("line.separator"));
 				for(String line : lines) {
-					addToFoundDataIfContainsArguments(BaseData.loadFromString(line));
+					addToFoundDataIfComesThroughFilters(BaseData.loadFromString(line));
 				}
 			}
 		} catch (Exception e) {
@@ -129,5 +129,5 @@ public abstract class GriefLogTask implements Runnable {
 		action.start();
 	}
 	
-	protected abstract void addToFoundDataIfContainsArguments(BaseData line);
+	protected abstract void addToFoundDataIfComesThroughFilters(BaseData line);
 }
