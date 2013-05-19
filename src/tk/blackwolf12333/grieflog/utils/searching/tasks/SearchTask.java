@@ -25,7 +25,7 @@ public class SearchTask extends GriefLogTask implements Runnable {
 		this.filters = getFilters(p, parser);
 		
 		addFilesToList();
-		(this.searchThread = new Thread(this)).start();
+		new Thread(this).start();
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
 	}
 	
@@ -35,7 +35,7 @@ public class SearchTask extends GriefLogTask implements Runnable {
 		this.filters = Arrays.asList(filters);
 		
 		addFilesToList();
-		(this.searchThread = new Thread(this)).start();
+		new Thread(this).start();
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
 	}
 	

@@ -16,12 +16,10 @@ public abstract class GriefLogTask implements Runnable {
 	
 	public String world;
 	ArrayList<File> filesToSearch = new ArrayList<File>();
-	ArrayList<String> args = new ArrayList<String>();
 	ArrayList<BaseData> foundData = new ArrayList<BaseData>();
 	List<Filter> filters = new ArrayList<Filter>();
 	PlayerSession p;
 	SearchCallback action;
-	Thread searchThread;
 	
 	public void addFilesToList() {
 		if(GriefLog.logsDir.exists()) {
