@@ -11,7 +11,6 @@ import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.BaseData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.Filter;
-import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 
 public abstract class GriefLogTask implements Runnable {
 	
@@ -70,26 +69,6 @@ public abstract class GriefLogTask implements Runnable {
 			}
 		}
 	}
-	
-	protected ArrayList<String> getParserResult(ArgumentParser parser) {
-		ArrayList<String> result = new ArrayList<String>(4);
-		addToListIfNotNull(parser.world, result);
-		addToListIfNotNull(parser.player, result);
-		addToListIfNotNull(parser.event, result);
-		addToListIfNotNull(parser.blockFilter, result);
-		return result;
-	}
-	
-	/**
-	 * Adds the string value to the list if value != null
-	 * @param value
-	 * @param list
-	 */
-	protected void addToListIfNotNull(String value, ArrayList<String> list) {
-		 if(!(value == null)) {
-			 list.add(value);
-		 }
-	 }
 	
 	/**
 	 * Read's the {@code file} to a string and loops through the lines to check if these lines contain the search arugments.  
