@@ -18,12 +18,6 @@ import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 
 public class SearchTask extends GriefLogTask implements Runnable {
 
-	/**
-	 * The search task that will search the files for the specified arguments.
-	 * @param p The PlayerSession of the player that requested the search.
-	 * @param action The callback that should happen after the search has been completed.
-	 * @param parser The {@link ArgumentParser} that contains the arguments to search for.
-	 */
 	public SearchTask(PlayerSession p, SearchCallback action, ArgumentParser parser) {
 		this.p = p;
 		this.action = action;
@@ -35,12 +29,6 @@ public class SearchTask extends GriefLogTask implements Runnable {
 		p.print(ChatColor.YELLOW + "[GriefLog] Searching for matching results...");
 	}
 	
-	/**
-	 * The search task that will search the files for the specified arugments.
-	 * @param p The PlayerSession of the player that requested the search.
-	 * @param action The callback that should happen after the search has been completed.
-	 * @param filters The filters to apply on this search task.
-	 */
 	public SearchTask(PlayerSession p, SearchCallback action, Filter... filters) {
 		this.p = p;
 		this.action = action;
@@ -71,10 +59,6 @@ public class SearchTask extends GriefLogTask implements Runnable {
 		return filters;
 	}
 
-	/**
-	 * Add's the parsed result of BaseData.loadFromString(line) to {@code foundData} if the line contained the search arguments.
-	 * @param line The line to check.
-	 */
 	@Override
 	protected void addToFoundDataIfComesThroughFilters(BaseData line) {
 		if(doesComeThroughFilter(line)) {

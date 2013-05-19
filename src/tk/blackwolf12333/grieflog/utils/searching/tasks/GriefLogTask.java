@@ -23,9 +23,6 @@ public abstract class GriefLogTask implements Runnable {
 	SearchCallback action;
 	Thread searchThread;
 	
-	/**
-	 * This function add's all the files we need to search through to {@code filesToSearch}
-	 */
 	public void addFilesToList() {
 		if(GriefLog.logsDir.exists()) {
 			if((world != null) && (!world.equalsIgnoreCase("null"))) {
@@ -45,10 +42,6 @@ public abstract class GriefLogTask implements Runnable {
 		}
 	}
 	
-	/**
-	 * Add's all the files inside the directory file {@code f}.
-	 * @param f The directory file.
-	 */
 	private void addFilesInsideToFilesToSearch(File f) {
 		f.mkdir();
 		File[] dircontents = f.listFiles();
@@ -59,9 +52,6 @@ public abstract class GriefLogTask implements Runnable {
 		}
 	}
 	
-	/**
-	 * Add's all the files in the logs directory to keep compatibility with older versions.
-	 */
 	private void addFilesInLogsDir() {
 		for(File f : GriefLog.logsDir.listFiles()) {
 			if(f.isFile()) {
@@ -70,10 +60,6 @@ public abstract class GriefLogTask implements Runnable {
 		}
 	}
 	
-	/**
-	 * Read's the {@code file} to a string and loops through the lines to check if these lines contain the search arugments.  
-	 * @param file The file to search through.
-	 */
 	protected void searchFile(File file) {
 		try {
 			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
