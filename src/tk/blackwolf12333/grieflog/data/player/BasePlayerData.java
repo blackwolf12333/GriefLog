@@ -85,18 +85,18 @@ public abstract class BasePlayerData extends BaseData {
 		
 		return null;
 	}
-	
+
 	private static BasePlayerData handleChestAccess(String[] data) throws OldVersionException {
 		try {
 			String time = data[0] + " " + data[1];
 			String playerName = data[4];
-			String taken = data[5] + data[6];
-			String put = data[7] + data[8];
+			String taken = data[6];
+			String put = data[8];
 			Integer x = Integer.parseInt(data[10].replaceAll(",", ""));
 			Integer y = Integer.parseInt(data[11].replaceAll(",", ""));
 			Integer z = Integer.parseInt(data[12].replaceAll(",", ""));
 			String world = data[14];
-			return new InventoryTransactionData(time, playerName, x, y, z, world, taken + " " + put);
+			return new ChestAccessData(time, playerName, x, y, z, world, taken, put);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
 		}

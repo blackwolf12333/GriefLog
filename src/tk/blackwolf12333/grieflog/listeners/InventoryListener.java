@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
 
 import tk.blackwolf12333.grieflog.GriefLog;
-import tk.blackwolf12333.grieflog.data.player.InventoryTransactionData;
+import tk.blackwolf12333.grieflog.data.player.ChestAccessData;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
@@ -20,7 +20,6 @@ public class InventoryListener implements Listener {
 
 	GriefLog plugin;
 	private static final int INDEX_NOT_FOUND = -1;
-	private static final String EMPTY = null;
 	HashMap<String, String> inventories = new HashMap<String, String>();
 	
 	public InventoryListener(GriefLog plugin) {
@@ -56,29 +55,38 @@ public class InventoryListener implements Listener {
 			}
 			
 			String player = event.getPlayer().getName();
-			String result = null;
+			String[] diff = new String[2];
 			
 			String before = inventories.get(player);
 			String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());
-			result = difference(before, after);
-			GriefLog.debug("Transaction by: " + player + " with " + result);
-			new GriefLogger(new InventoryTransactionData(player, chestX, chestY, chestZ, chestWorld, result));
+			diff = difference(before, after);
+			if(diff == null) {
+				inventories.remove(event.getPlayer().getName());
+				return;
+			}
+			GriefLog.debug("Transaction by: " + player + " with taken: " + diff[0] + " put: " + diff[1]);
+			new GriefLogger(new ChestAccessData(player, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
 		}
 		inventories.remove(event.getPlayer().getName());
 	}
 
-	public String difference(String str1, String str2) {
-	    if (str1 == null) {
-	        return str2;
+	public String[] difference(String str1, String str2) {
+		String[] ret = new String[2];
+		if (str1 == null) {
+	        ret[0] = str2;
+			return ret;
 	    }
 	    if (str2 == null) {
-	        return str1;
+	    	ret[0] = str1;
+	        return ret;
 	    }
 	    int at = indexOfDifference(str1, str2);
 	    if (at == INDEX_NOT_FOUND) {
-	        return EMPTY;
+	        return null;
 	    }
-	    return "taken: " + str1.substring(at) + " put: " + str2.substring(at);
+	    ret[0] = str1.substring(at);
+	    ret[1] = str2.substring(at);
+	    return ret;
 	}
 
 	public int indexOfDifference(CharSequence cs1, CharSequence cs2) {

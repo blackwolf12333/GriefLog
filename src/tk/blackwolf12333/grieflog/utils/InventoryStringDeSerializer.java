@@ -101,10 +101,11 @@ public class InventoryStringDeSerializer {
         return serializedItemStack;
     }
     
-    public static ItemStack stringToItem(String str) {
+    public static SerializedItem stringToItem(String str) {
     	ItemStack is = null;
         Boolean createdItemStack = false;
-       
+        int slot = getSlot(str);
+        
         String[] serializedItemStack = str.split(":");
         for (String itemInfo : serializedItemStack)
         {
@@ -127,6 +128,16 @@ public class InventoryStringDeSerializer {
                 is.addEnchantment(Enchantment.getById(Integer.valueOf(itemAttribute[1])), Integer.valueOf(itemAttribute[2]));
             }
         }
-    	return is; //TODO: Test this: implement the stringToItem function in InventoryStringDeSerializer
+        return new SerializedItem(str, is, slot); //TODO: Test this: implement the stringToItem function in InventoryStringDeSerializer
     }
+
+	private static int getSlot(String str) {
+		int slot = 0;
+		try {
+			slot = Integer.parseInt(str.substring(0, 2));
+		} catch(NumberFormatException e) {
+			slot = Integer.parseInt(str.substring(0, 1));
+		}
+		return slot;
+	}
 }

@@ -119,6 +119,7 @@ public class SearchTask implements Runnable {
 				String query = GriefLog.fileIO.read2String(file);
 				String[] lines = query.split(System.getProperty("line.separator"));
 				for(String line : lines) {
+					GriefLog.debug(line);
 					addToFoundDataIfComesThroughFilters(BaseData.loadFromString(line));
 				}
 			}
@@ -129,7 +130,6 @@ public class SearchTask implements Runnable {
 	
 	protected void addToFoundDataIfComesThroughFilters(BaseData line) {
 		if(doesComeThroughFilter(line)) {
-			GriefLog.debug("Found: " + line);
 			foundData.add(line);
 		}
 	}
