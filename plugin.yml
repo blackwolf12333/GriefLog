@@ -1,5 +1,5 @@
 name: GriefLog
-version: 4.9.6
+version: 4.9.8beta
 main: tk.blackwolf12333.grieflog.GriefLog
 commands:
     glog:

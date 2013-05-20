@@ -18,14 +18,16 @@ public class ArgumentParser implements Serializable {
 	public boolean worldedit;
 	
 	public ArgumentParser(String[] args) {
-		ArrayList<String> arguments = new ArrayList<String>();
-		
-		for(int i = 0; i < args.length; i++) {
-			if(i >= 1) {
-				arguments.add(args[i]);
+		if(args != null) {
+			ArrayList<String> arguments = new ArrayList<String>();
+			
+			for(int i = 0; i < args.length; i++) {
+				if(i >= 1) {
+					arguments.add(args[i]);
+				}
 			}
+			parse(arguments);
 		}
-		parse(arguments);
 	}
 	
 	public void parse(ArrayList<String> args) {
