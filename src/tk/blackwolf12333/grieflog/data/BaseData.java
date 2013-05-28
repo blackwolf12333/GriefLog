@@ -122,7 +122,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 */
 	public static BaseData loadFromString(String line) {
 		if(line != null) {
-			if(line.contains(Events.BREAK.getEventName()) || line.contains(Events.PLACE.getEventName()) || line.contains(Events.IGNITE.getEventName())) {
+			if(line.contains(Events.BREAK.getEventName()) || line.contains(Events.PLACE.getEventName()) || line.contains(Events.IGNITE.getEventName()) || line.contains(Events.WORLDEDIT.getEventName())) {
 				return BaseBlockData.loadFromString(line);
 			} else if(line.contains(Events.EXPLODE.getEventName()) || line.contains(Events.ENDERMAN_PICKUP.getEventName()) || line.contains(Events.ENDERMAN_PLACE.getEventName()) || line.contains(Events.ZOMBIEBREAKDOOR.getEventName())) {
 				return BaseEntityData.loadFromString(line);

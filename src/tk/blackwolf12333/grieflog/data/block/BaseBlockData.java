@@ -195,6 +195,8 @@ public abstract class BaseBlockData extends BaseData {
 				return handleBlockPlaceData(data.split(" "));
 			} else if(data.contains(Events.IGNITE.getEventName())) {
 				return handleBlockIgniteData(data.split(" "));
+			} else if(data.contains(Events.WORLDEDIT.getEventName())) {
+				return handleBlockWorldEditChangeData(data.split(" "));
 			}
 		} catch(OldVersionException e) {
 			e.printStackTrace();
@@ -203,6 +205,27 @@ public abstract class BaseBlockData extends BaseData {
 		return null;
 	}
 	
+	private static BaseBlockData handleBlockWorldEditChangeData(String[] data) {
+		try { //21-05-2013 18-48-00 [WORLDEDIT] By: blackwolf12333 from: DIRT:0 to: AIR:0 at: 232, 62, 293 in: world
+			String time = data[0] + " " + data[1];
+			String player = data[4];
+			String[] changedFromTypeAndData = data[6].split(":");
+			String blockType = changedFromTypeAndData[0];
+			byte blockData = Byte.parseByte(changedFromTypeAndData[1]);
+			String[] changedToTypeAndData = data[8].split(":");
+			String changedTo = changedToTypeAndData[0];
+			byte changedToData = Byte.parseByte(changedToTypeAndData[1]);
+			
+			int x = Integer.parseInt(data[10].replace(",", ""));
+			int y = Integer.parseInt(data[11].replace(",", ""));
+			int z = Integer.parseInt(data[12].replace(",", ""));
+			String world = data[14].trim();
+			return new BlockWorldEditChangeData(time, x, y, z, world, player, blockType, blockData, changedTo, changedToData);
+		} catch(ArrayIndexOutOfBoundsException e) {
+			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
+		}
+	}
+
 	private static BaseBlockData handleBlockBreakData(String[] data) throws OldVersionException {
 		try {
 			String time = data[0] + " " + data[1];

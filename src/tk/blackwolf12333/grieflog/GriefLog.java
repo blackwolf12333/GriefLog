@@ -29,6 +29,8 @@ import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.csv.CSVIO;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
+import tk.blackwolf12333.grieflog.utils.logging.worldedit.GriefLogEditSessionFactory;
+import tk.blackwolf12333.grieflog.utils.reports.Reporter;
 
 public class GriefLog extends JavaPlugin {
 	
@@ -41,6 +43,7 @@ public class GriefLog extends JavaPlugin {
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
 	public static CompatibilityWrapper compatibility = new CompatibilityWrapper();
+	public static Reporter reporter = new Reporter();
 	
 	private BlockListener bListener = new BlockListener(this);
 	private PlayerListener pListener = new PlayerListener(this);
@@ -60,6 +63,7 @@ public class GriefLog extends JavaPlugin {
 	public void onDisable() {
 		sessions.clear();
 		undoSerializer.save();
+		reporter.saveReports();
 		garbageStatics();
 		garbageListeners();
 		
@@ -87,6 +91,7 @@ public class GriefLog extends JavaPlugin {
 		logsDir = null;
 		undoSerializer = null;
 		compatibility = null;
+		reporter = null;
 	}
 
 	@Override
@@ -94,6 +99,7 @@ public class GriefLog extends JavaPlugin {
 		setupConfig();
 		registerListeners();
 		setupLogging();
+		enableWorldEditLogging();
 		getCommand("glog").setExecutor(glogCommand);
 		onReloadLoadPlayerSessions();
 		setupMetrics();
@@ -101,6 +107,12 @@ public class GriefLog extends JavaPlugin {
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void enableWorldEditLogging() {
+		if(this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+			new GriefLogEditSessionFactory(this).initialize();
+		}
 	}
 
 	private void setupLogging() {

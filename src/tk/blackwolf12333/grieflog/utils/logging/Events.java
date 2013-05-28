@@ -15,7 +15,8 @@ public enum Events {
 	COMMAND ("[PLAYER_COMMAND]",false, "player_command", "command"),
 	GAMEMODE ("[GAMEMODE_CHANGE]", false, "gamemode_change", "gamemode"),
 	WORLDCHANGE ("[WORLD_CHANGE]", false, "world_change", "world"),
-	CHESTACCESS ("[CHEST_ACCESS]", true, "chestaccess", "chest");
+	CHESTACCESS ("[CHEST_ACCESS]", true, "chestaccess", "chest"),
+	WORLDEDIT ("[WORLDEDIT]", true, "worldedit", "we", "worlde");
 	
 	private final String event;
 	private final String[] alias;
