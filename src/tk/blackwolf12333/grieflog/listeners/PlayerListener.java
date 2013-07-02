@@ -65,6 +65,10 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
+		if(event.getPlayer().hasPermission("grieflog.readreports")) {
+			event.getPlayer().sendMessage("There are " + GriefLog.reporter.countReports() + " reports available!");
+		}
+		
 		if (ConfigHandler.values.getPlayerJoin()) {
 			Player p = event.getPlayer();
 			GriefLog.sessions.put(p.getName(), new PlayerSession(p));

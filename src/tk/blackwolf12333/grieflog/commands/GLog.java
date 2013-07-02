@@ -53,6 +53,8 @@ public class GLog implements CommandExecutor {
 					return handler.reload();
 				} else if (args[0].equalsIgnoreCase("tool")) {
 					return handler.giveTool();
+				} else if (args[0].equalsIgnoreCase("report")) {
+					return handler.report(player);
 				}
 			} 
 			if (args.length == 2) {

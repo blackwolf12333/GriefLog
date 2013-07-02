@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import tk.blackwolf12333.grieflog.GriefLog;
 
 public class ConfigHandler {
-//TODO: add config options for inventory and hanging
 	public static GriefLog plugin;
 	public static File configFile;
 	public static FileConfiguration config;

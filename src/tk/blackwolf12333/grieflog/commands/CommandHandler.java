@@ -205,6 +205,15 @@ public class CommandHandler {
 		return false;
 	}
 	
+	public boolean report(PlayerSession player) {
+		if(GriefLog.reporter.createReport(player)) {
+			player.print(ChatColor.YELLOW + "Reported this grief for you, admins will have a look soon.");
+		} else {
+			player.print(ChatColor.YELLOW + "Your report could not be saved, it is lost in the void!");
+		}
+		return true;
+	}
+	
 	// with thanks to bergerkiller
 	private void removeItemFromInventory(Inventory inv, ItemStack item) {
 		removeItemFromInventory(inv, item.getType(), item.getAmount());
