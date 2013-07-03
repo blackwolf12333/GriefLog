@@ -71,15 +71,11 @@ public class Time {
 		return df.format(calendar.getTime());
 	}
 	
-	private static boolean isInt(String s) {
+	private static boolean isInt(char c) {
 		try {
-			Integer.parseInt(s);
+			Integer.parseInt(String.valueOf(c));
 			return true;
 		} catch(NumberFormatException e) {}
 		return false;
-	}
-	
-	private static boolean isInt(char c) {
-		return isInt(String.valueOf(c));
 	}
 }

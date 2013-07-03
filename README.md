@@ -41,6 +41,8 @@ These arguments are the following:
 * e: "e" is event, thus what event you want to search for.
 * p: "p" is the name of the player you want to search for.
 * w: "w" is the name of the world you want to search in.
+* b: "b" is a list separated by comma's of the blocks you want to search for.
+* t: "t" is how far back you want to search. example: t:2d3h4m30s is search 2 days 3 houres 4 minutes and 30 seconds back.
 
 After that the arguments go through the ArgumentParser class that creates a couple of Filter instances
 that the SearchTask class can use. After the ArgumentParser is done we create a new instance of
