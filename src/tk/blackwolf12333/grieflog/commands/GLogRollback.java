@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
-import tk.blackwolf12333.grieflog.conversations.RollbackConversation;
+import tk.blackwolf12333.grieflog.conversations.SearchConversation;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
@@ -20,7 +20,7 @@ public class GLogRollback {
 	}
 	
 	public boolean onCommand(PlayerSession player, String[] args) {
-		//if(GriefLog.enableRollback) {
+		if(GriefLog.enableRollback) {
 			if (player.hasPermission("grieflog.rollback")) {
 				if(player.isDoingRollback()) {
 					player.getPlayer().sendMessage(ChatColor.YELLOW + "[GriefLog] You are already doing a rollback, you can't have multiple rollbacks at the time.");
@@ -43,14 +43,14 @@ public class GLogRollback {
 				player.print(noPermsMsg);
 				return true;
 			}
-		/*} else {
+		} else {
 			player.print(ChatColor.DARK_RED + "Rollbacks are disabled because your CraftBukkit is not compatible!");
 			return true;
-		}*/
+		}
 	}
 	
 	private boolean useConversations(PlayerSession player) {
-		new RollbackConversation(plugin, player);
+		new SearchConversation(plugin, player, true);
 		return true;
 	}
 	

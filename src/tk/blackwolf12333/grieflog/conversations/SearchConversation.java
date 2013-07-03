@@ -1,8 +1,11 @@
 package tk.blackwolf12333.grieflog.conversations;
 
+import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.ConversationPrefix;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
@@ -14,24 +17,43 @@ import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
-public class SearchConversation extends BaseConversation implements ConversationAbandonedListener {
+public class SearchConversation implements ConversationAbandonedListener {
 
-	public SearchConversation(GriefLog plugin, PlayerSession session) {
-		super(plugin, session);
+	boolean rollback;
+	GriefLog plugin;
+	PlayerSession session;
+	ConversationFactory conversationFactory;
+	
+	public SearchConversation(GriefLog plugin, PlayerSession session, boolean rollback) {
+		this.plugin = plugin;
+		this.session = session;
+		this.conversationFactory = new ConversationFactory(plugin);
 		this.conversationFactory.withFirstPrompt(new SearchIntroPrompt());
+		this.conversationFactory.withPrefix(new GriefLogPrefix());
+		this.conversationFactory.withModality(true);
 		this.conversationFactory.addConversationAbandonedListener(this);
+		this.conversationFactory.withEscapeSequence("#quit");
+		this.rollback = rollback;
 		session.beginConversation(this.conversationFactory.buildConversation(session));
+	}
+	
+	private class GriefLogPrefix implements ConversationPrefix {
+		@Override
+		public String getPrefix(ConversationContext context) {
+			return ChatColor.GOLD + "[GriefLog] " + ChatColor.BLUE;
+		}
 	}
 	
 	@Override
 	public void conversationAbandoned(ConversationAbandonedEvent event) {
 		if(event.gracefulExit()) {
-			ArgumentParser parser = new ArgumentParser(null);
-			parser.player = event.getContext().getSessionData("player").toString();
-			parser.event = event.getContext().getSessionData("event").toString();
-			parser.world = event.getContext().getSessionData("world").toString();
+			ArgumentParser parser = fillParser(event);
 			if((event.getContext().getForWhom() instanceof PlayerSession)) {
-				new SearchTask(p, new SearchCallback(p, SearchCallback.Type.SEARCH), parser);
+				if(rollback) {
+					new SearchTask(session, new SearchCallback(session, SearchCallback.Type.ROLLBACK), parser);
+				} else {
+					new SearchTask(session, new SearchCallback(session, SearchCallback.Type.SEARCH), parser);
+				}
 			} else {
 				event.getContext().getForWhom().sendRawMessage("Failed to send your search request, to solve this you could try to reconnect.");
 			}
@@ -40,11 +62,34 @@ public class SearchConversation extends BaseConversation implements Conversation
 		}
 	}
 	
+	private ArgumentParser fillParser(ConversationAbandonedEvent e) {
+		ArgumentParser parser = new ArgumentParser(null);
+		Object player = e.getContext().getSessionData("player");
+		Object event = e.getContext().getSessionData("event");
+		Object world = e.getContext().getSessionData("world");
+		Object time = e.getContext().getSessionData("time");
+		
+		if(player != null) {
+			parser.player = player.toString();
+		}
+		if(event != null) {
+			parser.event = event.toString();
+		}
+		if(world != null) {
+			parser.world = world.toString();
+		}
+		if(time != null) {
+			parser.time = time.toString();
+		}
+		return parser;
+	}
+
 	private class SearchIntroPrompt extends MessagePrompt {
 
 		@Override
 		public String getPromptText(ConversationContext context) {
-			return "If you want to exit this just type #quit and hit enter at any time:D";
+			return 	"If you want to exit this just type #quit and hit enter at any time.\n" +
+					"If you want to skip an option you can use #next, if you want to go back to a previous question do #prev.";
 		}
 
 		@Override
@@ -57,11 +102,17 @@ public class SearchConversation extends BaseConversation implements Conversation
 
 		@Override
 		public String getPromptText(ConversationContext context) {
-			return "For which player do you want to search, if you don´t want to search for a player use \"null\".";
+			return "For which player do you want to search?";
 		}
 		
 		@Override
 		public Prompt acceptInput(ConversationContext context, String input) {
+			if(input.equalsIgnoreCase("#next")) {
+				context.setSessionData("player", null);
+				return new SearchEventPrompt();
+			} else if(input.equalsIgnoreCase("#prev")) {
+				return new SearchIntroPrompt();
+			}
 			context.setSessionData("player", input);
 			return new SearchEventPrompt();
 		}
@@ -71,17 +122,23 @@ public class SearchConversation extends BaseConversation implements Conversation
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String input) {
+			if(input.equalsIgnoreCase("#next")) {
+				context.setSessionData("event", null);
+				return new SearchWorldPrompt();
+			} else if(input.equalsIgnoreCase("#prev")) {
+				return new SearchPlayerPrompt();
+			}
 			if(Events.getEvent(input) != null) {
 				context.setSessionData("event", Events.getEvent(input).getEventName());
 			} else {
-				context.setSessionData("event", "null");
+				context.setSessionData("event", null);
 			}
 			return new SearchWorldPrompt();
 		}
 
 		@Override
 		public String getPromptText(ConversationContext context) {
-			return "Which event do you want to search for, if you don't want to search an event use \"null\".";
+			return "Which event do you want to search for?";
 		}
 	}
 	
@@ -89,28 +146,37 @@ public class SearchConversation extends BaseConversation implements Conversation
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String input) {
+			if(input.equalsIgnoreCase("#next")) {
+				context.setSessionData("world", null);
+				return new SearchTimePrompt();
+			} else if(input.equalsIgnoreCase("#prev")) {
+				return new SearchEventPrompt();
+			}
 			context.setSessionData("world", input);
-			return new SearchPrompt();
+			return new SearchTimePrompt();
 		}
 
 		@Override
 		public String getPromptText(ConversationContext arg0) {
-			return "Which world do you want to search for, if you don't want to search for an world use \"null\".";
+			return "Which world do you want to search for?";
 		}
 	}
 	
-	private class SearchPrompt extends MessagePrompt {
-
+	private class SearchTimePrompt extends StringPrompt {
 		@Override
-		public String getPromptText(ConversationContext context) {
-			String player = context.getSessionData("player").toString();
-			String event = context.getSessionData("event").toString();
-			String world = context.getSessionData("world").toString();
-			return "Now searching for " + player + " with event " + event + " in world " + world;
+		public String getPromptText(ConversationContext arg0) {
+			return "How far back would you like the search to go?";
 		}
-
+		
 		@Override
-		protected Prompt getNextPrompt(ConversationContext context) {
+		public Prompt acceptInput(ConversationContext context, String input) {
+			if(input.equalsIgnoreCase("#next")) {
+				context.setSessionData("time", null);
+				return Prompt.END_OF_CONVERSATION;
+			} else if(input.equalsIgnoreCase("#prev")) {
+				return new SearchWorldPrompt();
+			}
+			context.setSessionData("time", input);
 			return Prompt.END_OF_CONVERSATION;
 		}
 	}
