@@ -101,11 +101,11 @@ public abstract class BaseData implements Comparable<BaseData> {
 	@Override
 	public int compareTo(BaseData o) {
 		try {
-			if(Time.getTimeStamp(time).equals(Time.getTimeStamp(o.getTime())))
+			if(Time.getDate(time).equals(Time.getDate(o.getTime())))
 				return 0;
-			else if(Time.getTimeStamp(time).before(Time.getTimeStamp(o.getTime()))) 
+			else if(Time.getDate(time).before(Time.getDate(o.getTime()))) 
 				return -1;
-			else if(Time.getTimeStamp(time).after(Time.getTimeStamp(o.getTime())))
+			else if(Time.getDate(time).after(Time.getDate(o.getTime())))
 				return 1;
 			else
 				return 0;

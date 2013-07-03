@@ -20,7 +20,7 @@ import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
-import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class CommandHandler {
 	

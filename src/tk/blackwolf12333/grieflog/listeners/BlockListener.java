@@ -25,7 +25,7 @@ import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.searching.tasks.SearchTask;
+import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class BlockListener implements Listener {
 

@@ -1,4 +1,4 @@
-package tk.blackwolf12333.grieflog.utils.searching.tasks;
+package tk.blackwolf12333.grieflog.utils.searching;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,9 +17,10 @@ import tk.blackwolf12333.grieflog.utils.filters.BlockFilter;
 import tk.blackwolf12333.grieflog.utils.filters.EventFilter;
 import tk.blackwolf12333.grieflog.utils.filters.Filter;
 import tk.blackwolf12333.grieflog.utils.filters.PlayerFilter;
+import tk.blackwolf12333.grieflog.utils.filters.TimeFilter;
 import tk.blackwolf12333.grieflog.utils.filters.WorldEditFilter;
 import tk.blackwolf12333.grieflog.utils.filters.WorldFilter;
-import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
+import tk.blackwolf12333.grieflog.utils.logging.Time;
 
 public class SearchTask implements Runnable {
 
@@ -67,6 +68,9 @@ public class SearchTask implements Runnable {
 		}
 		if(parser.blockFilter != null) {
 			filters.add(new BlockFilter(player, parser.blockFilter));
+		}
+		if(parser.time != null) {
+			filters.add(new TimeFilter(Time.getTimeFrom(parser.time)));
 		}
 		return filters;
 	}
