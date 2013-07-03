@@ -13,9 +13,8 @@ public class TimeFilter implements Filter {
 	
 	@Override
 	public boolean doFilter(BaseData data) {
-		if(Time.getTimeStamp(time).after(Time.getTimeStamp(data.getTime())))
+		if(Time.getDate(time).before(Time.getDate(data.getTime())))
 			return true;
 		return false;
 	}
-	
 }

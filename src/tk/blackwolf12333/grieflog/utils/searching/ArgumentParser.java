@@ -15,6 +15,7 @@ public class ArgumentParser implements Serializable {
 	public String world;
 	public String event;
 	public String blockFilter;
+	public String time;
 	public boolean worldedit;
 	
 	public ArgumentParser(String[] args) {
@@ -60,6 +61,13 @@ public class ArgumentParser implements Serializable {
 				} else {
 					parse4Arguments(args.get(0), args.get(1), args.get(2), args.get(3));
 				}
+			} else if(args.size() == 5) {
+				if(args.get(0).equalsIgnoreCase("we")) {
+					this.worldedit = true;
+					parse4Arguments(args.get(1), args.get(2), args.get(3), args.get(4));
+				} else {
+					parse5Arguments(args.get(0), args.get(1), args.get(2), args.get(3), args.get(5));
+				}
 			}
 		} catch(NullPointerException e) {
 			eventNullError = true;
@@ -85,6 +93,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split1[1];
+			break;
+		case 't':
+			time = split1[1];
+			break;
 		default:
 			break;	
 		}
@@ -108,6 +120,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split1[1];
+			break;
+		case 't':
+			time = split1[1];
+			break;
 		default:
 			break;	
 		}
@@ -124,6 +140,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split2[1];
+			break;
+		case 't':
+			time = split2[1];
+			break;
 		default:
 			break;
 		}
@@ -149,6 +169,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split1[1];
+			break;
+		case 't':
+			time = split1[1];
+			break;
 		default:
 			break;	
 		}
@@ -165,6 +189,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split2[1];
+			break;
+		case 't':
+			time = split2[1];
+			break;
 		default:
 			break;	
 		}
@@ -181,6 +209,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split3[1];
+			break;
+		case 't':
+			time = split3[1];
+			break;
 		default:
 			break;	
 		}
@@ -208,6 +240,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split1[1];
+			break;
+		case 't':
+			time = split1[1];
+			break;
 		default:
 			break;	
 		}
@@ -224,6 +260,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split2[1];
+			break;
+		case 't':
+			time = split2[1];
+			break;
 		default:
 			break;	
 		}
@@ -240,6 +280,10 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split3[1];
+			break;
+		case 't':
+			time = split3[1];
+			break;
 		default:
 			break;
 		}
@@ -256,6 +300,123 @@ public class ArgumentParser implements Serializable {
 			break;
 		case 'b':
 			blockFilter = split4[1];
+			break;
+		case 't':
+			time = split4[1];
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void parse5Arguments(String arg, String arg1, String arg2, String arg3, String arg4) {
+		String[] split1 = arg.split(":");
+		String[] split2 = arg1.split(":");
+		String[] split3 = arg2.split(":");
+		String[] split4 = arg3.split(":");
+		String[] split5 = arg4.split(":");
+		char ch1 = split1[0].charAt(0);
+		char ch2 = split2[0].charAt(0);
+		char ch3 = split3[0].charAt(0);
+		char ch4 = split4[0].charAt(0);
+		char ch5 = split5[0].charAt(0);
+		
+		switch(ch1) {
+		case 'p':
+			player = split1[1];
+			break;
+		case 'e':
+			event = getEventFromAlias(split1[1]);
+			break;
+		case 'w':
+			world = split1[1];
+			break;
+		case 'b':
+			blockFilter = split1[1];
+			break;
+		case 't':
+			time = split1[1];
+			break;
+		default:
+			break;	
+		}
+		
+		switch(ch2) {
+		case 'p':
+			player = split2[1];
+			break;
+		case 'e':
+			event = getEventFromAlias(split2[1]);
+			break;
+		case 'w':
+			world = split2[1];
+			break;
+		case 'b':
+			blockFilter = split2[1];
+			break;
+		case 't':
+			time = split2[1];
+			break;
+		default:
+			break;	
+		}
+		
+		switch(ch3) {
+		case 'p':
+			player = split3[1];
+			break;
+		case 'e':
+			event = getEventFromAlias(split3[1]);
+			break;
+		case 'w':
+			world = split3[1];
+			break;
+		case 'b':
+			blockFilter = split3[1];
+			break;
+		case 't':
+			time = split3[1];
+			break;
+		default:
+			break;
+		}
+		
+		switch(ch4) {
+		case 'p':
+			player = split4[1];
+			break;
+		case 'e':
+			event = getEventFromAlias(split4[1]);
+			break;
+		case 'w':
+			world = split4[1];
+			break;
+		case 'b':
+			blockFilter = split4[1];
+			break;
+		case 't':
+			time = split4[1];
+			break;
+		default:
+			break;
+		}
+		
+		switch(ch5) {
+		case 'p':
+			player = split5[1];
+			break;
+		case 'e':
+			event = getEventFromAlias(split5[1]);
+			break;
+		case 'w':
+			world = split5[1];
+			break;
+		case 'b':
+			blockFilter = split5[1];
+			break;
+		case 't':
+			time = split5[1];
+			break;
 		default:
 			break;
 		}
