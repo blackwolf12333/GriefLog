@@ -60,6 +60,8 @@ public class GLog implements CommandExecutor {
 			if (args.length == 2) {
 				if(args[0].equalsIgnoreCase("tpto")) {
 					return handler.tpto(args[1]);
+				} else if(args[0].equalsIgnoreCase("report")) {
+					return handler.viewReports(player);
 				}
 			}
 			if(args.length > 0) {

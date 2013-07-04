@@ -1,8 +1,5 @@
 package tk.blackwolf12333.grieflog.commands;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
@@ -18,6 +15,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
+import tk.blackwolf12333.grieflog.utils.reports.Report;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
@@ -174,24 +172,17 @@ public class CommandHandler {
 		}
 	}
 	
-	public void readReportFile(File file, PlayerSession sender) {
-		try {
-			FileReader fileReader = new FileReader(file);
-			BufferedReader br = new BufferedReader(fileReader);
-			String line = "";
-
-			sender.print(ChatColor.RED + "+++++++++ReportStart+++++++++");
-			while ((line = br.readLine()) != null) {
-				sender.print(line);
-			}
-			sender.print(ChatColor.RED + "++++++++++ReportEnd+++++++++");
-
-			br.close();
-			fileReader.close();
-
-		} catch (Exception e) {
-			sender.print(ChatColor.DARK_RED + "No Reports have been found!");
+	public boolean viewReports(PlayerSession sender) {
+		ArrayList<Report> reports = GriefLog.reporter.getReports();
+		if(reports.size() == 0) {
+			sender.print("No reports found!");
+			return true;
 		}
+		for(int i = 0; i < reports.size(); i++) {
+			Report r = reports.get(i);
+			sender.print("Report " + i + ": x: " + r.getX() + " y: " + r.getY() + " z: " + r.getZ() + " world: " + r.getWorld());
+		}
+		return true;
 	}
 	
 	private boolean teleportIfOnline(PlayerSession player, String to) {
