@@ -174,15 +174,19 @@ public class CommandHandler {
 	
 	public boolean viewReports(PlayerSession sender) {
 		ArrayList<Report> reports = GriefLog.reporter.getReports();
-		if(reports.size() == 0) {
+		if(!sender.hasPermission("grieflog.report.view")) {
+			sender.print(noPermsMsg);
+			return true;
+		} else if(reports.size() == 0) {
 			sender.print("No reports found!");
 			return true;
+		} else {
+			for(int i = 0; i < reports.size(); i++) {
+				Report r = reports.get(i);
+				sender.print("Report " + i + ": x: " + r.getX() + " y: " + r.getY() + " z: " + r.getZ() + " world: " + r.getWorld());
+			}
+			return true;
 		}
-		for(int i = 0; i < reports.size(); i++) {
-			Report r = reports.get(i);
-			sender.print("Report " + i + ": x: " + r.getX() + " y: " + r.getY() + " z: " + r.getZ() + " world: " + r.getWorld());
-		}
-		return true;
 	}
 	
 	private boolean teleportIfOnline(PlayerSession player, String to) {
@@ -197,12 +201,17 @@ public class CommandHandler {
 	}
 	
 	public boolean report(PlayerSession player) {
-		if(GriefLog.reporter.createReport(player)) {
-			player.print(ChatColor.YELLOW + "Reported this grief for you, admins will have a look soon.");
+		if(!player.hasPermission("grieflog.report.report")) {
+			player.print(noPermsMsg);
+			return true;
 		} else {
-			player.print(ChatColor.YELLOW + "Your report could not be saved, it is lost in the void!");
+			if(GriefLog.reporter.createReport(player)) {
+				player.print(ChatColor.YELLOW + "Reported this grief for you, admins will have a look soon.");
+			} else {
+				player.print(ChatColor.YELLOW + "Your report could not be saved, it is lost in the void!");
+			}
+			return true;
 		}
-		return true;
 	}
 	
 	// with thanks to bergerkiller

@@ -1,5 +1,5 @@
 name: GriefLog
-version: 5.0.1
+version: 5.0.2
 main: tk.blackwolf12333.grieflog.GriefLog
 softdepend: [WorldEdit]
 commands:
@@ -18,9 +18,15 @@ permissions:
             grieflog.page: true
             grieflog.getwarning: true
             grieflog.tpto: true
+            grieflog.report: true
     grieflog.getwarning.*:
         description: Permission to get a warning when someone does something that indicates that he has a modified client.
         default: false
         children:
             grieflog.getwarning.breakair: true
-        
+    grieflog.report.*:
+        description: Permission nodes for the report commands
+        default: false
+        children:
+            grieflog.report.view: op
+            grieflog.report.report: true
