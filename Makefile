@@ -7,3 +7,5 @@ all:
 	$(JC) $(JFLAGS) @sourcefiles
 jar:
 	$(JAR) $(JARFLAGS) . plugin.yml config.yml LICENCE
+clean: 
+	rm -rf bin/*
