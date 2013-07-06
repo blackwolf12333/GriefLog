@@ -57,7 +57,7 @@ public class Reporter {
 				e1.printStackTrace();
 			}
 			if(loadSaveTries > 6) {
-				GriefLog.debug("Something went wrong with saving the reports!!");
+				GriefLog.debug("Something went wrong with saving the reports!");
 			}
 			this.saveReports();
 			this.loadSaveTries++;
@@ -83,7 +83,7 @@ public class Reporter {
 				e1.printStackTrace();
 			}
 			if(loadSaveTries > 6) {
-				GriefLog.debug("Something went wrong with loading the reports!!");
+				GriefLog.debug("Something went wrong with loading the reports!");
 			}
 			this.loadReports();
 			this.loadSaveTries++;

@@ -25,7 +25,7 @@ public class CommandHandler {
 	PlayerSession sender;
 	GriefLog plugin;
 	
-	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry Dave, but i cannot let you do that! You don't have permission.";
+	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, You do not have permission to run this command.";
 	ArrayList<String> searchArgs = new ArrayList<String>();
 	
 	public CommandHandler(PlayerSession sender) {
@@ -39,7 +39,7 @@ public class CommandHandler {
 				sender.print(ChatColor.GREEN + "[GriefLog] " + plugin.getDescription().getVersion());
 				return true;
 			} else {
-				sender.print(ChatColor.GREEN + "[GriefLog] Sorry, ya can't view the version, disabled by admins:(");
+				sender.print(ChatColor.GREEN + "[GriefLog] Sorry, you can't view the version, disabled by admins.");
 				return true;
 			}
 		} else if(sender.isOp()) {
@@ -160,7 +160,7 @@ public class CommandHandler {
 	public boolean page(String page) {
 		if(sender.hasPermission("grieflog.page")) {
 			if(PageManager.pages.size() <= 0) {
-				sender.print(ChatColor.RED + "No pages found, Sorry.");
+				sender.print(ChatColor.RED + "No pages found.");
 				return true;
 			} else {
 				PageManager.printPage(sender, Integer.parseInt(page) - 1);
@@ -206,9 +206,9 @@ public class CommandHandler {
 			return true;
 		} else {
 			if(GriefLog.reporter.createReport(player)) {
-				player.print(ChatColor.YELLOW + "Reported this grief for you, admins will have a look soon.");
+				player.print(ChatColor.YELLOW + "This grief has been reported. The admins can check it soon.");
 			} else {
-				player.print(ChatColor.YELLOW + "Your report could not be saved, it is lost in the void!");
+				player.print(ChatColor.YELLOW + "Your report could not be saved, please try again soon!");
 			}
 			return true;
 		}

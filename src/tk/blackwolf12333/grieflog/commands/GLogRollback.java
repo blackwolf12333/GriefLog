@@ -13,7 +13,7 @@ public class GLogRollback {
 	
 	GriefLog plugin;
 
-	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry Dave, but i cannot let you do that! You don't have permission.";
+	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, You do not have permission to run this command.";
 	
 	public GLogRollback(GriefLog plugin) {
 		this.plugin = plugin;

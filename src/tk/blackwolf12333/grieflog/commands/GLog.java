@@ -24,6 +24,8 @@ public class GLog implements CommandExecutor {
 			ChatColor.GOLD + "/glog search <options>: " + ChatColor.DARK_GRAY + "This lets you search for the specified arguments, these work the same as with the rollback arguments.",
 			ChatColor.GOLD + "/glog tpto <player>: " + ChatColor.DARK_GRAY + "This teleports you to <player>, if he is offline you will teleport to his/her last location.",
 			ChatColor.GOLD + "/glog undo <id>: " + ChatColor.DARK_GRAY + "This will undo the rollback specified by <id>. To get a list of id's use /glog undo list.",
+			ChatColor.GOLD + "/glog report: " + ChatColor.DARK_GRAY + "Report a grief, will leave location of report and notify admins.",
+			ChatColor.GOLD + "/glog report view: " + ChatColor.DARK_GRAY + "Admins will receive a notification saying that there is a grief report. Running the command will give report details.",
 			ChatColor.DARK_AQUA + "For more help, go to the BukkitDev page: http://dev.bukkit.org/server-mods/grieflog/"
 	};
 	

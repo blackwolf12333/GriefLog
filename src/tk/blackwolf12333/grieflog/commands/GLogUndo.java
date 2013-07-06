@@ -13,7 +13,7 @@ import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class GLogUndo {
 
-	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry Dave, but I cannot let you do that! You don't have permission.";
+	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, You do not have permission to run this command.";
 	
 	public boolean onCommand(PlayerSession player, String[] args) {
 		if (player.hasPermission("grieflog.rollback")) {
