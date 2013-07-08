@@ -148,6 +148,7 @@ public class CompatibilityWrapper {
 						} catch(ClassNotFoundException e5) {
 						GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
 						GriefLog.enableRollback = false;
+						}
 					}
 				}
 			}
@@ -207,6 +208,7 @@ public class CompatibilityWrapper {
 						} catch (ClassNotFoundException e5) {
 						GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
 						GriefLog.enableRollback = false;
+						}
 					}
 				}
 			}
