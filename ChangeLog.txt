@@ -1,79 +1,39 @@
-4.5.1:
-* Added a cancel command for the rollback, that should cancel the rollback currently active.
-* Added a check if the player is already rolling something back, if so don't let him do a second rollback.
-* Made it so that the friends are checked entirely by the isOnFriendsList function in ConfigHandler.
-* Added player quit logging.
-* Added command to teleport to the last known location of any player that is offline.
-* Changed some booleans to private instead of public and made getters for them, setter are not yet needed.
-* Made the world edit filter work on a thread instead of having it do that on the main thread.
-* Fixed a bug that threw an ArrayIndexOutOfBoundsException because the blacklist didn't contain anything.
-* Added a possibility to check if the ArgumentParser generated an exception.
-* Changed the way the worldedit filter works on the search results(using threads now).
-* Fixed the tool, didn't work because of the worldedit filter or so, dunno why exactly, but it works now again:)
+5.0.2:
+-1.6.2 compatable
+-Permissions for report commands
 
-4.6
-* Fixed the worldedit filter.
-* Added actions to fix the problem that the result was null because the search wasn't ready yet.
-* Fixed the rollback not rolling back lava and water because i changed the log string there a while ago
-* Made the lava and water rollback the 8 blocks around the source block
-* Fixed the worldedit filter not filtering the newest version of the log
-* Fixed the worldedit filter not filtering the newest explosions
-* Added a check to see if CreeperHeal is enabled, if so don't log explosions, it will result in loggin AIR
-* Split the rollback function in smaller pieces (this is part of my optimization quest:P) 
-* Added a guess of how long a rollback will take in seconds
-* Fixed a bug in the onEnable method making a call to a not existing configuration instance
-* Fixed a little bug in the BlockProtectionAction, i was calling the wrong event which resulted in a npe
-* Renamed the actions to callback, because that's what it really is
-* Split some functions for better readability
-* Fixed that the config was not loaded when first time running
+5.0.1:
+-1.6.1 compatible
+-New Code
 
-4.6.7
-* Fixed a bug with the blockprotection when it was enabled it would send the searching... message by every block break event
-* Added block type and data to BlockIgnite logging
-* Added block data logging, will appear like this: DIRT:0 or LEVER:3
-* Added rollback for block data, this will make all your stairs look good after rollback xD
-* Fixed a bug with the ConsoleCommandSender and GLPlayer == NPE
-* Fixed a bug, if the rollback was complete, the taskId wasn't cleared 
-  so when someone used /glog cancel another task was cancelled and not the rollback
+4.9.7:
+-Fixed all the 4.9.6 issues
+-Reverted back to old code
+-Compatible with craftbukkit 1.5 R3
+-To bukkit staff: Removed libs folder
 
+4.9.6:
+-Lets pretend like 4.9.6 was never born...
 
-4.6.8
-* Fixed a bug in the /glog tool command
+4.9.5:
+-Fixed compatibility with craftbukkit 1.5 R2
+-Rollbacks now work again
+-Updated plugin by doglover129 (I just had to through that in *Smile* )
 
-4.7
-* Dropped rollback support for the older versions 2.* and 3.*, some might work, i don't know
-* Added "DataEntries" that are the classes in tk.blackwolf12333.grieflog.data.*
-* Added loadFromString to BaseData classes to create a new instance of a DataEntry from a string from the logs
-* Added rollback function in the DataEntries for easier rollback
-* Improved the rollback
-* Added zombie and enderman grief rollback(zombie doesn't work to well)
-* And as always, fixed lots of bugs:)
-* Fixed a very dumb bug, arrays don't go from 1 to 3 but from 0 to 2...
-* Added configuration change check to load the new configuration options while keeping the old ones intact
+4.9.4:
+-Updated for compatibility with minecraft 1.5.0
 
-4.8
-* Fixed a bug in the worldedit filter that caused a npe, just had to check if the world was null or not
-* Lots of bugfixes
-* Added user friendliness options, those include:
-		# Option to show really minimal info like this "10-10-12 19:45:23 player blackwolf12333 broke block." only used with the tool
-		# Option to add colors to the log showing up when using the default log.
-		# Nicer looking config:D
-		# You can now use /glog rb to rollback, when you do, grieflog will just ask for what you want to rollback:D
-		# Same for /glog search as above.
-* Rewrote the page management a bit.
-* Fixed ignition logging.
-* Changed some stuff in how commands are handled, looks neat now:D
-* Added undo for rollback's
-		# Do /glog undo after you did a rollback you don't like to undo the rollback
-		# Do /glog undo list to see all possible search arguments that you can undo after it was rolled back.
-		# Do /glog undo <id> to undo something from the list you got from /glog undo list
-* I think i made the search a little faster.
-* Fixed the PlayerCommandData not getting the whole command but just the beginning.
-* Removed block protection.
-* Added page numbers.
+4.9.3:
+-Updated for compatibility with minecraft 1.4.7 rollbacks will now finish:)
 
-4.8.3
-* Improved the searching algorithm a bit.
-* Improved logging and searching, now goes faster.
-* Improved rollback a lot, now only takes a few milliseconds to rollback a few thousand events.:D
-* Fixed bugs as usual.
+4.9.2:
+-Added option for rolling back only a specific block. See documentation about rollback for more info.
+-Added check to see if the parameters in the search make sense or not, if they don't, don't search.
+
+4.9.1:
+-Supports 1.4.6 native craftbukkit code. (rollback won't be so fast without it)
+
+4.9:
+-Added a way to set the logs directory path in the config.
+-Made the merging of new config files and yours go smoother(comments will be removed:()
+-A few bugfixes.
