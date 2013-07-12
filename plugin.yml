@@ -28,5 +28,5 @@ permissions:
         description: Permission nodes for the report commands
         default: false
         children:
-            grieflog.report.view: op
+            grieflog.report.view: false
             grieflog.report.report: true
