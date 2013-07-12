@@ -2,7 +2,6 @@ package tk.blackwolf12333.grieflog.utils.reports;
 
 import java.io.Serializable;
 
-
 public class Report implements Serializable {
 
 	private static final long serialVersionUID = 3564703201532845810L;
