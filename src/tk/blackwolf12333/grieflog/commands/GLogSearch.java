@@ -22,7 +22,7 @@ public class GLogSearch {
 	public boolean onCommand(PlayerSession player, String[] args) {
 		if(player.hasPermission("grieflog.search")) {
 			if(args.length == 1) {
-				new SearchConversation(plugin, player, false);
+				new SearchConversation(plugin, player, false, false);
 				return true;
 			} else {
 				if(args.length >= 2) {

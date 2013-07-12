@@ -20,11 +20,12 @@ import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 public class SearchConversation implements ConversationAbandonedListener {
 
 	boolean rollback;
+	boolean worldedit;
 	GriefLog plugin;
 	PlayerSession session;
 	ConversationFactory conversationFactory;
 	
-	public SearchConversation(GriefLog plugin, PlayerSession session, boolean rollback) {
+	public SearchConversation(GriefLog plugin, PlayerSession session, boolean rollback, boolean worldedit) {
 		this.plugin = plugin;
 		this.session = session;
 		this.conversationFactory = new ConversationFactory(plugin);
@@ -34,6 +35,7 @@ public class SearchConversation implements ConversationAbandonedListener {
 		this.conversationFactory.addConversationAbandonedListener(this);
 		this.conversationFactory.withEscapeSequence("#quit");
 		this.rollback = rollback;
+		this.worldedit = worldedit;
 		session.beginConversation(this.conversationFactory.buildConversation(session));
 	}
 	
@@ -81,6 +83,7 @@ public class SearchConversation implements ConversationAbandonedListener {
 		if(time != null) {
 			parser.time = time.toString();
 		}
+		parser.worldedit = this.worldedit;
 		return parser;
 	}
 

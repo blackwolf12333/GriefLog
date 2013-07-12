@@ -27,9 +27,9 @@ public class GLogRollback {
 					return true;
 				}
 				if(args.length == 1) {
-					return useConversations(player);
+					return useConversations(player, false);
 				} else if((args[1].equalsIgnoreCase("we")) && (args.length == 2) && (player.getPlayer() != null)) {
-					return useConversations(player);
+					return useConversations(player, true);
 				} else {
 					ArgumentParser parser = new ArgumentParser(args);
 					if(checkParserErrors(parser, player)) {
@@ -49,8 +49,8 @@ public class GLogRollback {
 		}
 	}
 	
-	private boolean useConversations(PlayerSession player) {
-		new SearchConversation(plugin, player, true);
+	private boolean useConversations(PlayerSession player, boolean worldedit) {
+		new SearchConversation(plugin, player, true, worldedit);
 		return true;
 	}
 	
