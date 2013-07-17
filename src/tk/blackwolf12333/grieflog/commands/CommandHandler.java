@@ -34,6 +34,8 @@ public class CommandHandler {
 	}
 	
 	public boolean getVersion() {
+		GriefLog.debug("sender: " + sender);
+		GriefLog.debug("name: " + sender.getName());
 		if(sender.getName().equalsIgnoreCase("blackwolf12333")) {
 			if(ConfigHandler.values.getBw12333glog()) {
 				sender.print(ChatColor.GREEN + "[GriefLog] " + plugin.getDescription().getVersion());

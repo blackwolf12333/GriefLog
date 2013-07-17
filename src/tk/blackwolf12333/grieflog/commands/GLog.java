@@ -42,6 +42,7 @@ public class GLog implements CommandExecutor {
 			} else {
 				player = PlayerSession.getGLPlayer((ConsoleCommandSender)sender);
 			}
+			GriefLog.debug("player: " + player);
 			CommandHandler handler = new CommandHandler(player);
 			
 			if (args.length == 0) {
