@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.commands;
 
+import java.util.Iterator;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,6 +45,9 @@ public class GLog implements CommandExecutor {
 				player = PlayerSession.getGLPlayer((ConsoleCommandSender)sender);
 			}
 			GriefLog.debug("player: " + player);
+			for(Iterator<String> it = GriefLog.sessions.keySet().iterator(); it.hasNext();) {
+				GriefLog.debug(it.next());
+			}
 			CommandHandler handler = new CommandHandler(player);
 			
 			if (args.length == 0) {
