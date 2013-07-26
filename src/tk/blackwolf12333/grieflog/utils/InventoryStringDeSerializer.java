@@ -128,7 +128,7 @@ public class InventoryStringDeSerializer {
                 is.addEnchantment(Enchantment.getById(Integer.valueOf(itemAttribute[1])), Integer.valueOf(itemAttribute[2]));
             }
         }
-        return new SerializedItem(str, is, slot); //TODO: Test this: implement the stringToItem function in InventoryStringDeSerializer
+        return new SerializedItem(str, is, slot);
     }
 
 	private static int getSlot(String str) {

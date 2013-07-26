@@ -30,7 +30,6 @@ public class GriefLogger implements Runnable {
 				log.createNewFile();
 			}
 			
-			//TODO: add cvs logging here
 			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
 				data.setTime(GriefLog.time.now());
 				GriefLog.debug("logging: " + data.toString());

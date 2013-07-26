@@ -53,7 +53,7 @@ public class Rollback implements Runnable {
 	public void rollback(BaseData line) {
 		Events event = Events.getEvent(line.getEvent());
 		if(event != null) {
-			if(event.getCanRollback()) { // TODO: don't rollback excluded types
+			if(event.getCanRollback()) {
 				line.rollback(this);
 			}
 		}
