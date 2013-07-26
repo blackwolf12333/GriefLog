@@ -200,18 +200,30 @@ public class CommandHandler {
 		return false;
 	}
 	
-	public boolean report(PlayerSession player) {
-		if(!player.hasPermission("grieflog.report.report")) {
-			player.print(noPermsMsg);
+	public boolean report() {
+		if(!sender.hasPermission("grieflog.report.report")) {
+			sender.print(noPermsMsg);
 			return true;
 		} else {
-			if(GriefLog.reporter.createReport(player)) {
-				player.print(ChatColor.YELLOW + "This grief has been reported. The admins can check it soon.");
+			if(GriefLog.reporter.createReport(sender)) {
+				sender.print(ChatColor.YELLOW + "This grief has been reported. The admins can check it soon.");
 			} else {
-				player.print(ChatColor.YELLOW + "Your report could not be saved, please try again soon!");
+				sender.print(ChatColor.YELLOW + "Your report could not be saved, please try again soon!");
 			}
 			return true;
 		}
+	}
+	
+	public boolean deleteReport(String number) {
+		try {
+			Integer index = Integer.parseInt(number);
+			GriefLog.reporter.deleteReport(index);
+			sender.print(ChatColor.YELLOW + "Report deleted!");
+		} catch (NumberFormatException e) {
+			sender.print(ChatColor.RED + "That is not a number!");
+			return true;
+		}
+		return true;
 	}
 	
 	// with thanks to bergerkiller

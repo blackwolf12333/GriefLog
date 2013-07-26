@@ -16,14 +16,13 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 public class Reporter {
 
 	ArrayList<Report> reports = new ArrayList<Report>();
-	int loadSaveTries = 0;
 	
 	public int countReports() {
 		return reports.size();
 	}
 	
 	public boolean createReport(PlayerSession session) {
-		if(session.getPlayer() != null) { // if this is not a player skip it.
+		if(session.getPlayer() != null) {
 			int x = session.getPlayer().getLocation().getBlockX();
 			int y = session.getPlayer().getLocation().getBlockY();
 			int z = session.getPlayer().getLocation().getBlockZ();
@@ -34,6 +33,10 @@ public class Reporter {
 		} else {
 			return false;
 		}
+	}
+	
+	public void deleteReport(int index) {
+		reports.remove(index);
 	}
 	
 	public ArrayList<Report> getReports() {
@@ -56,11 +59,6 @@ public class Reporter {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			if(loadSaveTries > 6) {
-				GriefLog.debug("Something went wrong with saving the reports!");
-			}
-			this.saveReports();
-			this.loadSaveTries++;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,11 +80,6 @@ public class Reporter {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			if(loadSaveTries > 6) {
-				GriefLog.debug("Something went wrong with loading the reports!");
-			}
-			this.loadReports();
-			this.loadSaveTries++;
 		} catch (IOException e) {
 			if(e instanceof EOFException) {
 				GriefLog.debug("No reports found");

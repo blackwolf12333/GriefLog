@@ -56,7 +56,7 @@ public class GLog implements CommandExecutor {
 				} else if (args[0].equalsIgnoreCase("tool")) {
 					return handler.giveTool();
 				} else if (args[0].equalsIgnoreCase("report")) {
-					return handler.report(player);
+					return handler.report();
 				}
 			} 
 			if (args.length == 2) {
@@ -66,6 +66,13 @@ public class GLog implements CommandExecutor {
 					return handler.viewReports(player);
 				}
 			}
+			
+			if(args.length == 3) {
+				if(args[0].equalsIgnoreCase("report")) {
+					return handler.deleteReport(args[2]);
+				}
+			}
+			
 			if(args.length > 0) {
 				if(args[0].equalsIgnoreCase("page")) {
 					return handler.page(args[1]);
