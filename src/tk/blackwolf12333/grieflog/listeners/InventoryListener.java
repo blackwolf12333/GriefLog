@@ -3,9 +3,9 @@ package tk.blackwolf12333.grieflog.listeners;
 import java.util.HashMap;
 
 import org.bukkit.Location;
-import org.bukkit.block.Chest;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
-import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -48,19 +48,23 @@ public class InventoryListener implements Listener {
 				chestY = chest.getLocation().getBlockY();
 				chestZ = chest.getLocation().getBlockZ();
 				chestWorld = chest.getWorld().getName();
-			} else if(holder instanceof StorageMinecart) {
-				StorageMinecart chest = (StorageMinecart) holder;
+			} else if(holder instanceof BlockState) {
+				BlockState chest = (BlockState) holder;
+				Location loc = chest.getLocation();
+				chestX = loc.getBlockX();
+				chestY = loc.getBlockY();
+				chestZ = loc.getBlockZ();
+				chestWorld = loc.getWorld().getName();
+			} else if(holder instanceof Entity) {
+				Entity chest = (Entity) holder;
 				Location loc = chest.getLocation();
 				chestX = loc.getBlockX();
 				chestY = loc.getBlockY();
 				chestZ = loc.getBlockZ();
 				chestWorld = loc.getWorld().getName();
 			} else {
-				Chest chest = (Chest) holder;
-				chestX = chest.getX();
-				chestY = chest.getY();
-				chestZ = chest.getZ();
-				chestWorld = chest.getWorld().getName();
+				GriefLog.log.info("Something went wrong logging an Inventory event");
+				return;
 			}
 			
 			String player = event.getPlayer().getName();
