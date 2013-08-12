@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -48,11 +49,12 @@ public class UndoSerializer {
 			in.close();
 			fileIn.close();
 		} catch (IOException i) {
+			if(i instanceof FileNotFoundException) {
+				return;
+			}
 			i.printStackTrace();
-			return;
 		} catch (ClassNotFoundException c) {
 			c.printStackTrace();
-			return;
 		}
 	}
 }
