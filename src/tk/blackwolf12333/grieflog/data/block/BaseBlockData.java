@@ -206,7 +206,7 @@ public abstract class BaseBlockData extends BaseData {
 	}
 	
 	private static BaseBlockData handleBlockWorldEditChangeData(String[] data) {
-		try { //21-05-2013 18-48-00 [WORLDEDIT] By: blackwolf12333 from: DIRT:0 to: AIR:0 at: 232, 62, 293 in: world
+		try {
 			String time = data[0] + " " + data[1];
 			String player = data[4];
 			String[] changedFromTypeAndData = data[6].split(":");
