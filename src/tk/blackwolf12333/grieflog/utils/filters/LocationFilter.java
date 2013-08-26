@@ -19,14 +19,10 @@ public class LocationFilter implements Filter {
 	
 	@Override
 	public boolean doFilter(BaseData data) {
-		if(Events.getEvent(data.getEvent()).getCanRollback()) {
-			Location loc = data.getLocation();
-			if(loc != null) {
-				if((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world))) {
-					return true;
-				} else {
-					return false;
-				}
+		Location loc = data.getLocation();
+		if(loc != null) {
+			if((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world))) {
+				return true;
 			} else {
 				return false;
 			}
