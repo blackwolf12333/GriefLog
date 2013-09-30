@@ -124,6 +124,29 @@ public class CompatibilityWrapper {
 			}
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void sendChanges_1_6_R3(SendChangesTask task, HashSet<Chunk> chunks) {
+		HashSet<net.minecraft.server.v1_6_R3.ChunkCoordIntPair> pairs = new HashSet<net.minecraft.server.v1_6_R3.ChunkCoordIntPair>();
+		for (Chunk c : chunks) {
+			pairs.add(new net.minecraft.server.v1_6_R3.ChunkCoordIntPair(c.getX(), c.getZ()));
+		}
+
+		for (Player p : task.getPlayers()) {
+			HashSet<net.minecraft.server.v1_6_R3.ChunkCoordIntPair> queued = new HashSet<net.minecraft.server.v1_6_R3.ChunkCoordIntPair>();
+			if (p != null) {
+				net.minecraft.server.v1_6_R3.EntityPlayer ep = ((org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer) p).getHandle();
+				for (Object o : ep.chunkCoordIntPairQueue) {
+					queued.add((net.minecraft.server.v1_6_R3.ChunkCoordIntPair) o);
+				}
+				for (net.minecraft.server.v1_6_R3.ChunkCoordIntPair pair : pairs) {
+					if (!queued.contains(pair)) {
+						ep.chunkCoordIntPairQueue.add(pair);
+					}
+				}
+			}
+		}
+	}
 
 	public void sendChanges(SendChangesTask task, HashSet<Chunk> chunks) {
 		try {
@@ -146,8 +169,13 @@ public class CompatibilityWrapper {
 							Class.forName("net.minecraft.server.v1_6_R2.ChunkCoordIntPair");
 							sendChanges_1_6_R2(task, chunks);
 						} catch(ClassNotFoundException e5) {
-						GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-						GriefLog.enableRollback = false;
+							try {
+								Class.forName("net.minecraft.server.v1_6_R3.ChunkCoordIntPair");
+								sendChanges_1_6_R3(task, chunks);
+							} catch(ClassNotFoundException e6) {
+								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+								GriefLog.enableRollback = false;
+							}
 						}
 					}
 				}
@@ -184,6 +212,12 @@ public class CompatibilityWrapper {
 		net.minecraft.server.v1_6_R2.Chunk chunk = ((org.bukkit.craftbukkit.v1_6_R2.CraftChunk) c).getHandle();
 		chunk.a(x & 15, y, z & 15, typeID, data);
 	}
+	
+	private void setBlockFast_1_6_R3(int x, int y, int z, String world,	int typeID, byte data) {
+		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
+		net.minecraft.server.v1_6_R3.Chunk chunk = ((org.bukkit.craftbukkit.v1_6_R3.CraftChunk) c).getHandle();
+		chunk.a(x & 15, y, z & 15, typeID, data);
+	}
 
 	public void setBlockFast(int x, int y, int z, String world, int typeID,	byte data) {
 		try {
@@ -206,8 +240,13 @@ public class CompatibilityWrapper {
 							Class.forName("net.minecraft.server.v1_6_R2.Chunk");
 							setBlockFast_1_6_R2(x, y, z, world, typeID, data);
 						} catch (ClassNotFoundException e5) {
-						GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-						GriefLog.enableRollback = false;
+							try {
+								Class.forName("net.minecraft.server.v1_6_R3.Chunk");
+								setBlockFast_1_6_R3(x, y, z, world, typeID, data);
+							} catch (ClassNotFoundException e6) {
+								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+								GriefLog.enableRollback = false;
+							}
 						}
 					}
 				}
