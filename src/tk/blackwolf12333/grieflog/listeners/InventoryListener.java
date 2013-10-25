@@ -69,19 +69,19 @@ public class InventoryListener implements Listener {
 				    GriefLog.log.info("Something went wrong logging an Inventory event");
 				    return;
 			    }
-			}
-			String player = event.getPlayer().getName();
-			String[] diff = new String[2];
+			    String player = event.getPlayer().getName();
+			    String[] diff = new String[2];
 			
-			String before = inventories.get(player);
-			String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());
-			diff = difference(before, after);
-			if(diff == null) {
-				inventories.remove(event.getPlayer().getName());
-				return;
-			}
-			GriefLog.debug("Transaction by: " + player + " with taken: " + diff[0] + " put: " + diff[1]);
-			new GriefLogger(new ChestAccessData(player, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
+			    String before = inventories.get(player);
+			    String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());
+			    diff = difference(before, after);
+			    if(diff == null) {
+			    	inventories.remove(event.getPlayer().getName());
+			    	return;
+			    }
+			    GriefLog.debug("Transaction by: " + player + " with taken: " + diff[0] + " put: " + diff[1]);
+				new GriefLogger(new ChestAccessData(player, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
+		    }
 		}
 		inventories.remove(event.getPlayer().getName());
 	}
