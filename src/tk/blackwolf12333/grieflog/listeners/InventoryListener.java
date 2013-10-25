@@ -30,43 +30,45 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent event) {
-		inventories.put(event.getPlayer().getName(), InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory()));
+        if(ConfigHandler.values.getInventoryLogging()) {
+		    inventories.put(event.getPlayer().getName(), InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory()));
+		}
 	}
 	
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if(event.getInventory().getType() == InventoryType.CHEST) {
-			InventoryHolder holder = event.getInventory().getHolder();
-			Integer chestX;
-			Integer chestY;
-			Integer chestZ;
-			String chestWorld;
-			
-			if(holder instanceof DoubleChest) {
-				DoubleChest chest = (DoubleChest) holder;
-				chestX = chest.getLocation().getBlockX();
-				chestY = chest.getLocation().getBlockY();
-				chestZ = chest.getLocation().getBlockZ();
-				chestWorld = chest.getWorld().getName();
-			} else if(holder instanceof BlockState) {
-				BlockState chest = (BlockState) holder;
-				Location loc = chest.getLocation();
-				chestX = loc.getBlockX();
-				chestY = loc.getBlockY();
-				chestZ = loc.getBlockZ();
-				chestWorld = loc.getWorld().getName();
-			} else if(holder instanceof Entity) {
-				Entity chest = (Entity) holder;
-				Location loc = chest.getLocation();
-				chestX = loc.getBlockX();
-				chestY = loc.getBlockY();
-				chestZ = loc.getBlockZ();
-				chestWorld = loc.getWorld().getName();
-			} else {
-				GriefLog.log.info("Something went wrong logging an Inventory event");
-				return;
+		if(ConfigHandler.values.getInventoryLogging()) {
+		    if(event.getInventory().getType() == InventoryType.CHEST) {
+			    InventoryHolder holder = event.getInventory().getHolder();
+			    Integer chestX;
+			    Integer chestY;
+			    Integer chestZ;
+			    String chestWorld;
+			    if(holder instanceof DoubleChest) {
+				    DoubleChest chest = (DoubleChest) holder;
+				    chestX = chest.getLocation().getBlockX();
+				    chestY = chest.getLocation().getBlockY();
+				    chestZ = chest.getLocation().getBlockZ();
+				    chestWorld = chest.getWorld().getName();
+			    } else if(holder instanceof BlockState) {
+				    BlockState chest = (BlockState) holder;
+				    Location loc = chest.getLocation();
+				    chestX = loc.getBlockX();
+				    chestY = loc.getBlockY();
+				    chestZ = loc.getBlockZ();
+				    chestWorld = loc.getWorld().getName();
+			    } else if(holder instanceof Entity) {
+				    Entity chest = (Entity) holder;
+				    Location loc = chest.getLocation();
+				    chestX = loc.getBlockX();
+				    chestY = loc.getBlockY();
+				    chestZ = loc.getBlockZ();
+				    chestWorld = loc.getWorld().getName();
+			    } else {
+				    GriefLog.log.info("Something went wrong logging an Inventory event");
+				    return;
+			    }
 			}
-			
 			String player = event.getPlayer().getName();
 			String[] diff = new String[2];
 			
