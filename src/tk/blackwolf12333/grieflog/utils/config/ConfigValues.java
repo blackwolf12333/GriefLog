@@ -217,7 +217,7 @@ public class ConfigValues {
 		this.playerJoin = playerJoin;
 	}
 	
-	public void getInventoryLogging() {
+	public boolean getInventoryLogging() {
 	    return inventoryLogging;
 	}
 	
