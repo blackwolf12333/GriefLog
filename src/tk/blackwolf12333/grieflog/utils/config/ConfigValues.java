@@ -19,7 +19,8 @@ public class ConfigValues {
 	boolean zombie = ConfigHandler.config.getBoolean("events.zombie");
 	boolean explosions = ConfigHandler.config.getBoolean("events.explosions");
 	boolean playerJoin = ConfigHandler.config.getBoolean("events.playerjoin");
-	boolean playerQuit = ConfigHandler.config.getBoolean("events.playerquit");;
+	boolean playerQuit = ConfigHandler.config.getBoolean("events.playerquit");
+    boolean inventoryLogging = ConfigHandler.config.getBoolean("events.inventory");
 	boolean putItemsBackOnRollback = ConfigHandler.config.getBoolean("events.putitemsbackonrollback");
 	String ignoredCommands = ConfigHandler.config.getString("events.ignored-commands");
 	
@@ -214,6 +215,14 @@ public class ConfigValues {
 	 */
 	public void setPlayerJoin(boolean playerJoin) {
 		this.playerJoin = playerJoin;
+	}
+	
+	public void getInventoryLogging() {
+	    return inventoryLogging;
+	}
+	
+	public void setInventoryLogging(boolean inventoryLogging) {
+	    this.inventoryLogging = inventoryLogging
 	}
 
 	/**

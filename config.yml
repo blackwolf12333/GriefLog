@@ -39,6 +39,7 @@ events:
     explosions: true
     playerjoin: true
     playerquit: true
+    inventory: true
 
     # do you want to put items back in a chest when it was broken when you roll it back?
     # this can duplicate some items if the player picked it up right after it was griefed.
