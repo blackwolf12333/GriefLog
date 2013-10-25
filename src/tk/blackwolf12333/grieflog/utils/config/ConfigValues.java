@@ -222,7 +222,7 @@ public class ConfigValues {
 	}
 	
 	public void setInventoryLogging(boolean inventoryLogging) {
-	    this.inventoryLogging = inventoryLogging
+	    this.inventoryLogging = inventoryLogging;
 	}
 
 	/**
