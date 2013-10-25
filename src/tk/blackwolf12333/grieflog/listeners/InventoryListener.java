@@ -17,6 +17,7 @@ import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.data.player.ChestAccessData;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
+import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 
 public class InventoryListener implements Listener {
 
