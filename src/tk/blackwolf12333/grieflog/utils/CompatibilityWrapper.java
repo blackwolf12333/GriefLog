@@ -2,6 +2,8 @@ package tk.blackwolf12333.grieflog.utils;
 
 import java.util.HashSet;
 
+import net.minecraft.server.v1_7_R1.Block;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -196,6 +198,10 @@ public class CompatibilityWrapper {
 								Class.forName("net.minecraft.server.v1_6_R3.ChunkCoordIntPair");
 								sendChanges_1_6_R3(task, chunks);
 							} catch(ClassNotFoundException e6) {
+								try {
+								Class.forName("net.minecraft.server.v1_7_R1.ChunkCoordIntPair");
+								sendChanges_1_6_R3(task, chunks);
+							} catch(ClassNotFoundException e7) {
 								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
 								GriefLog.enableRollback = false;
 							}
@@ -205,6 +211,7 @@ public class CompatibilityWrapper {
 			}
 		}
 	}
+}
 
 	private void setBlockFast_1_4_R1(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
@@ -242,6 +249,12 @@ public class CompatibilityWrapper {
 		chunk.a(x & 15, y, z & 15, typeID, data);
 	}
 
+	private void setBlockFast_1_7_R1(int x, int y, int z, String world, int typeID, byte data) {
+		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
+		net.minecraft.server.v1_7_R1.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R1.CraftChunk) c).getHandle();
+		chunk.a(x & 15, y, z & 15, typeID, data);
+	}
+	
 	public void setBlockFast(int x, int y, int z, String world, int typeID,	byte data) {
 		try {
 			Class.forName("net.minecraft.server.v1_4_R1.Chunk");
@@ -267,8 +280,13 @@ public class CompatibilityWrapper {
 								Class.forName("net.minecraft.server.v1_6_R3.Chunk");
 								setBlockFast_1_6_R3(x, y, z, world, typeID, data);
 							} catch (ClassNotFoundException e6) {
+								try {
+									Class.forName("net.minecraft.server.v1_7_R1.Chunk");
+									setBlockFast_1_7_R1(x, y, z, world, typeID, data);
+								} catch (ClassNotFoundException e7) {
 								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
 								GriefLog.enableRollback = false;
+								}
 							}
 						}
 					}
