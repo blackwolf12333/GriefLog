@@ -20,11 +20,7 @@ public class LocationFilter implements Filter {
 	public boolean doFilter(BaseData data) {
 		Location loc = data.getLocation();
 		if(loc != null) {
-			if((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world))) {
-				return true;
-			} else {
-				return false;
-			}
+			return ((loc.getBlockX() == this.x) && (loc.getBlockY() == this.y) && (loc.getBlockZ() == this.z) && (loc.getWorld().getName().equalsIgnoreCase(world)));
 		} else {
 			return false;
 		}
