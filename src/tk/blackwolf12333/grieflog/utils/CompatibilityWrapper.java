@@ -250,7 +250,8 @@ public class CompatibilityWrapper {
 	private void setBlockFast_1_7_R1(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
 		net.minecraft.server.v1_7_R1.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R1.CraftChunk) c).getHandle();
-		chunk.a(x & 15, y, z & 15, typeID, data);
+		net.minecraft.server.v1_7_R1.Block block = chunk.getType(x & 15, y, z & 15);
+		chunk.a(x & 15, y, z & 15, block, data);
 	}
 	
 	public void setBlockFast(int x, int y, int z, String world, int typeID,	byte data) {
