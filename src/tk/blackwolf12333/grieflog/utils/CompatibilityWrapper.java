@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
@@ -247,11 +248,33 @@ public class CompatibilityWrapper {
 		chunk.a(x & 15, y, z & 15, typeID, data);
 	}
 
+	// getting really dirty down here
 	private void setBlockFast_1_7_R1(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
 		net.minecraft.server.v1_7_R1.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R1.CraftChunk) c).getHandle();
-		net.minecraft.server.v1_7_R1.Block block = chunk.getType(x & 15, y, z & 15);
-		chunk.a(x & 15, y, z & 15, block, data);
+		net.minecraft.server.v1_7_R1.Block block = this.getBlockType(typeID);
+		boolean ret = chunk.a(x & 15, y, z & 15, block, data);
+		GriefLog.debug("Setting block at: x=" + x + " y=" + y + " z=" + z + " result: " + ret);
+	}
+
+	// some hacks to get the right block type
+	private net.minecraft.server.v1_7_R1.Block getBlockType(int typeID) {
+		for(Material m : Material.values()) {
+			if(m.getId() == typeID) {
+				try {
+					return (net.minecraft.server.v1_7_R1.Block) net.minecraft.server.v1_7_R1.Blocks.class.getDeclaredField(m.toString()).get(null);
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return net.minecraft.server.v1_7_R1.Blocks.AIR;
 	}
 	
 	public void setBlockFast(int x, int y, int z, String world, int typeID,	byte data) {
