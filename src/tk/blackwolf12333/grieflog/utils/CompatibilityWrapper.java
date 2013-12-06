@@ -2,8 +2,6 @@ package tk.blackwolf12333.grieflog.utils;
 
 import java.util.HashSet;
 
-import net.minecraft.server.v1_7_R1.Block;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -200,7 +198,7 @@ public class CompatibilityWrapper {
 							} catch(ClassNotFoundException e6) {
 								try {
 								Class.forName("net.minecraft.server.v1_7_R1.ChunkCoordIntPair");
-								sendChanges_1_6_R3(task, chunks);
+								sendChanges_1_7_R1(task, chunks);
 							} catch(ClassNotFoundException e7) {
 								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
 								GriefLog.enableRollback = false;
