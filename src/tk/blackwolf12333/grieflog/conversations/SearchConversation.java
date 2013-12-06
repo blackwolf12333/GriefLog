@@ -10,12 +10,12 @@ import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
+import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class SearchConversation implements ConversationAbandonedListener {
 

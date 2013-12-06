@@ -1,3 +1,8 @@
+5.0.5:
+-1.7.2 Compatable
+
+Skipping ahead...
+
 5.0.2:
 -1.6.2 compatable
 -Permissions for report commands
@@ -32,8 +37,3 @@
 
 4.9.1:
 -Supports 1.4.6 native craftbukkit code. (rollback won't be so fast without it)
-
-4.9:
--Added a way to set the logs directory path in the config.
--Made the merging of new config files and yours go smoother(comments will be removed:()
--A few bugfixes.

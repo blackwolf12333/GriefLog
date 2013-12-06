@@ -147,6 +147,29 @@ public class CompatibilityWrapper {
 			}
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void sendChanges_1_7_R1(SendChangesTask task, HashSet<Chunk> chunks) {
+		HashSet<net.minecraft.server.v1_7_R1.ChunkCoordIntPair> pairs = new HashSet<net.minecraft.server.v1_7_R1.ChunkCoordIntPair>();
+		for (Chunk c : chunks) {
+			pairs.add(new net.minecraft.server.v1_7_R1.ChunkCoordIntPair(c.getX(), c.getZ()));
+		}
+
+		for (Player p : task.getPlayers()) {
+			HashSet<net.minecraft.server.v1_7_R1.ChunkCoordIntPair> queued = new HashSet<net.minecraft.server.v1_7_R1.ChunkCoordIntPair>();
+			if (p != null) {
+				net.minecraft.server.v1_7_R1.EntityPlayer ep = ((org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer) p).getHandle();
+				for (Object o : ep.chunkCoordIntPairQueue) {
+					queued.add((net.minecraft.server.v1_7_R1.ChunkCoordIntPair) o);
+				}
+				for (net.minecraft.server.v1_7_R1.ChunkCoordIntPair pair : pairs) {
+					if (!queued.contains(pair)) {
+						ep.chunkCoordIntPairQueue.add(pair);
+					}
+				}
+			}
+		}
+	}
 
 	public void sendChanges(SendChangesTask task, HashSet<Chunk> chunks) {
 		try {

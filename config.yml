@@ -1,10 +1,7 @@
 # Set the selection tool first.
-# Second you can set when your logs have reached the size 
-# you specify, should be moved to the logs/ folder.
+# Second you can set when your logs have reached the size you specify, should be moved to the logs/ folder.
 # And last but not least, you can set which things you would like to get logged.
-# If you want more help on the configuration you should contact me on http://dev.bukkit.org/server-mods/grieflog/
-# or you can pm me there, you could also add me as skype contact, but that will only be chat, 
-# my name is blackwolf12333.
+# If you need any help, check out our Wiki or contact us at: https://sites.google.com/site/grieflogwiki/home/help
 
 general:
     # Set this to false if you don't want me to be able to use /glog on your server
