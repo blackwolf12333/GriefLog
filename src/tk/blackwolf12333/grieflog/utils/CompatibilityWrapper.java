@@ -197,11 +197,12 @@ public class CompatibilityWrapper {
 								sendChanges_1_6_R3(task, chunks);
 							} catch(ClassNotFoundException e6) {
 								try {
-								Class.forName("net.minecraft.server.v1_7_R1.ChunkCoordIntPair");
-								sendChanges_1_7_R1(task, chunks);
-							} catch(ClassNotFoundException e7) {
-								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-								GriefLog.enableRollback = false;
+									Class.forName("net.minecraft.server.v1_7_R1.ChunkCoordIntPair");
+									sendChanges_1_7_R1(task, chunks);
+								} catch(ClassNotFoundException e7) {
+									GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+									GriefLog.enableRollback = false;
+								}
 							}
 						}
 					}
@@ -209,7 +210,6 @@ public class CompatibilityWrapper {
 			}
 		}
 	}
-}
 
 	private void setBlockFast_1_4_R1(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
@@ -282,8 +282,8 @@ public class CompatibilityWrapper {
 									Class.forName("net.minecraft.server.v1_7_R1.Chunk");
 									setBlockFast_1_7_R1(x, y, z, world, typeID, data);
 								} catch (ClassNotFoundException e7) {
-								GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-								GriefLog.enableRollback = false;
+									GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+									GriefLog.enableRollback = false;
 								}
 							}
 						}
