@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
@@ -25,7 +26,6 @@ import tk.blackwolf12333.grieflog.data.player.PlayerQuitData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class PlayerListener implements Listener {
 

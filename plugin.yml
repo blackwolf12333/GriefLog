@@ -1,5 +1,5 @@
 name: GriefLog
-version: 5.0.4
+version: 5.0.5
 main: tk.blackwolf12333.grieflog.GriefLog
 softdepend: [WorldEdit]
 commands:
