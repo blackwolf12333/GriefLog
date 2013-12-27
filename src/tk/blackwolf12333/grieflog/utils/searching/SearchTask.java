@@ -80,7 +80,6 @@ public class SearchTask implements Runnable {
 			if((world != null) && (!world.equalsIgnoreCase("null"))) {
 				File f = new File(GriefLog.logsDir, world);
 				addFilesInsideToFilesToSearch(f);
-				addFilesInLogsDir();
 			} else {
 				File[] list = GriefLog.logsDir.listFiles();
 				for (File f : list) {
@@ -100,14 +99,6 @@ public class SearchTask implements Runnable {
 		for(File file : dircontents) {
 			if(file.isFile()) {
 				filesToSearch.add(file);
-			}
-		}
-	}
-	
-	private void addFilesInLogsDir() {
-		for(File f : GriefLog.logsDir.listFiles()) {
-			if(f.isFile()) {
-				filesToSearch.add(f);
 			}
 		}
 	}
