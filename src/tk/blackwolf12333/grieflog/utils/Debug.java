@@ -17,7 +17,7 @@ public class Debug {
 	}
 	
 	public void log(Object msg, boolean debug) {
-		if(ConfigHandler.values.getDebug()) {
+		if(ConfigHandler.values.getDebug() && debug) {
 			log.info(msg.toString());
 		}
 	}
