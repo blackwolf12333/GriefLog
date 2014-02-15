@@ -31,10 +31,6 @@ public class BlockListener implements Listener {
 
 	GriefLog plugin;
 	
-	/*public HashMap<String, Long> breakTimes = new HashMap<String, Long>();
-	public HashMap<String, Integer> fastbreakTimes = new HashMap<String, Integer>();
-	public static final float BLOCK_RATE = 1000000;*/
-	
 	public BlockListener(GriefLog plugin) {
 		this.plugin = plugin;
 	}
@@ -42,10 +38,7 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(!event.isCancelled()) {
-/*			if(ConfigHandler.values.getAntiHackFastbreak()) {
-				checkFastBreak(event);
-			}
-*/			if(event.getBlock().getType() == Material.AIR) {
+			if(event.getBlock().getType() == Material.AIR) {
 				handleBlockBreakAir(event);
 				return;
 			} else if(event.getBlock().getType() == Material.CHEST) {
@@ -63,26 +56,6 @@ public class BlockListener implements Listener {
 			new GriefLogger(data);
 		}
 	}
-	
-	/*private void checkFastBreak(BlockBreakEvent event) { Working on it
-		Player p = event.getPlayer();
-		if(breakTimes.containsKey(p.getName())) {
-			long deltaTime = System.nanoTime() - breakTimes.get(p.getName());
-			if(deltaTime < BLOCK_RATE) {
-				if(fastbreakTimes.containsKey(p.getName())) {
-					fastbreakTimes.put(p.getName(), fastbreakTimes.get(p.getName()) + 1);
-					if(fastbreakTimes.get(p.getName()) > 5) {
-						p.kickPlayer("fastbreak");
-					}
-				} else {
-					fastbreakTimes.put(p.getName(), 0);
-				}
-			}
-			breakTimes.put(p.getName(), System.nanoTime());
-		} else {
-			breakTimes.put(p.getName(), System.nanoTime());
-		}
-	}*/
 
 	private void handleBreakDoor(BlockBreakEvent event) {
 		BlockFace[] faces = new BlockFace[] {BlockFace.DOWN, BlockFace.UP};

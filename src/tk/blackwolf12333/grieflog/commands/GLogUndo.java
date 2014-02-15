@@ -16,6 +16,10 @@ public class GLogUndo {
 	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, You do not have permission to run this command.";
 	
 	public boolean onCommand(PlayerSession player, String[] args) {
+                if(player.isDoingRollback()) {
+                        player.print(ChatColor.DARK_RED + "You are still rolling back, you can't undo what isn't rolled back yet!");
+                        return true;
+                }
 		if (player.hasPermission("grieflog.rollback")) {
 			if(args.length == 2) {
 				if((args.length == 2) && (args[1].equalsIgnoreCase("list"))) {

@@ -1,3 +1,6 @@
+5.0.6
+-1.7.2 R0.2 Compatable
+
 5.0.5:
 -1.7.2 Compatable
 
