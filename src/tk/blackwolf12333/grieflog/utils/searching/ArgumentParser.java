@@ -77,29 +77,33 @@ public class ArgumentParser implements Serializable {
 		
 	}
 	
-	private void parse1Argument(String arg) {
-		String[] split1 = arg.split(":");
-		char ch1 = split1[0].charAt(0);
-		
-		switch(ch1) {
+	public void checkArgument(char identifier, String arg) {
+		switch(identifier) {
 		case 'p':
-			player = split1[1];
+			player = arg;
 			break;
 		case 'e':
-			event = getEventFromAlias(split1[1]);
+			event = getEventFromAlias(arg);
 			break;
 		case 'w':
-			world = split1[1];
+			world = arg;
 			break;
 		case 'b':
-			blockFilter = split1[1];
+			blockFilter = arg;
 			break;
 		case 't':
-			time = split1[1];
+			time = arg;
 			break;
 		default:
 			break;	
 		}
+	}
+	
+	private void parse1Argument(String arg) {
+		String[] split1 = arg.split(":");
+		char ch1 = split1[0].charAt(0);
+		
+		checkArgument(ch1, split1[1]);
 	}
 	
 	private void parse2Arguments(String arg, String arg1) {
@@ -108,45 +112,8 @@ public class ArgumentParser implements Serializable {
 		char ch1 = split1[0].charAt(0);
 		char ch2 = split2[0].charAt(0);
 		
-		switch(ch1) {
-		case 'p':
-			player = split1[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split1[1]);
-			break;
-		case 'w':
-			world = split1[1];
-			break;
-		case 'b':
-			blockFilter = split1[1];
-			break;
-		case 't':
-			time = split1[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch2) {
-		case 'p':
-			player = split2[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split2[1]);
-			break;
-		case 'w':
-			world = split2[1];
-			break;
-		case 'b':
-			blockFilter = split2[1];
-			break;
-		case 't':
-			time = split2[1];
-			break;
-		default:
-			break;
-		}
+		checkArgument(ch1, split1[1]);
+		checkArgument(ch2, split2[1]);
 	}
 	
 	private void parse3Arguments(String arg, String arg1, String arg2) {
@@ -157,65 +124,9 @@ public class ArgumentParser implements Serializable {
 		char ch2 = split2[0].charAt(0);
 		char ch3 = split3[0].charAt(0);
 		
-		switch(ch1) {
-		case 'p':
-			player = split1[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split1[1]);
-			break;
-		case 'w':
-			world = split1[1];
-			break;
-		case 'b':
-			blockFilter = split1[1];
-			break;
-		case 't':
-			time = split1[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch2) {
-		case 'p':
-			player = split2[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split2[1]);
-			break;
-		case 'w':
-			world = split2[1];
-			break;
-		case 'b':
-			blockFilter = split2[1];
-			break;
-		case 't':
-			time = split2[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch3) {
-		case 'p':
-			player = split3[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split3[1]);
-			break;
-		case 'w':
-			world = split3[1];
-			break;
-		case 'b':
-			blockFilter = split3[1];
-			break;
-		case 't':
-			time = split3[1];
-			break;
-		default:
-			break;	
-		}
+		checkArgument(ch1, split1[1]);
+		checkArgument(ch2, split2[1]);
+		checkArgument(ch3, split3[1]);
 	}
 	
 	private void parse4Arguments(String arg, String arg1, String arg2, String arg3) {
@@ -228,85 +139,10 @@ public class ArgumentParser implements Serializable {
 		char ch3 = split3[0].charAt(0);
 		char ch4 = split4[0].charAt(0);
 		
-		switch(ch1) {
-		case 'p':
-			player = split1[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split1[1]);
-			break;
-		case 'w':
-			world = split1[1];
-			break;
-		case 'b':
-			blockFilter = split1[1];
-			break;
-		case 't':
-			time = split1[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch2) {
-		case 'p':
-			player = split2[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split2[1]);
-			break;
-		case 'w':
-			world = split2[1];
-			break;
-		case 'b':
-			blockFilter = split2[1];
-			break;
-		case 't':
-			time = split2[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch3) {
-		case 'p':
-			player = split3[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split3[1]);
-			break;
-		case 'w':
-			world = split3[1];
-			break;
-		case 'b':
-			blockFilter = split3[1];
-			break;
-		case 't':
-			time = split3[1];
-			break;
-		default:
-			break;
-		}
-		
-		switch(ch4) {
-		case 'p':
-			player = split4[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split4[1]);
-			break;
-		case 'w':
-			world = split4[1];
-			break;
-		case 'b':
-			blockFilter = split4[1];
-			break;
-		case 't':
-			time = split4[1];
-			break;
-		default:
-			break;
-		}
+		checkArgument(ch1, split1[1]);
+		checkArgument(ch2, split2[1]);
+		checkArgument(ch3, split3[1]);
+		checkArgument(ch4, split4[1]);
 	}
 	
 	private void parse5Arguments(String arg, String arg1, String arg2, String arg3, String arg4) {
@@ -321,105 +157,11 @@ public class ArgumentParser implements Serializable {
 		char ch4 = split4[0].charAt(0);
 		char ch5 = split5[0].charAt(0);
 		
-		switch(ch1) {
-		case 'p':
-			player = split1[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split1[1]);
-			break;
-		case 'w':
-			world = split1[1];
-			break;
-		case 'b':
-			blockFilter = split1[1];
-			break;
-		case 't':
-			time = split1[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch2) {
-		case 'p':
-			player = split2[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split2[1]);
-			break;
-		case 'w':
-			world = split2[1];
-			break;
-		case 'b':
-			blockFilter = split2[1];
-			break;
-		case 't':
-			time = split2[1];
-			break;
-		default:
-			break;	
-		}
-		
-		switch(ch3) {
-		case 'p':
-			player = split3[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split3[1]);
-			break;
-		case 'w':
-			world = split3[1];
-			break;
-		case 'b':
-			blockFilter = split3[1];
-			break;
-		case 't':
-			time = split3[1];
-			break;
-		default:
-			break;
-		}
-		
-		switch(ch4) {
-		case 'p':
-			player = split4[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split4[1]);
-			break;
-		case 'w':
-			world = split4[1];
-			break;
-		case 'b':
-			blockFilter = split4[1];
-			break;
-		case 't':
-			time = split4[1];
-			break;
-		default:
-			break;
-		}
-		
-		switch(ch5) {
-		case 'p':
-			player = split5[1];
-			break;
-		case 'e':
-			event = getEventFromAlias(split5[1]);
-			break;
-		case 'w':
-			world = split5[1];
-			break;
-		case 'b':
-			blockFilter = split5[1];
-			break;
-		case 't':
-			time = split5[1];
-			break;
-		default:
-			break;
-		}
+		checkArgument(ch1, split1[1]);
+		checkArgument(ch2, split2[1]);
+		checkArgument(ch3, split3[1]);
+		checkArgument(ch4, split4[1]);
+		checkArgument(ch5, split5[1]);
 	}
 	
 	public String getEventFromAlias(String alias) {
