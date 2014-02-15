@@ -81,10 +81,10 @@ public class SearchTask implements Runnable {
 				File f = new File(GriefLog.logsDir, world);
 				addFilesInsideToFilesToSearch(f);
 			} else {
-				File[] list = GriefLog.logsDir.listFiles();
+				File[] list = GriefLog.logsDir.listFiles(); //TODO: fix
 				for (File f : list) {
 					if(f.isFile()) {
-						filesToSearch.add(f);
+						//filesToSearch.add(f);
 					} else if(f.isDirectory()) {
 						addFilesInsideToFilesToSearch(f);
 					}
