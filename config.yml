@@ -18,7 +18,7 @@ general:
     # What logging method would you like to use? csv or flatfile
     logging-method: flatfile
     
-    path: logs/
+    path: plugins/GriefLog/logs/
     
     # Do you want debug messages to show up in your server log? Leave this false unless told otherwise.
     debug: false
