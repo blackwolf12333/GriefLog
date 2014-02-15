@@ -99,6 +99,7 @@ public class GriefLog extends JavaPlugin {
 		setupConfig();
 		registerListeners();
 		setupLogging();
+		moveLogsIfNeeded();
 		enableWorldEditLogging();
 		getCommand("glog").setExecutor(glogCommand);
 		onReloadLoadPlayerSessions();
@@ -108,6 +109,24 @@ public class GriefLog extends JavaPlugin {
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void moveLogsIfNeeded() {
+		File oldDir = new File("logs/world/");
+		if(oldDir.exists()) {
+			oldDir = oldDir.getParentFile();
+			for(File f : oldDir.listFiles()) {
+				if(f.isDirectory()) {
+					for(File file : f.listFiles()) {
+						File newFile = new File(ConfigHandler.values.getLogsDir() + File.separatorChar + f.getName() + File.separatorChar + file.getName());
+						if(!newFile.getParentFile().exists()) {
+							newFile.getParentFile().mkdirs();
+						}
+						f.renameTo(newFile.getParentFile().getAbsoluteFile());
+					}
+				}
+			}
+		}
 	}
 
 	private void enableWorldEditLogging() {
