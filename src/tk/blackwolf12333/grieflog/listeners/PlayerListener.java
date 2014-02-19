@@ -102,7 +102,7 @@ public class PlayerListener implements Listener {
 		Action a = event.getAction();
 		Player p = event.getPlayer();
 		
-		if (a == Action.LEFT_CLICK_BLOCK) {
+		/*if (a == Action.LEFT_CLICK_BLOCK) {
 			if (p.getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
 				PlayerSession player = PlayerSession.getGLPlayer(p);
 				Block b = event.getClickedBlock();
@@ -116,10 +116,7 @@ public class PlayerListener implements Listener {
 				
 				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
 			}
-		} else if(a == Action.RIGHT_CLICK_BLOCK) {
-			if(event.getPlayer().getInventory().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
-				
-			}
+		} else*/ if(a == Action.RIGHT_CLICK_BLOCK) {
 			if(p.getItemInHand().getType() == Material.FLINT_AND_STEEL) {
 				if(event.getClickedBlock().getType() == Material.TNT) {
 					Tracker.playerFAS.put(event.getClickedBlock(), p.getName());
