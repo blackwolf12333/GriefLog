@@ -21,7 +21,7 @@ public class FileIO {
 	public synchronized void write(String data, File file) {
 		try {
 			if (getFileSize(file) >= ConfigHandler.values.getMb()) {
-				System.out.print("backup at " + ConfigHandler.values.getMb());
+				GriefLog.debug("backup at " + ConfigHandler.values.getMb());
 				autoBackup(file);
 				file.createNewFile();
 			}
