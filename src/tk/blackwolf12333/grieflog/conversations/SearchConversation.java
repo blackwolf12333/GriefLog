@@ -52,9 +52,9 @@ public class SearchConversation implements ConversationAbandonedListener {
 			ArgumentParser parser = fillParser(event);
 			if((event.getContext().getForWhom() instanceof PlayerSession)) {
 				if(rollback) {
-					new SearchTask(session, new SearchCallback(session, SearchCallback.Type.ROLLBACK), parser);
+					new SearchTask(session, new SearchCallback(SearchCallback.Type.ROLLBACK), parser);
 				} else {
-					new SearchTask(session, new SearchCallback(session, SearchCallback.Type.SEARCH), parser);
+					new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), parser);
 				}
 			} else {
 				event.getContext().getForWhom().sendRawMessage("Failed to send your search request, to solve this you could try to reconnect.");
