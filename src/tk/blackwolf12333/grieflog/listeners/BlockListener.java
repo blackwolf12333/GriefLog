@@ -103,7 +103,7 @@ public class BlockListener implements Listener {
 
 				event.setCancelled(true);
 			
-				new SearchTask(session, new SearchCallback(session, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+				new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
 			}
 		}
 		
