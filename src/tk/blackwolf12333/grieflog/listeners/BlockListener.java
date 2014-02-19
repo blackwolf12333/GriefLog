@@ -94,14 +94,17 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Block b = event.getBlock();
 		if(b.getTypeId() == ConfigHandler.values.getTool()) {
-			Integer x = b.getX();
-			Integer y = b.getY();
-			Integer z = b.getZ();
-			String world = b.getWorld().getName();
+			PlayerSession session = PlayerSession.getGLPlayer(event.getPlayer());
+			if(session.isUsingTool()) {
+				Integer x = b.getX();
+				Integer y = b.getY();
+				Integer z = b.getZ();
+				String world = b.getWorld().getName();
 
-			event.setCancelled(true);
+				event.setCancelled(true);
 			
-			new SearchTask(PlayerSession.getGLPlayer(event.getPlayer()), new SearchCallback(PlayerSession.getGLPlayer(event.getPlayer()), SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+				new SearchTask(session, new SearchCallback(session, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+			}
 		}
 		
 		if((!event.isCancelled())) {
