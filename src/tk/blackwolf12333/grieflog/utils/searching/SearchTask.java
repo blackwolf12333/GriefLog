@@ -28,11 +28,11 @@ public class SearchTask implements Runnable {
 	ArrayList<File> filesToSearch = new ArrayList<File>();
 	ArrayList<BaseData> foundData = new ArrayList<BaseData>();
 	List<Filter> filters = new ArrayList<Filter>();
-	PlayerSession p;
+	PlayerSession player;
 	SearchCallback action;
 	
 	public SearchTask(PlayerSession p, SearchCallback action, ArgumentParser parser) {
-		this.p = p;
+		this.player = p;
 		this.action = action;
 		this.world = parser.world;
 		this.filters = getFilters(p, parser);
@@ -43,7 +43,7 @@ public class SearchTask implements Runnable {
 	}
 	
 	public SearchTask(PlayerSession p, SearchCallback action, Filter... filters) {
-		this.p = p;
+		this.player = p;
 		this.action = action;
 		this.filters = Arrays.asList(filters);
 		
@@ -153,7 +153,7 @@ public class SearchTask implements Runnable {
 		}
 		
 		Collections.sort(foundData);
-		p.setSearchResult(foundData);
-		action.start();
+		player.setSearchResult(foundData);
+		action.start(player);
 	}
 }
