@@ -12,7 +12,6 @@ import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 public class GLogRollback {
 	
 	GriefLog plugin;
-
 	private String noPermsMsg = ChatColor.DARK_RED + "I am sorry, You do not have permission to run this command.";
 	
 	public GLogRollback(GriefLog plugin) {
@@ -55,7 +54,7 @@ public class GLogRollback {
 	}
 	
 	private boolean checkParserErrors(ArgumentParser parser, PlayerSession player) {
-		return true;
+		return true; //TODO: implement
 	}
 	
 	private void addParserResultsToUndoConfig(ArgumentParser parser) {

@@ -253,8 +253,7 @@ public class CompatibilityWrapper {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
 		net.minecraft.server.v1_7_R1.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R1.CraftChunk) c).getHandle();
 		net.minecraft.server.v1_7_R1.Block block = this.getBlockType(typeID);
-		boolean ret = chunk.a(x & 15, y, z & 15, block, data);
-		GriefLog.debug("Setting block at: x=" + x + " y=" + y + " z=" + z + " result: " + ret);
+		chunk.a(x & 15, y, z & 15, block, data); // sets the block at (x,y,z)
 	}
 
 	// some hacks to get the right block type

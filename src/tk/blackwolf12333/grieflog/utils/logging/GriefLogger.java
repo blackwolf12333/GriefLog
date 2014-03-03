@@ -32,7 +32,6 @@ public class GriefLogger implements Runnable {
 			
 			if(ConfigHandler.values.getLoggingMethod().equalsIgnoreCase("csv")) {
 				data.setTime(GriefLog.time.now());
-				GriefLog.debug("logging: " + data.toString());
 				GriefLog.csvIO.write(log, data.toString().split(" "));
 			} else {
 				String strData = data.toString();

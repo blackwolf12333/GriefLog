@@ -68,7 +68,7 @@ public class GriefLog extends JavaPlugin {
 		garbageListeners();
 		
 		log.info("GriefLog Disabled!!!");
-		log = null; // has to be done after the message above, otherwise you get an npe
+		log = null;
 		System.gc();
 	}
 
