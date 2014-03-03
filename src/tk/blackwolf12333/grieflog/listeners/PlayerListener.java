@@ -117,9 +117,6 @@ public class PlayerListener implements Listener {
 				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
 			}
 		} else if(a == Action.RIGHT_CLICK_BLOCK) {
-			if(event.getPlayer().getInventory().getItemInHand().getTypeId() == ConfigHandler.values.getTool()) {
-				
-			}
 			if(p.getItemInHand().getType() == Material.FLINT_AND_STEEL) {
 				if(event.getClickedBlock().getType() == Material.TNT) {
 					Tracker.playerFAS.put(event.getClickedBlock(), p.getName());

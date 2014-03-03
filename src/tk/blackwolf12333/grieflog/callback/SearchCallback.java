@@ -17,7 +17,11 @@ public class SearchCallback {
 		this.type = type;
 	}
 	
-	public void start() {
+	public SearchCallback(Type type) {
+		this.type = type;
+	}
+	
+	public void start(PlayerSession player) {
 		player.setSearching(false);
 		
 		switch(this.type) {
@@ -25,7 +29,7 @@ public class SearchCallback {
 			PageManager.printPage(player, 0);
 			break;
 		case TPTO:
-			teleport();
+			teleport(player);
 			break;
 		case ROLLBACK:
 			player.setDoingRollback(true);
@@ -38,7 +42,7 @@ public class SearchCallback {
 		}
 	}
 	
-	private void teleport() {
+	private void teleport(PlayerSession player) {
 		if(player.getSearchResult().size() == 0) {
 			player.print(ChatColor.DARK_RED + "Nothing was found, sorry.");
 			return;
