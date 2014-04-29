@@ -5,6 +5,7 @@ public class ConfigValues {
 	int tool = ConfigHandler.config.getInt("general.tool");
 	int mb = ConfigHandler.config.getInt("general.mb");
 	String loggingMethod = ConfigHandler.config.getString("general.logging-method");
+	int purgeAfter = ConfigHandler.config.getInt("general.purge-files-after");
 	boolean bw12333glog = ConfigHandler.config.getBoolean("general.blackwolf12333glog");
 	boolean debug = ConfigHandler.config.getBoolean("general.debug");
 	String logsDir = ConfigHandler.config.getString("general.path");
@@ -38,6 +39,14 @@ public class ConfigValues {
 	String blockinfocolor = ConfigHandler.config.getString("colors.block-info");
 	String locationcolor = ConfigHandler.config.getString("colors.location");
 	String worldcolor = ConfigHandler.config.getString("colors.world");
+	
+	public int getPurgeAfter() {
+		return this.purgeAfter;
+	}
+	
+	public void setPurgeAfter(int purgeAfter) {
+		this.purgeAfter = purgeAfter;
+	}
 	
 	/**
 	 * @return the tool
