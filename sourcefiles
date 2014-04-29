@@ -21,6 +21,7 @@ src/tk/blackwolf12333/grieflog/listeners/WorldListener.java
 src/tk/blackwolf12333/grieflog/rollback/Rollback.java
 src/tk/blackwolf12333/grieflog/rollback/SendChangesTask.java
 src/tk/blackwolf12333/grieflog/rollback/Undo.java
+src/tk/blackwolf12333/grieflog/utils/FilePurger.java
 src/tk/blackwolf12333/grieflog/utils/BlockUtils.java
 src/tk/blackwolf12333/grieflog/utils/CompatibilityWrapper.java
 src/tk/blackwolf12333/grieflog/utils/Debug.java

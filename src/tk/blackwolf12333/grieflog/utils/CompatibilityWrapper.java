@@ -171,6 +171,52 @@ public class CompatibilityWrapper {
 			}
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void sendChanges_1_7_R2(SendChangesTask task, HashSet<Chunk> chunks) {
+		HashSet<net.minecraft.server.v1_7_R2.ChunkCoordIntPair> pairs = new HashSet<net.minecraft.server.v1_7_R2.ChunkCoordIntPair>();
+		for (Chunk c : chunks) {
+			pairs.add(new net.minecraft.server.v1_7_R2.ChunkCoordIntPair(c.getX(), c.getZ()));
+		}
+
+		for (Player p : task.getPlayers()) {
+			HashSet<net.minecraft.server.v1_7_R2.ChunkCoordIntPair> queued = new HashSet<net.minecraft.server.v1_7_R2.ChunkCoordIntPair>();
+			if (p != null) {
+				net.minecraft.server.v1_7_R2.EntityPlayer ep = ((org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer) p).getHandle();
+				for (Object o : ep.chunkCoordIntPairQueue) {
+					queued.add((net.minecraft.server.v1_7_R2.ChunkCoordIntPair) o);
+				}
+				for (net.minecraft.server.v1_7_R2.ChunkCoordIntPair pair : pairs) {
+					if (!queued.contains(pair)) {
+						ep.chunkCoordIntPairQueue.add(pair);
+					}
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void sendChanges_1_7_R3(SendChangesTask task, HashSet<Chunk> chunks) {
+		HashSet<net.minecraft.server.v1_7_R3.ChunkCoordIntPair> pairs = new HashSet<net.minecraft.server.v1_7_R3.ChunkCoordIntPair>();
+		for (Chunk c : chunks) {
+			pairs.add(new net.minecraft.server.v1_7_R3.ChunkCoordIntPair(c.getX(), c.getZ()));
+		}
+
+		for (Player p : task.getPlayers()) {
+			HashSet<net.minecraft.server.v1_7_R3.ChunkCoordIntPair> queued = new HashSet<net.minecraft.server.v1_7_R3.ChunkCoordIntPair>();
+			if (p != null) {
+				net.minecraft.server.v1_7_R3.EntityPlayer ep = ((org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer) p).getHandle();
+				for (Object o : ep.chunkCoordIntPairQueue) {
+					queued.add((net.minecraft.server.v1_7_R3.ChunkCoordIntPair) o);
+				}
+				for (net.minecraft.server.v1_7_R3.ChunkCoordIntPair pair : pairs) {
+					if (!queued.contains(pair)) {
+						ep.chunkCoordIntPairQueue.add(pair);
+					}
+				}
+			}
+		}
+	}
 
 	public void sendChanges(SendChangesTask task, HashSet<Chunk> chunks) {
 		try {
@@ -201,8 +247,18 @@ public class CompatibilityWrapper {
 									Class.forName("net.minecraft.server.v1_7_R1.ChunkCoordIntPair");
 									sendChanges_1_7_R1(task, chunks);
 								} catch(ClassNotFoundException e7) {
-									GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-									GriefLog.enableRollback = false;
+									try {
+										Class.forName("net.minecraft.server.v1_7_R2.ChunkCoordIntPair");
+										sendChanges_1_7_R2(task, chunks);
+									} catch(ClassNotFoundException e8) {
+										try {
+											Class.forName("net.minecraft.server.v1_7_R3.ChunkCoordIntPair");
+											sendChanges_1_7_R3(task, chunks);
+										} catch(ClassNotFoundException e9) {
+											GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+											GriefLog.enableRollback = false;
+										}
+									}
 								}
 							}
 						}
@@ -252,12 +308,26 @@ public class CompatibilityWrapper {
 	private void setBlockFast_1_7_R1(int x, int y, int z, String world, int typeID, byte data) {
 		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
 		net.minecraft.server.v1_7_R1.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R1.CraftChunk) c).getHandle();
-		net.minecraft.server.v1_7_R1.Block block = this.getBlockType(typeID);
+		net.minecraft.server.v1_7_R1.Block block = this.getBlockType_1_7_R1(typeID);
+		chunk.a(x & 15, y, z & 15, block, data); // sets the block at (x,y,z)
+	}
+	
+	private void setBlockFast_1_7_R2(int x, int y, int z, String world, int typeID, byte data) {
+		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
+		net.minecraft.server.v1_7_R2.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R2.CraftChunk) c).getHandle();
+		net.minecraft.server.v1_7_R2.Block block = this.getBlockType_1_7_R2(typeID);
+		chunk.a(x & 15, y, z & 15, block, data); // sets the block at (x,y,z)
+	}
+	
+	private void setBlockFast_1_7_R3(int x, int y, int z, String world, int typeID, byte data) {
+		Chunk c = Bukkit.getWorld(world).getChunkAt(x >> 4, z >> 4);
+		net.minecraft.server.v1_7_R3.Chunk chunk = ((org.bukkit.craftbukkit.v1_7_R3.CraftChunk) c).getHandle();
+		net.minecraft.server.v1_7_R3.Block block = this.getBlockType_1_7_R3(typeID);
 		chunk.a(x & 15, y, z & 15, block, data); // sets the block at (x,y,z)
 	}
 
 	// some hacks to get the right block type
-	private net.minecraft.server.v1_7_R1.Block getBlockType(int typeID) {
+	private net.minecraft.server.v1_7_R1.Block getBlockType_1_7_R1(int typeID) {
 		for(Material m : Material.values()) {
 			if(m.getId() == typeID) {
 				try {
@@ -274,6 +344,44 @@ public class CompatibilityWrapper {
 			}
 		}
 		return net.minecraft.server.v1_7_R1.Blocks.AIR;
+	}
+	
+	private net.minecraft.server.v1_7_R2.Block getBlockType_1_7_R2(int typeID) {
+		for(Material m : Material.values()) {
+			if(m.getId() == typeID) {
+				try {
+					return (net.minecraft.server.v1_7_R2.Block) net.minecraft.server.v1_7_R2.Blocks.class.getDeclaredField(m.toString()).get(null);
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return net.minecraft.server.v1_7_R2.Blocks.AIR;
+	}
+	
+	private net.minecraft.server.v1_7_R3.Block getBlockType_1_7_R3(int typeID) {
+		for(Material m : Material.values()) {
+			if(m.getId() == typeID) {
+				try {
+					return (net.minecraft.server.v1_7_R3.Block) net.minecraft.server.v1_7_R3.Blocks.class.getDeclaredField(m.toString()).get(null);
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return net.minecraft.server.v1_7_R3.Blocks.AIR;
 	}
 	
 	public void setBlockFast(int x, int y, int z, String world, int typeID,	byte data) {
@@ -305,8 +413,18 @@ public class CompatibilityWrapper {
 									Class.forName("net.minecraft.server.v1_7_R1.Chunk");
 									setBlockFast_1_7_R1(x, y, z, world, typeID, data);
 								} catch (ClassNotFoundException e7) {
-									GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
-									GriefLog.enableRollback = false;
+									try {
+										Class.forName("net.minecraft.server.v1_7_R2.Chunk");
+										setBlockFast_1_7_R2(x, y, z, world, typeID, data);
+									} catch (ClassNotFoundException e8) {
+										try {
+											Class.forName("net.minecraft.server.v1_7_R3.Chunk");
+											setBlockFast_1_7_R3(x, y, z, world, typeID, data);
+										} catch (ClassNotFoundException e9) {
+											GriefLog.log.warning("You don't have a compatible CraftBukkit version, rollbacks are not possible.");
+											GriefLog.enableRollback = false;
+										}
+									}
 								}
 							}
 						}
