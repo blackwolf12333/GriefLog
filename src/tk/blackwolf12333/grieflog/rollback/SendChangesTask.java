@@ -23,7 +23,7 @@ public class SendChangesTask implements Runnable {
 	
 	@Override
 	public void run() {
-		GriefLog.compatibility.sendChanges(this, chunks);
+		GriefLog.compatibility.getChangesSender().sendChanges(this, chunks);
 	}
 
 	public HashSet<Player> getPlayers() {

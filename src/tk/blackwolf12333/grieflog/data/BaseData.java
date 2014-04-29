@@ -95,7 +95,7 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 * @param data The new data.
 	 */
 	public void setBlockFast(int x, int y, int z, String world, int typeID, byte data) {
-		GriefLog.compatibility.setBlockFast(x, y, z, world, typeID, data);
+		GriefLog.compatibility.getFastBlockSetter().setBlockFast(x, y, z, world, typeID, data);
 	}
 	
 	@Override

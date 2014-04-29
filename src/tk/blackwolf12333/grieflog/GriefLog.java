@@ -43,7 +43,7 @@ public class GriefLog extends JavaPlugin {
 	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
-	public static CompatibilityWrapper compatibility = new CompatibilityWrapper();
+	public static CompatibilityWrapper compatibility;
 	public static Reporter reporter = new Reporter();
 	
 	private BlockListener bListener = new BlockListener(this);
@@ -99,6 +99,7 @@ public class GriefLog extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		setupConfig();
+		setupCompatibilityWrapper();
 		registerListeners();
 		setupLogging();
 		moveLogsIfNeeded();
@@ -112,6 +113,11 @@ public class GriefLog extends JavaPlugin {
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void setupCompatibilityWrapper() {
+		String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+		compatibility = new CompatibilityWrapper(version);
 	}
 
 	private void startFilePurger() {
