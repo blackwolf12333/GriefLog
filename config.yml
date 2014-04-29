@@ -18,6 +18,9 @@ general:
     # What logging method would you like to use? csv or flatfile
     logging-method: flatfile
     
+    # purge the log files after how many days. -1 is never.
+    purge-files-after: -1
+    
     path: plugins/GriefLog/logs/
     
     # Do you want debug messages to show up in your server log? Leave this false unless told otherwise.

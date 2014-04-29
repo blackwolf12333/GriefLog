@@ -24,6 +24,7 @@ import tk.blackwolf12333.grieflog.listeners.WorldListener;
 import tk.blackwolf12333.grieflog.utils.CompatibilityWrapper;
 import tk.blackwolf12333.grieflog.utils.Debug;
 import tk.blackwolf12333.grieflog.utils.FileIO;
+import tk.blackwolf12333.grieflog.utils.FilePurger;
 import tk.blackwolf12333.grieflog.utils.UndoSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
@@ -106,9 +107,17 @@ public class GriefLog extends JavaPlugin {
 		setupMetrics();
 		loadUndo();
 		reporter.loadReports();
+		startFilePurger();
 		
 		GriefLog.debug("Server is running " + this.getServer().getVersion());
 		log.info("GriefLog " + this.getDescription().getVersion() + " Enabled");
+	}
+
+	private void startFilePurger() {
+		if(ConfigHandler.values.getPurgeAfter() == -1) {
+			return; // never schedule the file purger!
+		}
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new FilePurger(this), 0, 1000*60*60*12); // rerun every half day.
 	}
 
 	private void moveLogsIfNeeded() {
