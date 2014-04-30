@@ -11,9 +11,15 @@ public class CompatibilityWrapper {
 		try {
 			fastBlockSetter = (FastBlockSetterInterface) Class.forName("tk.blackwolf12333.grieflog.compatibility." + version + ".FastBlockSetter").newInstance();
 			changesSender = (ChangesSenderInterface) Class.forName("tk.blackwolf12333.grieflog.compatibility." + version + ".ChangesSender").newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | SecurityException
-				| ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch(IllegalAccessException e) {
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch(SecurityException e) {
+			e.printStackTrace();
+		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
