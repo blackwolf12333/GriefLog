@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ public abstract class BaseBlockData extends BaseData {
 	protected Integer blockZ;
 	protected String xyz;
 	protected String playerName;
+	protected UUID playerUUID;
 	protected String blockType;
 	protected byte blockData;
 	protected Integer gamemode;
@@ -133,6 +135,20 @@ public abstract class BaseBlockData extends BaseData {
 		this.gamemode = gamemode;
 	}
 	
+	/**
+	 * @return the player's UUID
+	 */
+	public UUID getPlayerUUID() {
+		return playerUUID;
+	}
+	
+	/**
+	 * @param playerUUID the playerUUID to set
+	 */
+	public void setPlayerUUID(UUID playerUUID) {
+		this.playerUUID = playerUUID;
+	}
+	
 	protected void putBlock(Block b) {
 		this.blockX = b.getX();
 		this.blockY = b.getY();
@@ -209,6 +225,10 @@ public abstract class BaseBlockData extends BaseData {
 		try {
 			String time = data[0] + " " + data[1];
 			String player = data[4];
+			UUID playerUUID = UUID.fromString(player);
+			if(playerUUID != null) {
+				
+			}
 			String[] changedFromTypeAndData = data[6].split(":");
 			String blockType = changedFromTypeAndData[0];
 			byte blockData = Byte.parseByte(changedFromTypeAndData[1]);
