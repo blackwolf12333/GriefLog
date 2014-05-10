@@ -31,20 +31,8 @@ public class EntityEndermanData extends BaseEntityData {
 	}
 	
 	public EntityEndermanData(String time, Integer x, Integer y, Integer z, String world, String blockType, byte blockData, boolean pickup) {
+		this(x, y, z, world, blockType, blockData, pickup);
 		this.time = time;
-		this.blockX = x;
-		this.blockY = y;
-		this.blockZ = z;
-		this.worldName = world;
-		this.entityType = "Enderman";
-		this.blockData = blockData;
-		this.blockType = blockType;
-		this.pickup = pickup;
-		if(pickup) {
-			this.event = Events.ENDERMAN_PICKUP.getEventName();
-		}
-		this.event = Events.ENDERMAN_PLACE.getEventName();
-		this.xyz = blockX + ", " + blockY + ", " + blockZ;
 	}
 	
 	@Override

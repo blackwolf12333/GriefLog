@@ -24,14 +24,8 @@ public class EntityBreakDoorData extends BaseEntityData {
 	}
 	
 	public EntityBreakDoorData(String time, Integer x, Integer y, Integer z, String world, String entityType) {
+		this(x, y, z, world, entityType);
 		this.time = time;
-		this.blockX = x;
-		this.blockY = y;
-		this.blockZ = z;
-		this.worldName = world;
-		this.entityType = entityType;
-		this.event = Events.ZOMBIEBREAKDOOR.getEventName();
-		this.xyz = blockX + ", " + blockY + ", " + blockZ;
 	}
 	
 	@Override
