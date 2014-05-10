@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +24,11 @@ public class BlockIgniteData extends BaseBlockData {
 		this.gamemode = gamemode;
 		this.event = Events.IGNITE.getEventName();
 	}
+
+	public BlockIgniteData(Block block, String cause, String playerName, UUID playerUUID, Integer gamemode) {
+		this(block, cause, playerName, gamemode);
+		this.playerUUID = playerUUID;
+	}
 	
 	public BlockIgniteData(Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String cause, String playerName, Integer gamemode) {
 		this.blockX = blockX;
@@ -38,18 +45,13 @@ public class BlockIgniteData extends BaseBlockData {
 	}
 	
 	public BlockIgniteData(String time, Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String cause, String playerName, Integer gamemode) {
+		this(blockX, blockY, blockZ, blockType, blockData, world, cause, playerName, gamemode);
 		this.time = time;
-		this.blockX = blockX;
-		this.blockY = blockY;
-		this.blockZ = blockZ;
-		this.blockType = blockType;
-		this.blockData = blockData;
-		this.worldName = world;
-		this.cause = cause;
-		this.playerName = playerName;
-		this.gamemode = gamemode;
-		this.event = Events.IGNITE.getEventName();
-		xyz = blockX + ", " + blockY + ", " + blockZ;
+	}
+	
+	public BlockIgniteData(String time, Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String cause, String playerName, UUID playerUUID, Integer gamemode) {
+		this(time, blockX, blockY, blockZ, blockType, blockData, world, cause, playerName, gamemode);
+		this.playerUUID = playerUUID;
 	}
 	
 	public String getCause() {
@@ -85,6 +87,6 @@ public class BlockIgniteData extends BaseBlockData {
 		if(time != null) {
 			return time + " " + event + " By: " + playerName + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " How: " + cause + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 		}
-		return " " + event + " By: " + playerName + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " How: " + cause + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
+		return " " + event + " By: " + playerName + ":" + playerUUID.toString() + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " How: " + cause + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 	}
 }

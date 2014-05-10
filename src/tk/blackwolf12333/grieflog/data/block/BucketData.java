@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +34,11 @@ public class BucketData extends BaseBlockData {
 		}
 	}
 	
+	public BucketData(Block block, String playerName, UUID playerUUID, Integer gamemode, Material bucket) {
+		this(block, playerName, gamemode, bucket);
+		this.playerUUID = playerUUID;
+	}
+	
 	public BucketData(Integer x, Integer y, Integer z, String world, String playerName, Integer gamemode, Material bucket) {
 		this.gamemode = gamemode;
 		this.playerName = playerName;
@@ -49,19 +55,13 @@ public class BucketData extends BaseBlockData {
 	}
 	
 	public BucketData(String time, Integer x, Integer y, Integer z, String world, String playerName, Integer gamemode, Material bucket) {
-		this.gamemode = gamemode;
+		this(x, y, z, world, playerName, gamemode, bucket);
 		this.time = time;
-		this.playerName = playerName;
-		this.bucket = bucket;
-		this.blockX = x;
-		this.blockY = y;
-		this.blockZ = z;
-		this.worldName = world;
-		if(bucket == Material.WATER_BUCKET) {
-			this.event = Events.WATER.getEventName();
-		} else {
-			this.event = Events.LAVA.getEventName();
-		}
+	}
+	
+	public BucketData(String time, Integer x, Integer y, Integer z, String world, String playerName, UUID playerUUID, Integer gamemode, Material bucket) {
+		this(time, x, y, z, world, playerName, gamemode, bucket);
+		this.playerUUID = playerUUID;
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public class BucketData extends BaseBlockData {
 		if(time != null) {
 			return time + " " + event + " Who: " + playerName + " GM: " + gamemode + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 		}
-		return " " + event + " Who: " + playerName + " GM: " + gamemode + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
+		return " " + event + " Who: " + playerName + ":" + playerUUID.toString() + " GM: " + gamemode + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 	}
 	
 	public static BucketData loadFromString(String line) {
@@ -121,9 +121,18 @@ public class BucketData extends BaseBlockData {
 		Integer y = Integer.parseInt(data[9].replace(",", ""));
 		Integer z = Integer.parseInt(data[10].replace(",", ""));
 		String world = data[data.length - 1].trim();
-		String playerName = data[4];
+		String player = data[4];
+		UUID playerUUID = null;
+		if(player.contains(":")) {
+			playerUUID = UUID.fromString(player.split(":")[1]);
+			player = player.split(":")[0];
+		}
 		Integer gamemode = Integer.parseInt(data[6]);
-		return new BucketData(time, x, y, z, world, playerName, gamemode, bucket);
+		
+		if(playerUUID != null) {
+			return new BucketData(time, x, y, z, world, player, gamemode, bucket);
+		}
+		return new BucketData(time, x, y, z, world, player, gamemode, bucket);
 	}
 	
 	private HashSet<Block> getFluidStream(Block source) {
