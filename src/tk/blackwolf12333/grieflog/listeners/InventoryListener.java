@@ -81,8 +81,8 @@ public class InventoryListener implements Listener {
 			    	inventories.remove(event.getPlayer().getUniqueId());
 			    	return;
 			    }
-			    GriefLog.debug("Transaction by: " + player + " with taken: " + diff[0] + " put: " + diff[1]);
-				new GriefLogger(new ChestAccessData(player, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
+			    GriefLog.debug("Transaction by: " + player + ":" + playerUUID + " with taken: " + diff[0] + " put: " + diff[1]);
+				new GriefLogger(new ChestAccessData(player, playerUUID, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
 		    }
 		}
 		inventories.remove(event.getPlayer().getUniqueId());
@@ -103,7 +103,13 @@ public class InventoryListener implements Listener {
 	        return null;
 	    }
 	    ret[0] = str1.substring(at);
+	    if(ret[0] == null) {
+	    	ret[0] = "";
+	    }
 	    ret[1] = str2.substring(at);
+	    if(ret[1] == null) {
+	    	ret[1] = "";
+	    }
 	    return ret;
 	}
 

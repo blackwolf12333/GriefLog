@@ -36,6 +36,11 @@ public class ChestAccessData extends BasePlayerData {
 		this.event = Events.CHESTACCESS.getEventName();
 	}
 	
+	public ChestAccessData(String player, UUID playerUUID, Integer chestX, Integer chestY, Integer chestZ, String chestWorld, String taken, String put) {
+		this(player, chestX, chestY, chestZ, chestWorld, taken, put);
+		this.playerUUID = playerUUID;
+	}
+	
 	public ChestAccessData(String time, String player, Integer chestX, Integer chestY, Integer chestZ, String chestWorld, String taken, String put) {
 		this(player, chestX, chestY, chestZ, chestWorld, taken, put);
 		this.time = time;
