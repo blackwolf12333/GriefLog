@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.player;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,16 +37,13 @@ public class ChestAccessData extends BasePlayerData {
 	}
 	
 	public ChestAccessData(String time, String player, Integer chestX, Integer chestY, Integer chestZ, String chestWorld, String taken, String put) {
+		this(player, chestX, chestY, chestZ, chestWorld, taken, put);
 		this.time = time;
-		this.playerName = player;
-		this.chestX = chestX;
-		this.chestY = chestY;
-		this.chestZ = chestZ;
-		this.xyz = chestX + ", " + chestY + ", " + chestZ;
-		this.worldName = chestWorld;
-		this.taken = taken;
-		this.put = put;
-		this.event = Events.CHESTACCESS.getEventName();
+	}
+	
+	public ChestAccessData(String time, String player, UUID playerUUID, Integer chestX, Integer chestY, Integer chestZ, String chestWorld, String taken, String put) {
+		this(time, player, chestX, chestY, chestZ, chestWorld, taken, put);
+		this.playerUUID = playerUUID;
 	}
 
 	@Override
@@ -111,6 +110,6 @@ public class ChestAccessData extends BasePlayerData {
 		if(time != null) {
 			return time + " " + event + " By: " + playerName + " taken: " + taken.toString() + " put: " + put.toString() +" where: " + xyz + " in: " + worldName + System.getProperty("line.separator");
 		}
-		return " " + event + " By: " + playerName + " taken: " + taken.toString() + " put: " + put.toString() + " where: " + xyz + " in: " + worldName + System.getProperty("line.separator");
+		return " " + event + " By: " + playerName + ":" + playerUUID.toString() + " taken: " + taken.toString() + " put: " + put.toString() + " where: " + xyz + " in: " + worldName + System.getProperty("line.separator");
 	}
 }

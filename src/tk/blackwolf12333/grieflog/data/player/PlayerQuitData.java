@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.player;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,15 +26,19 @@ public class PlayerQuitData extends BasePlayerData {
 		this.event = Events.QUIT.getEventName();
 	}
 	
+	public PlayerQuitData(String playerName, UUID playerUUID, Integer gamemode, String world, Integer x, Integer y, Integer z) {
+		this(playerName, gamemode, world, x, y, z);
+		this.playerUUID = playerUUID;
+	}
+	
 	public PlayerQuitData(String time, String playerName, Integer gamemode, String world, Integer x, Integer y, Integer z) {
+		this(playerName, gamemode, world, x, y, z);
 		this.time = time;
-		this.playerName = playerName;
-		this.gamemode = gamemode;
-		this.worldName = world.trim();
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.event = Events.QUIT.getEventName();
+	}
+	
+	public PlayerQuitData(String time, String playerName, UUID playerUUID, Integer gamemode, String world, Integer x, Integer y, Integer z) {
+		this(time, playerName, gamemode, world, x, y, z);
+		this.playerUUID = playerUUID;
 	}
 	
 	public Integer getX() {
@@ -84,6 +90,6 @@ public class PlayerQuitData extends BasePlayerData {
 		if(time != null) {
 			return time + " " + event + " " + playerName + " GM: " + gamemode + " Where: " + x + ", " + y + ", " + z + " in: " + worldName;
 		}
-		return " " + event + " " + playerName + " GM: " + gamemode + " Where: " + x + ", " + y + ", " + z + " in: " + worldName;
+		return " " + event + " " + playerName + ":" + playerUUID.toString() + " GM: " + gamemode + " Where: " + x + ", " + y + ", " + z + " in: " + worldName;
 	}
 }

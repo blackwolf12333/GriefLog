@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.data.player;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ public abstract class BasePlayerData extends BaseData {
 
 	Integer gamemode;
 	String playerName;
+	UUID playerUUID;
 	
 	public Integer getGamemode() {
 		return gamemode;
@@ -90,12 +92,20 @@ public abstract class BasePlayerData extends BaseData {
 		try {
 			String time = data[0] + " " + data[1];
 			String playerName = data[4];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			String taken = data[6];
 			String put = data[8];
 			Integer x = Integer.parseInt(data[10].replaceAll(",", ""));
 			Integer y = Integer.parseInt(data[11].replaceAll(",", ""));
 			Integer z = Integer.parseInt(data[12].replaceAll(",", ""));
 			String world = data[14];
+			if(playerUUID != null) {
+				return new ChestAccessData(time, playerName, playerUUID, x, y, z, world, taken, put);
+			}
 			return new ChestAccessData(time, playerName, x, y, z, world, taken, put);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -106,12 +116,20 @@ public abstract class BasePlayerData extends BaseData {
 		try {
 			String time = data[0] + " " + data[1];
 			String playerName = data[3];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			Integer gamemode = Integer.parseInt(data[8]);
 			String ipaddress = data[5];
 			Integer x = Integer.parseInt(data[9].replace(",", ""));
 			Integer y = Integer.parseInt(data[10].replace(",", ""));
 			Integer z = Integer.parseInt(data[11].replace(",", ""));
 			String world = data[13].trim();
+			if(playerUUID != null) {
+				return new PlayerJoinData(time, playerName, playerUUID, gamemode, world, ipaddress, x, y, z);
+			}
 			return new PlayerJoinData(time, playerName, gamemode, world, ipaddress, x, y, z);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -126,7 +144,15 @@ public abstract class BasePlayerData extends BaseData {
 			Integer z = Integer.parseInt(data[9].replace(",", ""));
 			String world = data[11].trim();
 			String playerName = data[3];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			Integer gamemode = Integer.parseInt(data[5]);
+			if(playerUUID != null) {
+				return new PlayerQuitData(time, playerName, playerUUID, gamemode, world, x, y, z);
+			}
 			return new PlayerQuitData(time, playerName, gamemode, world, x, y, z);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -139,8 +165,16 @@ public abstract class BasePlayerData extends BaseData {
 			String time = data[0] + " " + data[1];
 			String command = getCommand(line);
 			String playerName = data[4];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			String world = data[data.length - 1].trim();
 			Integer gamemode = Integer.parseInt(data[6]);
+			if(playerUUID != null) {
+				return new PlayerCommandData(time, playerName, playerUUID, gamemode, world, command);
+			}
 			return new PlayerCommandData(time, playerName, gamemode, world, command);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -173,8 +207,16 @@ public abstract class BasePlayerData extends BaseData {
 			String time = data[0] + " " + data[1];
 			Integer newGamemode = Integer.parseInt(data[6]);
 			String playerName = data[3];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			Integer gamemode = 0; // is not set in the data
 			String worldName = data[data.length - 1].trim();
+			if(playerUUID != null) {
+				return new PlayerChangedGamemodeData(time, playerName, playerUUID, gamemode, worldName, newGamemode);
+			}
 			return new PlayerChangedGamemodeData(time, playerName, gamemode, worldName, newGamemode);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -187,7 +229,15 @@ public abstract class BasePlayerData extends BaseData {
 			String from = data[6].trim();
 			String to = data[8].trim();
 			String playerName = data[4];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			Integer gamemode = 0; // is not set in the data
+			if(playerUUID != null) {
+				return new PlayerChangedWorldData(time, playerName, playerUUID, gamemode, to, from);
+			}
 			return new PlayerChangedWorldData(time, playerName, gamemode, to, from);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");

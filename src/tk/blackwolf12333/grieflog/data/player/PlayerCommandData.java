@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.player;
 
+import java.util.UUID;
+
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
@@ -15,13 +17,19 @@ public class PlayerCommandData extends BasePlayerData {
 		this.event = Events.COMMAND.getEventName();
 	}
 	
+	public PlayerCommandData(String playerName, UUID playerUUID, Integer gamemode, String world, String command) {
+		this(playerName, gamemode, world, command);
+		this.playerUUID = playerUUID;
+	}
+	
 	public PlayerCommandData(String time, String playerName, Integer gamemode, String world, String command) {
+		this(playerName, gamemode, world, command);
 		this.time = time;
-		this.playerName = playerName;
-		this.gamemode = gamemode;
-		this.worldName = world;
-		this.command = command;
-		this.event = Events.COMMAND.getEventName();
+	}
+	
+	public PlayerCommandData(String time, String playerName, UUID playerUUID, Integer gamemode, String world, String command) {
+		this(time, playerName, gamemode, world, command);
+		this.playerUUID = playerUUID;
 	}
 	
 	public String getCommand() {
@@ -47,6 +55,6 @@ public class PlayerCommandData extends BasePlayerData {
 		if(time != null) {
 			return time + " " + event + " Who: " + playerName + " GM: " + gamemode + " Command: " + command + " in: " + worldName;
 		}
-		return " " + event + " Who: " + playerName + " GM: " + gamemode + " Command: " + command + " in: " + worldName;
+		return " " + event + " Who: " + playerName + ":" + playerUUID.toString() + " GM: " + gamemode + " Command: " + command + " in: " + worldName;
 	}
 }

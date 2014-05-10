@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.player;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,16 +28,19 @@ public class PlayerJoinData extends BasePlayerData {
 		this.event = Events.JOIN.getEventName();
 	}
 	
+	public PlayerJoinData(String playerName, UUID playerUUID, Integer gamemode, String world, String ipaddress, Integer x, Integer y, Integer z) {
+		this(playerName, gamemode, world, ipaddress, x, y, z);
+		this.playerUUID = playerUUID;
+	}
+	
 	public PlayerJoinData(String time, String playerName, Integer gamemode, String world, String ipaddress, Integer x, Integer y, Integer z) {
+		this(playerName, gamemode, world, ipaddress, x, y, z);
 		this.time = time;
-		this.playerName = playerName;
-		this.gamemode = gamemode;
-		this.worldName = world;
-		this.ipaddress = ipaddress;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.event = Events.JOIN.getEventName();
+	}
+	
+	public PlayerJoinData(String time, String playerName, UUID playerUUID, Integer gamemode, String world, String ipaddress, Integer x, Integer y, Integer z) {
+		this(time, playerName, gamemode, world, ipaddress, x, y, z);
+		this.playerUUID = playerUUID;
 	}
 	
 	public String getIpaddress() {
@@ -96,6 +101,6 @@ public class PlayerJoinData extends BasePlayerData {
 		if(time != null) {
 			return time + " " + event + " " + playerName + " On: " + ipaddress + " With GameMode: " + gamemode + " " + x + ", " + y + ", " + z + " in: " + worldName;
 		}
-		return " " + event + " " + playerName + " On: " + ipaddress + " With GameMode: " + gamemode + " " + x + ", " + y + ", " + z + " in: " + worldName;
+		return " " + event + " " + playerName + ":" + playerUUID.toString() + " On: " + ipaddress + " With GameMode: " + gamemode + " " + x + ", " + y + ", " + z + " in: " + worldName;
 	}
 }

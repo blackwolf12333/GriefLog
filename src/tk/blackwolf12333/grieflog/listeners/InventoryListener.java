@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.listeners;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -23,7 +24,7 @@ public class InventoryListener implements Listener {
 
 	GriefLog plugin;
 	private static final int INDEX_NOT_FOUND = -1;
-	HashMap<String, String> inventories = new HashMap<String, String>();
+	HashMap<UUID, String> inventories = new HashMap<UUID, String>();
 	
 	public InventoryListener(GriefLog plugin) {
 		this.plugin = plugin;
@@ -32,7 +33,7 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryOpen(InventoryOpenEvent event) {
         if(ConfigHandler.values.getInventoryLogging()) {
-		    inventories.put(event.getPlayer().getName(), InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory()));
+		    inventories.put(event.getPlayer().getUniqueId(), InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory()));
 		}
 	}
 	
@@ -69,21 +70,22 @@ public class InventoryListener implements Listener {
 				    GriefLog.log.info("Something went wrong logging an Inventory event");
 				    return;
 			    }
+			    UUID playerUUID = event.getPlayer().getUniqueId();
 			    String player = event.getPlayer().getName();
 			    String[] diff = new String[2];
 			
-			    String before = inventories.get(player);
+			    String before = inventories.get(playerUUID);
 			    String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());
 			    diff = difference(before, after);
 			    if(diff == null) {
-			    	inventories.remove(event.getPlayer().getName());
+			    	inventories.remove(event.getPlayer().getUniqueId());
 			    	return;
 			    }
 			    GriefLog.debug("Transaction by: " + player + " with taken: " + diff[0] + " put: " + diff[1]);
 				new GriefLogger(new ChestAccessData(player, chestX, chestY, chestZ, chestWorld, diff[0], diff[1]));
 		    }
 		}
-		inventories.remove(event.getPlayer().getName());
+		inventories.remove(event.getPlayer().getUniqueId());
 	}
 
 	public String[] difference(String str1, String str2) {
