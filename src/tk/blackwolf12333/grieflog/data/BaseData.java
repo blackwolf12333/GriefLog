@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.data;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -177,6 +178,11 @@ public abstract class BaseData implements Comparable<BaseData> {
 	 * @return Returns the name of the player involved in this event.
 	 */
 	public abstract String getPlayerName();
+	
+	/**
+	 * @return Returns the UUID of the player who did this.
+	 */
+	public abstract UUID getPlayerUUID();
 	
 	public abstract Location getLocation();
 	

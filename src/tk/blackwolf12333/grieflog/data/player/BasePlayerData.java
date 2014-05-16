@@ -36,6 +36,11 @@ public abstract class BasePlayerData extends BaseData {
 	}
 	
 	@Override
+	public UUID getPlayerUUID() {
+		return playerUUID;
+	}
+	
+	@Override
 	public void rollback(Rollback rollback) {
 		// do nothing cannot rollback player data
 	}

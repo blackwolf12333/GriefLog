@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.commands;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -146,7 +147,7 @@ public class CommandHandler {
 				ArgumentParser parser = new ArgumentParser(null);
 				
 				parser.event = Events.QUIT.getEventName();
-				parser.player = to;
+				parser.player = Bukkit.getOfflinePlayer(to).getPlayer().getUniqueId();
 				
 				new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), parser);
 				return true;

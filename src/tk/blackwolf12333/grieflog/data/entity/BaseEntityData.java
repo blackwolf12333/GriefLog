@@ -94,6 +94,11 @@ public abstract class BaseEntityData extends BaseData {
 		return null;
 	}
 	
+	@Override
+	public UUID getPlayerUUID() {
+		return null;
+	}
+	
 	public abstract void rollback(Rollback rollback);
 	
 	public void tpto(PlayerSession who) {
