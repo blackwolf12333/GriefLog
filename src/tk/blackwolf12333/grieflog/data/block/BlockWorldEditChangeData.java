@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +27,11 @@ public class BlockWorldEditChangeData extends BaseBlockData {
 		this.event = Events.WORLDEDIT.getEventName();
 	}
 	
+	public BlockWorldEditChangeData(Block b, String player, UUID playerUUID, String changedFromType, byte changedFromData, String changedTo, byte changedToData) {
+		this(b, player, changedFromType, changedFromData, changedTo, changedToData);
+		this.playerUUID = playerUUID;
+	}
+	
 	public BlockWorldEditChangeData(String time, int x, int y, int z, String world, String player, String changedFromType, byte changedFromData, String changedTo, byte changedToData) {
 		this.time = time;
 		this.blockX = x;
@@ -38,6 +45,11 @@ public class BlockWorldEditChangeData extends BaseBlockData {
 		this.playerName = player;
 		this.xyz = this.blockX + ", " + this.blockY + ", " + this.blockZ;
 		this.event = Events.WORLDEDIT.getEventName();
+	}
+	
+	public BlockWorldEditChangeData(String time, int x, int y, int z, String world, String player, UUID playerUUID, String changedFromType, byte changedFromData, String changedTo, byte changedToData) {
+		this(time, x, y, z, world, player, changedFromType, changedFromData, changedTo, changedToData);
+		this.playerUUID = playerUUID;
 	}
 	
 	@Override
@@ -68,10 +80,10 @@ public class BlockWorldEditChangeData extends BaseBlockData {
 	
 	@Override
 	public String toString() {
-		if(time != null) {
+		if(time != null) { // this is only used after searching, I think
 			return this.time + " " + this.event + " By: " + this.playerName + " from: " + this.blockType + ":" + this.blockData + " to: " + this.changedTo + ":" + this.changedToData + " at: " + this.xyz + " in: " + this.worldName;
 		}
-		return " " + this.event + " By: " + this.playerName + " from: " + this.blockType + ":" + this.blockData + " to: " + this.changedTo + ":" + this.changedToData + " at: " + this.xyz + " in: " + this.worldName;
+		return " " + this.event + " By: " + this.playerName + ":" + playerUUID.toString() + " from: " + this.blockType + ":" + this.blockData + " to: " + this.changedTo + ":" + this.changedToData + " at: " + this.xyz + " in: " + this.worldName;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ public abstract class BaseBlockData extends BaseData {
 	protected Integer blockZ;
 	protected String xyz;
 	protected String playerName;
+	protected UUID playerUUID;
 	protected String blockType;
 	protected byte blockData;
 	protected Integer gamemode;
@@ -133,6 +135,20 @@ public abstract class BaseBlockData extends BaseData {
 		this.gamemode = gamemode;
 	}
 	
+	/**
+	 * @return the player's UUID
+	 */
+	public UUID getPlayerUUID() {
+		return playerUUID;
+	}
+	
+	/**
+	 * @param playerUUID the playerUUID to set
+	 */
+	public void setPlayerUUID(UUID playerUUID) {
+		this.playerUUID = playerUUID;
+	}
+	
 	protected void putBlock(Block b) {
 		this.blockX = b.getX();
 		this.blockY = b.getY();
@@ -209,6 +225,11 @@ public abstract class BaseBlockData extends BaseData {
 		try {
 			String time = data[0] + " " + data[1];
 			String player = data[4];
+			UUID playerUUID = null;
+			if(player.contains(":")) {
+				playerUUID = UUID.fromString(player.split(":")[1]);
+				player = player.split(":")[0];
+			}
 			String[] changedFromTypeAndData = data[6].split(":");
 			String blockType = changedFromTypeAndData[0];
 			byte blockData = Byte.parseByte(changedFromTypeAndData[1]);
@@ -220,6 +241,9 @@ public abstract class BaseBlockData extends BaseData {
 			int y = Integer.parseInt(data[11].replace(",", ""));
 			int z = Integer.parseInt(data[12].replace(",", ""));
 			String world = data[14].trim();
+			if(playerUUID != null) {
+				return new BlockWorldEditChangeData(time, x, y, z, world, player, playerUUID, blockType, blockData, changedTo, changedToData);
+			}
 			return new BlockWorldEditChangeData(time, x, y, z, world, player, blockType, blockData, changedTo, changedToData);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
@@ -237,12 +261,20 @@ public abstract class BaseBlockData extends BaseData {
 			byte blockData = Byte.parseByte(typeAndData[1]);
 			Integer gamemode = Integer.parseInt(data[6]);
 			String world = data[15].trim();
-			String playerName = data[4];
+			String player = data[4];
+			UUID playerUUID = null;
+			if(player.contains(":")) {
+				playerUUID = UUID.fromString(player.split(":")[1]);
+				player = player.split(":")[0];
+			}
 			
 			int x = Integer.parseInt(strX);
 			int y = Integer.parseInt(strY);
 			int z = Integer.parseInt(strZ);
-			return new BlockBreakData(time, x, y, z, world, type, blockData, playerName, gamemode);
+			if(playerUUID != null) {
+				return new BlockBreakData(time, x, y, z, world, type, blockData, player, playerUUID, gamemode);
+			}
+			return new BlockBreakData(time, x, y, z, world, type, blockData, player, gamemode);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
 		}
@@ -254,7 +286,12 @@ public abstract class BaseBlockData extends BaseData {
 			String strX = data[11].replace(",", "");
 			String strY = data[12].replace(",", "");
 			String strZ = data[13].replace(",", "");
-			String playerName = data[4];
+			String player = data[4];
+			UUID playerUUID = null;
+			if(player.contains(":")) {
+				playerUUID = UUID.fromString(player.split(":")[1]);
+				player = player.split(":")[0];
+			}
 			Integer gamemode = Integer.parseInt(data[6]);
 			String[] typeAndData = data[8].split(":");
 			String blockType = typeAndData[0];
@@ -264,7 +301,10 @@ public abstract class BaseBlockData extends BaseData {
 			int x = Integer.parseInt(strX);
 			int y = Integer.parseInt(strY);
 			int z = Integer.parseInt(strZ);
-			return new BlockPlaceData(time, x, y, z, blockType, blockData, world, playerName, gamemode);
+			if(playerUUID != null) {
+				return new BlockPlaceData(time, x, y, z, blockType, blockData, world, player, playerUUID, gamemode);
+			}
+			return new BlockPlaceData(time, x, y, z, blockType, blockData, world, player, gamemode);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
 		}
@@ -276,7 +316,12 @@ public abstract class BaseBlockData extends BaseData {
 			String strX = data[12].replace(",", "");
 			String strY = data[13].replace(",", "");
 			String strZ = data[14].replace(",", "");
-			String playerName = data[4];
+			String player = data[4];
+			UUID playerUUID = null;
+			if(player.contains(":")) {
+				playerUUID = UUID.fromString(player.split(":")[1]);
+				player = player.split(":")[0];
+			}
 			Integer gamemode = Integer.parseInt(data[6]);
 			String[] typeAndData = data[8].split(":");
 			String blockType = typeAndData[0];
@@ -287,7 +332,10 @@ public abstract class BaseBlockData extends BaseData {
 			int x = Integer.parseInt(strX);
 			int y = Integer.parseInt(strY);
 			int z = Integer.parseInt(strZ);
-			return new BlockIgniteData(time, x, y, z, blockType, blockData, world, cause, playerName, gamemode);
+			if(playerUUID != null) {
+				return new BlockIgniteData(time, x, y, z, blockType, blockData, world, cause, player, playerUUID, gamemode);
+			}
+			return new BlockIgniteData(time, x, y, z, blockType, blockData, world, cause, player, gamemode);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
 		}

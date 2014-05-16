@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -14,7 +16,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
@@ -26,6 +27,7 @@ import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
+import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 
 public class BlockListener implements Listener {
 
@@ -50,8 +52,9 @@ public class BlockListener implements Listener {
 			}
 			
 			String namePlayer = event.getPlayer().getName();
+			UUID playerUUID = event.getPlayer().getUniqueId();
 			Integer gm = event.getPlayer().getGameMode().getValue();
-			BlockBreakData data = new BlockBreakData(event.getBlock(), namePlayer, gm);
+			BlockBreakData data = new BlockBreakData(event.getBlock(), namePlayer, playerUUID, gm);
 			
 			new GriefLogger(data);
 		}
@@ -61,8 +64,10 @@ public class BlockListener implements Listener {
 		BlockFace[] faces = new BlockFace[] {BlockFace.DOWN, BlockFace.UP};
 		for(BlockFace face : faces) {
 			if((event.getBlock().getRelative(face).getType() == Material.WOOD_DOOR) || (event.getBlock().getRelative(face).getType() == Material.IRON_DOOR)) {
-				int gm = event.getPlayer().getGameMode().getValue();
-				BlockBreakData data = new BlockBreakData(event.getBlock().getRelative(face), event.getPlayer().getName(), gm);
+				String namePlayer = event.getPlayer().getName();
+				UUID playerUUID = event.getPlayer().getUniqueId();
+				Integer gm = event.getPlayer().getGameMode().getValue();
+				BlockBreakData data = new BlockBreakData(event.getBlock().getRelative(face), namePlayer, playerUUID, gm);
 				new GriefLogger(data);
 			}
 		}
@@ -115,9 +120,10 @@ public class BlockListener implements Listener {
 			}
 			
 			String namePlayer = event.getPlayer().getName();
+			UUID playerUUID = event.getPlayer().getUniqueId();
 			Integer gm = event.getPlayer().getGameMode().getValue();
 			
-			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, gm);
+			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
 			new GriefLogger(data);
 		}
 	}
@@ -126,7 +132,11 @@ public class BlockListener implements Listener {
 		Block b = event.getBlockAgainst();
 		Tracker.playerIgnite.put(b, event.getPlayer().getName());
 		
-		BlockIgniteData data = new BlockIgniteData(b, IgniteCause.FLINT_AND_STEEL.toString(), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue());
+		String namePlayer = event.getPlayer().getName();
+		UUID playerUUID = event.getPlayer().getUniqueId();
+		Integer gm = event.getPlayer().getGameMode().getValue();
+		
+		BlockIgniteData data = new BlockIgniteData(b, IgniteCause.FLINT_AND_STEEL.toString(), namePlayer, playerUUID, gm);
 		new GriefLogger(data);
 	}
 

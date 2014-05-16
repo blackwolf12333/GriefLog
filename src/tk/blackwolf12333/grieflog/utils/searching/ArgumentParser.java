@@ -2,6 +2,9 @@ package tk.blackwolf12333.grieflog.utils.searching;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 
@@ -11,7 +14,7 @@ public class ArgumentParser implements Serializable {
 	public boolean eventNullError = false;
 	public boolean argsNullError = false;
 	
-	public String player;
+	public UUID player;
 	public String world;
 	public String event;
 	public String blockFilter;
@@ -80,7 +83,7 @@ public class ArgumentParser implements Serializable {
 	public void checkArgument(char identifier, String arg) {
 		switch(identifier) {
 		case 'p':
-			player = arg;
+			player = Bukkit.getOfflinePlayer(arg).getPlayer().getUniqueId();
 			break;
 		case 'e':
 			event = getEventFromAlias(arg);

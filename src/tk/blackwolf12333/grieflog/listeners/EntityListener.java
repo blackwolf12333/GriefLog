@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Enderman;
@@ -53,14 +54,16 @@ public class EntityListener implements Listener {
 				List<Block> blocks = event.blockList();
 				
 				// get the player who ingited this tnt
-				String player = getIgniter(event);
-				if(player != null) {
+				String playerName = getIgniter(event);
+				if(playerName != null) {
+					UUID playerUUID = Bukkit.getServer().getPlayer(playerName).getUniqueId();
+					
 					for (int i = 0; i < blocks.size(); i++) {
 						int x = blocks.get(i).getX();
 						int y = blocks.get(i).getY();
 						int z = blocks.get(i).getZ();
 						
-						EntityExplodeData data = new EntityExplodeData(x, y, z, event.getEntity().getWorld().getName(), event.blockList().get(i).getType().toString(), event.blockList().get(i).getData(), event.getEntityType().toString(), player);
+						EntityExplodeData data = new EntityExplodeData(x, y, z, event.getEntity().getWorld().getName(), event.blockList().get(i).getType().toString(), event.blockList().get(i).getData(), event.getEntityType().toString(), playerName, playerUUID);
 						new GriefLogger(data);
 					}
 				}

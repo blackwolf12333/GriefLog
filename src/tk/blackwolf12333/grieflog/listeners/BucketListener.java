@@ -31,7 +31,7 @@ public class BucketListener implements Listener {
 			if (ConfigHandler.values.getBucketWater()) {
 				Material bucket = event.getBucket();
 				if (bucket == Material.WATER_BUCKET) {
-					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getBucket());
+					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getBucket());
 					new GriefLogger(data);
 				}
 			}
@@ -39,7 +39,7 @@ public class BucketListener implements Listener {
 				Material bucket = event.getBucket();
 
 				if (bucket == Material.LAVA_BUCKET) {
-					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getBucket());
+					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getBucket());
 					new GriefLogger(data);
 				}
 			}

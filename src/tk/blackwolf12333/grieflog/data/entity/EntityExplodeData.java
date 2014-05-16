@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.entity;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,6 +15,7 @@ import tk.blackwolf12333.grieflog.utils.logging.Events;
 public class EntityExplodeData extends BaseEntityData {
 
 	String activator;
+	UUID activatorUUID;
 	
 	public EntityExplodeData(Integer x, Integer y, Integer z, String world, String blockType, byte blockData, String entityType, String activator) {
 		this.blockX = x;
@@ -27,18 +30,19 @@ public class EntityExplodeData extends BaseEntityData {
 		this.xyz = blockX + ", " + blockY + ", " + blockZ;
 	}
 	
+	public EntityExplodeData(Integer x, Integer y, Integer z, String world, String blockType, byte blockData, String entityType, String activator, UUID activatorUUID) {
+		this(x, y, z, world, blockType, blockData, entityType, activator);
+		this.activatorUUID = activatorUUID;
+	}
+	
 	public EntityExplodeData(String time, Integer x, Integer y, Integer z, String world, String blockType, byte blockData, String entityType, String activator) {
+		this(x, y, z, world, blockType, blockData, entityType, activator);
 		this.time = time;
-		this.blockX = x;
-		this.blockY = y;
-		this.blockZ = z;
-		this.worldName = world;
-		this.blockData = blockData;
-		this.blockType = blockType;
-		this.entityType = entityType;
-		this.activator = activator;
-		this.event = Events.EXPLODE.getEventName();
-		this.xyz = blockX + ", " + blockY + ", " + blockZ;
+	}
+	
+	public EntityExplodeData(String time, Integer x, Integer y, Integer z, String world, String blockType, byte blockData, String entityType, String activator, UUID activatorUUID) {
+		this(time, x, y, z, world, blockType, blockData, entityType, activator);
+		this.activatorUUID = activatorUUID;
 	}
 	
 	@Override
@@ -71,6 +75,6 @@ public class EntityExplodeData extends BaseEntityData {
 		if(time != null) {
 			return time + " " + event + " By: " + activator + " EntityType: " + entityType + " Block: " + blockType + ":" + blockData + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 		}
-		return " " + event + " By: " + activator + " EntityType: " + entityType + " Block: " + blockType + ":" + blockData + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
+		return " " + event + " By: " + activator + ":" + activatorUUID.toString() + " EntityType: " + entityType + " Block: " + blockType + ":" + blockData + " Where: " + blockX + ", " + blockY + ", " + blockZ + " In: " + worldName;
 	}
 }

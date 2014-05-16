@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (ConfigHandler.values.getGmChange()) {
-			PlayerChangedGamemodeData data = new PlayerChangedGamemodeData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getNewGameMode().getValue());
+			PlayerChangedGamemodeData data = new PlayerChangedGamemodeData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getNewGameMode().getValue());
 			
 			new GriefLogger(data);
 		}
@@ -47,7 +47,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		if (ConfigHandler.values.getWorldChange()) {
-			PlayerChangedWorldData data = new PlayerChangedWorldData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getFrom().getName());
+			PlayerChangedWorldData data = new PlayerChangedWorldData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getFrom().getName());
 			
 			new GriefLogger(data);
 		}
@@ -57,7 +57,7 @@ public class PlayerListener implements Listener {
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (ConfigHandler.values.getCommand()) {
 			if(ConfigHandler.values.getIgnoredCommands().contains(event.getMessage().split(" ")[0].trim())) return;
-			PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
+			PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
 			
 			new GriefLogger(data);
 		}
@@ -77,7 +77,7 @@ public class PlayerListener implements Listener {
 			int y = p.getLocation().getBlockY();
 			int z = p.getLocation().getBlockZ();
 
-			PlayerJoinData data = new PlayerJoinData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), address, x, y, z);
+			PlayerJoinData data = new PlayerJoinData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), address, x, y, z);
 			
 			new GriefLogger(data);
 		}
@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
 			int y = event.getPlayer().getLocation().getBlockY();
 			int z = event.getPlayer().getLocation().getBlockZ();
 			
-			PlayerQuitData data = new PlayerQuitData(event.getPlayer().getName(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), x, y, z);
+			PlayerQuitData data = new PlayerQuitData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), x, y, z);
 			new GriefLogger(data);
 		}
 	}

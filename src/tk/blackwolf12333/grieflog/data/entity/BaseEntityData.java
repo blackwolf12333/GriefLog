@@ -2,6 +2,7 @@ package tk.blackwolf12333.grieflog.data.entity;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,6 +94,11 @@ public abstract class BaseEntityData extends BaseData {
 		return null;
 	}
 	
+	@Override
+	public UUID getPlayerUUID() {
+		return null;
+	}
+	
 	public abstract void rollback(Rollback rollback);
 	
 	public void tpto(PlayerSession who) {
@@ -153,10 +159,18 @@ public abstract class BaseEntityData extends BaseData {
 			byte blockData = Byte.parseByte(typeAndData[1]);
 			String world = data[14].trim();
 			String playerName = data[4];
+			UUID playerUUID = null;
+			if(playerName.contains(":")) {
+				playerUUID = UUID.fromString(playerName.split(":")[1]);
+				playerName = playerName.split(":")[0];
+			}
 			
 			int x = Integer.parseInt(strX);
 			int y = Integer.parseInt(strY);
 			int z = Integer.parseInt(strZ);
+			if(playerUUID != null) {
+				return new EntityExplodeData(time, x, y, z, world, type, blockData, entityType, playerName, playerUUID);
+			}
 			return new EntityExplodeData(time, x, y, z, world, type, blockData, entityType, playerName);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");

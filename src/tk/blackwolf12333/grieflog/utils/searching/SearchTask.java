@@ -55,21 +55,27 @@ public class SearchTask implements Runnable {
 	private ArrayList<Filter> getFilters(PlayerSession player, ArgumentParser parser) {
 		ArrayList<Filter> filters = new ArrayList<Filter>();
 		if(parser.worldedit == true) {
+			GriefLog.debug("Searching in worldedit region");
 			filters.add(new WorldEditFilter(player));
 		}
 		if(parser.player != null) {
+			GriefLog.debug("Searching for: " + parser.player.toString());
 			filters.add(new PlayerFilter(parser.player));
 		}
 		if(parser.event != null) {
+			GriefLog.debug("Searching for: " + parser.event);
 			filters.add(new EventFilter(parser.event));
 		}
 		if(parser.world != null) {
+			GriefLog.debug("Searching in: " + parser.world);
 			filters.add(new WorldFilter(parser.world));
 		}
 		if(parser.blockFilter != null) {
+			GriefLog.debug("Searching for: " + parser.blockFilter);
 			filters.add(new BlockFilter(player, parser.blockFilter));
 		}
 		if(parser.time != null) {
+			GriefLog.debug("Searching for: " + parser.time);
 			filters.add(new TimeFilter(Time.getTimeFrom(parser.time)));
 		}
 		return filters;

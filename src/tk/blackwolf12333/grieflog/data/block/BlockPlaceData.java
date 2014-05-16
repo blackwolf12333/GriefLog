@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.data.block;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +23,11 @@ public class BlockPlaceData extends BaseBlockData {
 		this.event = Events.PLACE.getEventName();
 	}
 	
+	public BlockPlaceData(Block block, String playerName, UUID playerUUID, Integer gamemode) {
+		this(block, playerName, gamemode);
+		this.playerUUID = playerUUID;
+	}
+	
 	public BlockPlaceData(Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String playerName, Integer gamemode) {
 		this.blockX = blockX;
 		this.blockY = blockY;
@@ -35,17 +42,13 @@ public class BlockPlaceData extends BaseBlockData {
 	}
 	
 	public BlockPlaceData(String time, Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String playerName, Integer gamemode) {
+		this(blockX, blockY, blockZ, blockType, blockData, world, playerName, gamemode);
 		this.time = time;
-		this.blockX = blockX;
-		this.blockY = blockY;
-		this.blockZ = blockZ;
-		this.blockType = blockType;
-		this.blockData = blockData;
-		this.worldName = world;
-		this.playerName = playerName;
-		this.gamemode = gamemode;
-		this.xyz = blockX + ", " + blockY + ", " + blockZ;
-		this.event = Events.PLACE.getEventName();
+	}
+	
+	public BlockPlaceData(String time, Integer blockX, Integer blockY, Integer blockZ, String blockType, byte blockData, String world, String playerName, UUID playerUUID, Integer gamemode) {
+		this(time, blockX, blockY, blockZ, blockType, blockData, world, playerName, gamemode);
+		this.playerUUID = playerUUID;
 	}
 	
 	@Override
@@ -55,7 +58,7 @@ public class BlockPlaceData extends BaseBlockData {
 			setBlockFast(loc, Material.AIR.getId(), blockData);
 			rollback.chunks.add(loc.getChunk());
 		} catch(NullPointerException e) {
-			GriefLog.log.warning("Non existing world!");
+			GriefLog.log.warning("Non existing world! Might be unloaded.");
 		}
 		
 	}
@@ -81,6 +84,6 @@ public class BlockPlaceData extends BaseBlockData {
 		if(time != null) {
 			return time + " " + event + " By: " + playerName + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName;
 		}
-		return " " + event + " By: " + playerName + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName;
+		return " " + event + " By: " + playerName + ":" + playerUUID.toString() + " GM: " + gamemode + " What: " + blockType + ":" + blockData + " on Pos: " + blockX.toString() + ", " + blockY.toString() + ", " + blockZ.toString() + " in: " + worldName;
 	}
 }
