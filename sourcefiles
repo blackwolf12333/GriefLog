@@ -72,6 +72,7 @@ src/tk/blackwolf12333/grieflog/utils/config/ConfigValues.java
 src/tk/blackwolf12333/grieflog/utils/csv/CSVDataParser.java
 src/tk/blackwolf12333/grieflog/utils/csv/CSVIO.java
 src/tk/blackwolf12333/grieflog/utils/filters/BlockFilter.java
+src/tk/blackwolf12333/grieflog/utils/filters/ChestAccessFilter.java
 src/tk/blackwolf12333/grieflog/utils/filters/EventFilter.java
 src/tk/blackwolf12333/grieflog/utils/filters/Filter.java
 src/tk/blackwolf12333/grieflog/utils/filters/LocationFilter.java
@@ -88,5 +89,6 @@ src/tk/blackwolf12333/grieflog/utils/searching/ArgumentParser.java
 src/tk/blackwolf12333/grieflog/utils/searching/PageManager.java
 src/tk/blackwolf12333/grieflog/utils/searching/ResultPage.java
 src/tk/blackwolf12333/grieflog/utils/searching/SearchTask.java
+src/tk/blackwolf12333/grieflog/utils/searching/ChestSearchResult.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSessionFactory.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSession.java
