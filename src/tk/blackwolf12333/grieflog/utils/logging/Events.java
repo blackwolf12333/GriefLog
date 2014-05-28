@@ -6,6 +6,7 @@ public enum Events {
 	LAVA ("[BUCKET_LAVA_EMPTY]", true, "lava", "lava_bucket"),
 	WATER ("[BUCKET_WATER_EMPTY]", true, "water", "water_bucket"),
 	IGNITE ("[BLOCK_IGNITE]", false, "fire", "ignite", "block_ignite"),
+	BURN ("[BLOCK_BURN]", true, "burn", "block_burn"),
 	ENDERMAN_PICKUP ("[ENDERMAN_PICKUP]", true, "pickup", "enderman_pickup", "events_enderman", "endermangrief"),
 	ENDERMAN_PLACE ("[ENDERMAN_PLACE]", true, "enderman_place", "events_enderman", "endermangrief"),
 	ZOMBIEBREAKDOOR ("[ENTITY_BREAK_DOOR]", true, "zombiebreakdoor"),

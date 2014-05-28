@@ -72,7 +72,7 @@ public class InventoryListener implements Listener {
 			    }
 			    UUID playerUUID = event.getPlayer().getUniqueId();
 			    String player = event.getPlayer().getName();
-			    String[] diff = new String[2];
+			    String[] diff = new String[2]; // diff[0] is taken, diff[1] is put
 			
 			    String before = inventories.get(playerUUID);
 			    String after = InventoryStringDeSerializer.InventoryToString(event.getView().getTopInventory());

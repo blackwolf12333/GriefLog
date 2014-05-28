@@ -6,6 +6,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.rollback.Rollback;
 import tk.blackwolf12333.grieflog.rollback.Undo;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
+import tk.blackwolf12333.grieflog.utils.searching.ChestSearchResult;
 
 public class SearchCallback {
 
@@ -39,6 +40,9 @@ public class SearchCallback {
 			player.setDoingRollback(true);
 			new Undo(player);
 			break;
+		case CHEST_SEARCH:
+			new ChestSearchResult(player);
+			break;
 		}
 	}
 	
@@ -55,6 +59,7 @@ public class SearchCallback {
 		SEARCH,
 		TPTO,
 		ROLLBACK,
-		UNDO;
+		UNDO,
+		CHEST_SEARCH;
 	}
 }

@@ -51,6 +51,26 @@ public class ChestAccessData extends BasePlayerData {
 		this.playerUUID = playerUUID;
 	}
 
+	public String getTaken() {
+		return this.taken;
+	}
+
+	public String getPut() {
+		return this.put;
+	}
+
+	public int getChestX() {
+		return this.chestX;
+	}
+
+	public int getChestY() {
+		return this.chestY;
+	}
+
+	public int getChestZ() {
+		return this.chestZ;
+	}
+
 	@Override
 	public void tpto(PlayerSession who) {
 		who.teleport(new Location(Bukkit.getWorld(worldName), chestX, chestY, chestZ));
@@ -91,7 +111,7 @@ public class ChestAccessData extends BasePlayerData {
 		}
 	}
 	
-	private SerializedItem[] getItems(String putOrTaken) {
+	public SerializedItem[] getItems(String putOrTaken) {
 		if(putOrTaken == null) {
 			return null;
 		} else if(putOrTaken.equalsIgnoreCase("")) {

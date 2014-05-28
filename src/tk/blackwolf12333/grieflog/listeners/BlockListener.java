@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -22,6 +23,7 @@ import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.block.BlockBreakData;
 import tk.blackwolf12333.grieflog.data.block.BlockIgniteData;
 import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
+import tk.blackwolf12333.grieflog.data.block.BlockBurnData;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
@@ -37,7 +39,7 @@ public class BlockListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getBlock().getType() == Material.AIR) {
@@ -95,23 +97,8 @@ public class BlockListener implements Listener {
 		return;
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		Block b = event.getBlock();
-		if(b.getTypeId() == ConfigHandler.values.getTool()) {
-			PlayerSession session = PlayerSession.getGLPlayer(event.getPlayer());
-			if(session.isUsingTool()) {
-				Integer x = b.getX();
-				Integer y = b.getY();
-				Integer z = b.getZ();
-				String world = b.getWorld().getName();
-
-				event.setCancelled(true);
-			
-				new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
-			}
-		}
-		
 		if((!event.isCancelled())) {
 			handleRedstoneOrTnt(event);
 			if(event.getBlock().getType() == Material.FIRE) {
@@ -125,6 +112,24 @@ public class BlockListener implements Listener {
 			
 			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
 			new GriefLogger(data);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onToolUse(BlockPlaceEvent event) {
+		Block b = event.getBlock();
+		if(b.getTypeId() == ConfigHandler.values.getTool()) {
+			PlayerSession session = PlayerSession.getGLPlayer(event.getPlayer());
+			if(session.isUsingTool()) {
+				Integer x = b.getX();
+				Integer y = b.getY();
+				Integer z = b.getZ();
+				String world = b.getWorld().getName();
+
+				event.setCancelled(true);
+			
+				new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+			}
 		}
 	}
 
@@ -154,5 +159,11 @@ public class BlockListener implements Listener {
 				}
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockBurn(BlockBurnEvent event) {
+		BlockBurnData data = new BlockBurnData(event.getBlock());
+		new GriefLogger(data);
 	}
 }

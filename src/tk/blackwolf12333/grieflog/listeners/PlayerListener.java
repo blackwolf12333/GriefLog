@@ -25,6 +25,7 @@ import tk.blackwolf12333.grieflog.data.player.PlayerJoinData;
 import tk.blackwolf12333.grieflog.data.player.PlayerQuitData;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
+import tk.blackwolf12333.grieflog.utils.filters.ChestAccessFilter;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
 public class PlayerListener implements Listener {
@@ -113,8 +114,11 @@ public class PlayerListener implements Listener {
 				String world = b.getWorld().getName();
 
 				event.setCancelled(true);
-				
-				new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+				if(b.getType() == Material.CHEST) {
+					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.CHEST_SEARCH), new ChestAccessFilter(x, y, z, world));
+				} else {
+					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+				}
 			}
 		} else if(a == Action.RIGHT_CLICK_BLOCK) {
 			if(p.getItemInHand().getType() == Material.FLINT_AND_STEEL) {
