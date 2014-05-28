@@ -120,7 +120,13 @@ public class SearchTask implements Runnable {
 				String query = GriefLog.fileIO.read2String(file);
 				String[] lines = query.split(System.getProperty("line.separator"));
 				for(String line : lines) {
-					addToFoundDataIfComesThroughFilters(BaseData.loadFromString(line));
+					BaseData data = BaseData.loadFromString(line);
+					if(data != null) {
+						addToFoundDataIfComesThroughFilters(data);
+					} else {
+						GriefLog.debug("Encountered an unidentified data type:");
+						GriefLog.debug(line);
+					}
 				}
 			}
 		} catch (Exception e) {
