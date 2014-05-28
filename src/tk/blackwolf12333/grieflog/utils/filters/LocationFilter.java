@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import tk.blackwolf12333.grieflog.data.BaseData;
 
 public class LocationFilter implements Filter {
-
 	int x, y, z;
 	String world;
 	
