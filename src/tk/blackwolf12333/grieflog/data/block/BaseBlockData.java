@@ -213,12 +213,31 @@ public abstract class BaseBlockData extends BaseData {
 				return handleBlockIgniteData(data.split(" "));
 			} else if(data.contains(Events.WORLDEDIT.getEventName())) {
 				return handleBlockWorldEditChangeData(data.split(" "));
+			} else if(data.contains(Events.BURN.getEventName())) {
+				return handleBlockBurnData(data.split(" "));
 			}
 		} catch(OldVersionException e) {
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+
+	private static BaseBlockData handleBlockBurnData(String[] data) {
+		try {
+			String time = data[0] + " " + data[1];
+			String[] typeAndData = data[4].split(":");
+			String type = typeAndData[0];
+			byte blockData = Byte.parseByte(typeAndData[1]);
+
+			int x = Integer.parseInt(data[7].replace(",", ""));
+			int y = Integer.parseInt(data[8].replace(",", ""));
+			int z = Integer.parseInt(data[9].replace(",", ""));
+			String world = data[11].trim();
+			return new BlockBurnData(time, type, blockData, x, y, z, world);
+		} catch(ArrayIndexOutOfBoundsException e) {
+			throw new OldVersionException("Data was not successfully parsed because it came from an outdated file!");
+		}
 	}
 	
 	private static BaseBlockData handleBlockWorldEditChangeData(String[] data) {

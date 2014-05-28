@@ -53,6 +53,7 @@ src/tk/blackwolf12333/grieflog/data/block/BaseBlockData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockBreakData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockIgniteData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockPlaceData.java
+src/tk/blackwolf12333/grieflog/data/block/BlockBurnData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockWorldEditChangeData.java
 src/tk/blackwolf12333/grieflog/data/block/BucketData.java
 src/tk/blackwolf12333/grieflog/data/entity/BaseEntityData.java

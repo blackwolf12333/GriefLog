@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -22,6 +23,7 @@ import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.data.block.BlockBreakData;
 import tk.blackwolf12333.grieflog.data.block.BlockIgniteData;
 import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
+import tk.blackwolf12333.grieflog.data.block.BlockBurnData;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
@@ -154,5 +156,11 @@ public class BlockListener implements Listener {
 				}
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockBurn(BlockBurnEvent event) {
+		BlockBurnData data = new BlockBurnData(event.getBlock());
+		new GriefLogger(data);
 	}
 }
