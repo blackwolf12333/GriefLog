@@ -9,3 +9,5 @@ jar:
 	$(JAR) $(JARFLAGS) . plugin.yml config.yml LICENCE
 clean: 
 	rm -rf bin/*
+jarl:
+	$(JAR) cf ~/server/plugins/GriefLog.jar -C bin . plugin.yml config.yml LICENCE
