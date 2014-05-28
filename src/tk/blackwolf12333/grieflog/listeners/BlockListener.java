@@ -39,7 +39,7 @@ public class BlockListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if(!event.isCancelled()) {
 			if(event.getBlock().getType() == Material.AIR) {
@@ -97,23 +97,8 @@ public class BlockListener implements Listener {
 		return;
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		Block b = event.getBlock();
-		if(b.getTypeId() == ConfigHandler.values.getTool()) {
-			PlayerSession session = PlayerSession.getGLPlayer(event.getPlayer());
-			if(session.isUsingTool()) {
-				Integer x = b.getX();
-				Integer y = b.getY();
-				Integer z = b.getZ();
-				String world = b.getWorld().getName();
-
-				event.setCancelled(true);
-			
-				new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
-			}
-		}
-		
 		if((!event.isCancelled())) {
 			handleRedstoneOrTnt(event);
 			if(event.getBlock().getType() == Material.FIRE) {
@@ -127,6 +112,24 @@ public class BlockListener implements Listener {
 			
 			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
 			new GriefLogger(data);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onToolUse(BlockPlaceEvent event) {
+		Block b = event.getBlock();
+		if(b.getTypeId() == ConfigHandler.values.getTool()) {
+			PlayerSession session = PlayerSession.getGLPlayer(event.getPlayer());
+			if(session.isUsingTool()) {
+				Integer x = b.getX();
+				Integer y = b.getY();
+				Integer z = b.getZ();
+				String world = b.getWorld().getName();
+
+				event.setCancelled(true);
+			
+				new SearchTask(session, new SearchCallback(SearchCallback.Type.SEARCH), new LocationFilter(x, y, z, world));
+			}
 		}
 	}
 
