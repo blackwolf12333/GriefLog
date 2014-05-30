@@ -220,19 +220,22 @@ public class GriefLog extends JavaPlugin {
 	}
 
 	public static void debug(Object msg) {
-		if(msg instanceof List<?>) {
+		if(msg == null) {
+			log.log("{null}", true);
+		} else if(msg instanceof List<?>) {
 			List<?> list = (List<?>) msg;
 			for(int i = 0; i < list.size(); i++) {
 				log.log(list.get(i), true);
 			}
+		} else if(msg instanceof String) {
+			String str = (String) msg;
+			if(str.isEmpty()) {
+				log.log("{empty}", true);
+			} else {
+				log.log(str, true);
+			}
 		} else {
 			log.log(msg, true);
-		}
-	}
-	
-	public static void debug(String args[]) {
-		for(String s : args) {
-			log.log(s, true);
 		}
 	}
 	
