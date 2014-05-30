@@ -89,7 +89,7 @@ public class SearchTask implements Runnable {
 			} else {
 				File[] list = GriefLog.logsDir.listFiles();
 				for (File f : list) {
-					if(f.isFile()) {
+					if(f.isFile() && f.getName().startsWith("GriefLog")) {
 						filesToSearch.add(f);
 					} else if(f.isDirectory()) {
 						addFilesInsideToFilesToSearch(f);
@@ -103,7 +103,7 @@ public class SearchTask implements Runnable {
 		f.mkdir();
 		File[] dircontents = f.listFiles();
 		for(File file : dircontents) {
-			if(file.isFile()) {
+			if(file.isFile() && file.getName().startsWith("GriefLog")) {
 				filesToSearch.add(file);
 			}
 		}
