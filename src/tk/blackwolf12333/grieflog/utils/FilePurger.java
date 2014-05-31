@@ -16,12 +16,14 @@ public class FilePurger implements Runnable {
 	@Override
 	public void run() {
 		for(File worldDir : GriefLog.logsDir.listFiles()) {
-			for(File f : worldDir.listFiles()) {
-				long diff = new Date().getTime() - f.lastModified();
-				int days = ConfigHandler.values.getPurgeAfter();
-				if(diff > days * 24 * 60 * 60 * 1000) {
-					System.out.println("Deleting old file: " + f.getName() + " after " + days + " days.");
-					f.delete();
+			if(!worldDir.isFile()) {
+				for(File f : worldDir.listFiles()) {
+					long diff = new Date().getTime() - f.lastModified();
+					int days = ConfigHandler.values.getPurgeAfter();
+					if(diff > days * 24 * 60 * 60 * 1000) {
+						System.out.println("Deleting old file: " + f.getName() + " after " + days + " days.");
+						f.delete();
+					}
 				}
 			}
 		}
