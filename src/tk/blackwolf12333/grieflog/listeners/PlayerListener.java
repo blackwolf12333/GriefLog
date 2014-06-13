@@ -3,6 +3,7 @@ package tk.blackwolf12333.grieflog.listeners;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
 import tk.blackwolf12333.grieflog.utils.searching.SearchTask;
 import tk.blackwolf12333.grieflog.GriefLog;
@@ -126,6 +128,14 @@ public class PlayerListener implements Listener {
 					Tracker.playerFAS.put(event.getClickedBlock(), p.getName());
 				}
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		if(event.getItemDrop().getItemStack().getTypeId() == ConfigHandler.values.getTool()) {
+			event.getItemDrop().setItemStack(new ItemStack(Material.AIR));
+			GriefLog.sessions.get(event.getPlayer().getName()).setUsingTool(false);
 		}
 	}
 }
