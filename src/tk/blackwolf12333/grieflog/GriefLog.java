@@ -69,6 +69,7 @@ public class GriefLog extends JavaPlugin {
 		garbageListeners();
 		
 		log.info("GriefLog Disabled!!!");
+		log.stop();
 		log = null;
 		System.gc();
 	}
