@@ -27,16 +27,7 @@ public class GLogSearch {
 			} else {
 				if(args.length >= 2) {
 					ArgumentParser parser = new ArgumentParser(args);
-					
-					if(parser.argsNullError) {
-						player.print(ChatColor.DARK_RED + "Sorry, an error occured. Please check if you formatted the arguments right.");
-					} else if(parser.eventNullError) { 
-						player.print(ChatColor.DARK_RED + "You misspelled the event, try again.");
-					} else {
-						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
-						return true;
-					}
-					
+					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
 					return true;
 				} else {
 					ArgumentParser parser = new ArgumentParser(args);
