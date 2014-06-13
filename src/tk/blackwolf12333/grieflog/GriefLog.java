@@ -40,6 +40,7 @@ public class GriefLog extends JavaPlugin {
 	public static Time time = new Time();
 	public static FileIO fileIO = new FileIO();
 	public static CSVIO csvIO;
+	//TODO: use uuid
 	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
