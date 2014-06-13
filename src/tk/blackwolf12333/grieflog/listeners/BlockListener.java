@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockMultiPlaceEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -111,6 +113,18 @@ public class BlockListener implements Listener {
 			Integer gm = event.getPlayer().getGameMode().getValue();
 			
 			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
+			new GriefLogger(data);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
+		for(BlockState b : event.getReplacedBlockStates()) {
+			String playerName = event.getPlayer().getName();
+			UUID playerUUID = event.getPlayer().getUniqueId();
+			Integer gm = event.getPlayer().getGameMode().getValue();
+
+			BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
 			new GriefLogger(data);
 		}
 	}
