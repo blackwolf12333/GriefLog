@@ -134,7 +134,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		if(event.getItemDrop().getItemStack().getTypeId() == ConfigHandler.values.getTool()) {
-			event.getItemDrop().setItemStack(new ItemStack(Material.AIR));
+			event.getItemDrop().remove();
 			GriefLog.sessions.get(event.getPlayer().getName()).setUsingTool(false);
 		}
 	}
