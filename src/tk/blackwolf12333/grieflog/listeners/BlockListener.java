@@ -102,9 +102,9 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if((!event.isCancelled())) {
-			handleRedstoneOrTnt(event);
+			//handleRedstoneOrTnt(event);
 			if(event.getBlock().getType() == Material.FIRE) {
-				handlePlacedFire(event);
+				//handlePlacedFire(event);
 				return;
 			}
 			
@@ -119,13 +119,28 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
-		for(BlockState b : event.getReplacedBlockStates()) {
-			String playerName = event.getPlayer().getName();
+		GriefLog.debug(event.getReplacedBlockStates());
+		GriefLog.debug(event.getReplacedBlockStates().get(0));
+		if(event.getReplacedBlockStates() == null || event.getReplacedBlockStates().isEmpty() || event.getReplacedBlockStates().get(0).getType() == Material.AIR) {
+			if(event.getBlock().getType() == Material.FIRE) {
+				return;
+			}
+			
+			String namePlayer = event.getPlayer().getName();
 			UUID playerUUID = event.getPlayer().getUniqueId();
 			Integer gm = event.getPlayer().getGameMode().getValue();
-
-			BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
+			
+			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
 			new GriefLogger(data);
+		} else {
+			for(BlockState b : event.getReplacedBlockStates()) {
+				String playerName = event.getPlayer().getName();
+				UUID playerUUID = event.getPlayer().getUniqueId();
+				Integer gm = event.getPlayer().getGameMode().getValue();
+
+				BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
+				new GriefLogger(data);
+			}
 		}
 	}
 
@@ -147,7 +162,8 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	private void handlePlacedFire(BlockPlaceEvent event) {
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void handlePlacedFire(BlockPlaceEvent event) {
 		Block b = event.getBlockAgainst();
 		Tracker.playerIgnite.put(b, event.getPlayer().getName());
 		
@@ -159,7 +175,8 @@ public class BlockListener implements Listener {
 		new GriefLogger(data);
 	}
 
-	private void handleRedstoneOrTnt(BlockPlaceEvent event) {
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void handleRedstoneOrTnt(BlockMultiPlaceEvent event) {
 		if(event.getBlock().getType() == Material.TNT) {
 			for(BlockFace face : BlockFace.values()) {
 				if(event.getBlock().getRelative(face).getType() == Material.REDSTONE_TORCH_ON) {
