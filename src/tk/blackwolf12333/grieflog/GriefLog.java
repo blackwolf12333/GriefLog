@@ -13,6 +13,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import tk.blackwolf12333.grieflog.commands.GLog;
 import tk.blackwolf12333.grieflog.listeners.BlockListener;
@@ -31,6 +32,7 @@ import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.csv.CSVIO;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
 import tk.blackwolf12333.grieflog.utils.logging.worldedit.GriefLogEditSessionFactory;
+import tk.blackwolf12333.grieflog.utils.logging.worldedit.WorldEditLoggingHook;
 import tk.blackwolf12333.grieflog.utils.reports.Reporter;
 
 public class GriefLog extends JavaPlugin {
@@ -148,8 +150,15 @@ public class GriefLog extends JavaPlugin {
 	}
 
 	private void enableWorldEditLogging() {
-		if(this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
-			new GriefLogEditSessionFactory(this).initialize();
+		Plugin worldEdit = this.getServer().getPluginManager().getPlugin("WorldEdit");
+		if(worldEdit != null) {
+			if(this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+				if(worldEdit.getDescription().getVersion().startsWith("6.")) {
+					new WorldEditLoggingHook(this).hook();
+				} else {
+					new GriefLogEditSessionFactory(this).initialize();
+				}
+			}
 		}
 	}
 
