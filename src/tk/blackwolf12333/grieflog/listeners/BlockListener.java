@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockMultiPlaceEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.PlayerSession;
@@ -99,10 +101,10 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if((!event.isCancelled())) {
-			handleRedstoneOrTnt(event);
+		if((!event.isCancelled()) && !(event instanceof BlockMultiPlaceEvent)) {
+			//handleRedstoneOrTnt(event);
 			if(event.getBlock().getType() == Material.FIRE) {
-				handlePlacedFire(event);
+				//handlePlacedFire(event);
 				return;
 			}
 			
@@ -111,6 +113,19 @@ public class BlockListener implements Listener {
 			Integer gm = event.getPlayer().getGameMode().getValue();
 			
 			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
+			new GriefLogger(data);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
+		GriefLog.debug(event.getReplacedBlockStates());
+		GriefLog.debug(event.getReplacedBlockStates().get(0));
+		for(BlockState b : event.getReplacedBlockStates()) {
+			String playerName = event.getPlayer().getName();
+			UUID playerUUID = event.getPlayer().getUniqueId();
+			Integer gm = event.getPlayer().getGameMode().getValue();
+			BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
 			new GriefLogger(data);
 		}
 	}
@@ -133,7 +148,8 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	private void handlePlacedFire(BlockPlaceEvent event) {
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void handlePlacedFire(BlockPlaceEvent event) {
 		Block b = event.getBlockAgainst();
 		Tracker.playerIgnite.put(b, event.getPlayer().getName());
 		
@@ -145,7 +161,8 @@ public class BlockListener implements Listener {
 		new GriefLogger(data);
 	}
 
-	private void handleRedstoneOrTnt(BlockPlaceEvent event) {
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void handleRedstoneOrTnt(BlockMultiPlaceEvent event) {
 		if(event.getBlock().getType() == Material.TNT) {
 			for(BlockFace face : BlockFace.values()) {
 				if(event.getBlock().getRelative(face).getType() == Material.REDSTONE_TORCH_ON) {
