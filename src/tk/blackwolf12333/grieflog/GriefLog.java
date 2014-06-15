@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -40,8 +41,7 @@ public class GriefLog extends JavaPlugin {
 	public static Time time = new Time();
 	public static FileIO fileIO = new FileIO();
 	public static CSVIO csvIO;
-	//TODO: use uuid
-	public static HashMap<String, PlayerSession> sessions = new HashMap<String, PlayerSession>();
+	public static HashMap<UUID, PlayerSession> sessions = new HashMap<UUID, PlayerSession>();
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
 	public static CompatibilityWrapper compatibility;
@@ -55,6 +55,7 @@ public class GriefLog extends JavaPlugin {
 	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
+	private UUID consoleUUID = UUID.randomUUID();
 	
 	@Override
 	public void onLoad() {
@@ -196,10 +197,10 @@ public class GriefLog extends JavaPlugin {
 
 	private void onReloadLoadPlayerSessions() {
 		for(Player p : getServer().getOnlinePlayers()) {
-			sessions.put(p.getName(), new PlayerSession(p));
+			sessions.put(p.getUniqueId(), new PlayerSession(p));
 		}
 		ConsoleCommandSender console = this.getServer().getConsoleSender();
-		sessions.put(console.getName(), new PlayerSession(console));
+		sessions.put(consoleUUID, new PlayerSession(console));
 	}
 
 	private void registerListeners() {
