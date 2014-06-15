@@ -101,7 +101,7 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if((!event.isCancelled())) {
+		if((!event.isCancelled()) && !(event instanceof BlockMultiPlaceEvent)) {
 			//handleRedstoneOrTnt(event);
 			if(event.getBlock().getType() == Material.FIRE) {
 				//handlePlacedFire(event);
@@ -121,26 +121,12 @@ public class BlockListener implements Listener {
 	public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
 		GriefLog.debug(event.getReplacedBlockStates());
 		GriefLog.debug(event.getReplacedBlockStates().get(0));
-		if(event.getReplacedBlockStates() == null || event.getReplacedBlockStates().isEmpty() || event.getReplacedBlockStates().get(0).getType() == Material.AIR) {
-			if(event.getBlock().getType() == Material.FIRE) {
-				return;
-			}
-			
-			String namePlayer = event.getPlayer().getName();
+		for(BlockState b : event.getReplacedBlockStates()) {
+			String playerName = event.getPlayer().getName();
 			UUID playerUUID = event.getPlayer().getUniqueId();
 			Integer gm = event.getPlayer().getGameMode().getValue();
-			
-			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
+			BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
 			new GriefLogger(data);
-		} else {
-			for(BlockState b : event.getReplacedBlockStates()) {
-				String playerName = event.getPlayer().getName();
-				UUID playerUUID = event.getPlayer().getUniqueId();
-				Integer gm = event.getPlayer().getGameMode().getValue();
-
-				BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
-				new GriefLogger(data);
-			}
 		}
 	}
 
