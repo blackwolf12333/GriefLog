@@ -11,3 +11,5 @@ clean:
 	rm -rf bin/*
 jarl:
 	$(JAR) cf ~/server/plugins/GriefLog.jar -C bin . plugin.yml config.yml LICENCE
+build:
+	find src/tk/blackwolf12333/grieflog -maxdepth 5 -type f -name "*.java" > sourcefiles
