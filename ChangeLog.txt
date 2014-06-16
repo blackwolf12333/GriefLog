@@ -1,3 +1,17 @@
+5.2.0
+- Update for minecraft 1.8 using UUID's instead of player names for logging
+- Add chest access searching.
+- Add block burn logging.
+- Fixed a bug where GriefLog would try to search non GriefLog files.
+- Use UUID's for PlayerSession's.
+- Update for WorldEdit 6.0 logging.
+- Use BlockMultiPlaceEvent for handling of logging of beds and doors etc.
+
+5.1.0
+- Prevented a mess when the player wants to undo while doing a rollback.
+- Moved logs directory to a new location.
+- Refactored CompatibilityLayer
+
 5.0.6
 -1.7.2 R0.2 Compatable
 
