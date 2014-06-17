@@ -67,6 +67,7 @@ src/tk/blackwolf12333/grieflog/utils/BlockUtils.java
 src/tk/blackwolf12333/grieflog/utils/logging/Events.java
 src/tk/blackwolf12333/grieflog/utils/logging/GriefLogger.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSessionFactory.java
+src/tk/blackwolf12333/grieflog/utils/logging/worldedit/WorldEditLoggingHook.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSession.java
 src/tk/blackwolf12333/grieflog/utils/logging/Time.java
 src/tk/blackwolf12333/grieflog/utils/FileIO.java
