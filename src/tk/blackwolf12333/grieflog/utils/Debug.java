@@ -17,14 +17,16 @@ public class Debug {
 	
 	public Debug(Logger log) {
 		this.log = log;
-		try {
-			FileHandler fileHandler = new FileHandler("plugins/GriefLog/debug-log.txt", true);
-			fileHandler.setLevel(Level.FINEST);
-			LogFormatter formatter = new LogFormatter();
-			fileHandler.setFormatter(formatter);
-			this.log.addHandler(fileHandler);
-		} catch(Exception e) {
-			e.printStackTrace();
+		if(ConfigHandler.values.getDebugLogging()) {
+			try {
+				FileHandler fileHandler = new FileHandler("plugins/GriefLog/debug-log.txt", true);
+				fileHandler.setLevel(Level.FINEST);
+				LogFormatter formatter = new LogFormatter();
+				fileHandler.setFormatter(formatter);
+				this.log.addHandler(fileHandler);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

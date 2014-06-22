@@ -62,6 +62,7 @@ public class GriefLog extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		log = new Debug(this.getLogger());
+		setupConfig();
 	}
 
 	@Override
@@ -103,7 +104,6 @@ public class GriefLog extends JavaPlugin {
 	//TODO: start logging by uuid instead of player name. playernames can change as of 1.8
 	@Override
 	public void onEnable() {
-		setupConfig();
 		setupCompatibilityWrapper();
 		registerListeners();
 		setupLogging();

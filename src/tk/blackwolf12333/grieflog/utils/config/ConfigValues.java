@@ -8,6 +8,7 @@ public class ConfigValues {
 	int purgeAfter = ConfigHandler.config.getInt("general.purge-files-after");
 	boolean bw12333glog = ConfigHandler.config.getBoolean("general.blackwolf12333glog");
 	boolean debug = ConfigHandler.config.getBoolean("general.debug");
+	boolean debugLogging = ConfigHandler.config.getBoolean("general.debug-logging");
 	String logsDir = ConfigHandler.config.getString("general.path");
 	
 	boolean command = ConfigHandler.config.getBoolean("events.command");
@@ -40,6 +41,14 @@ public class ConfigValues {
 	String locationcolor = ConfigHandler.config.getString("colors.location");
 	String worldcolor = ConfigHandler.config.getString("colors.world");
 	
+	public boolean getDebugLogging() {
+		return this.debugLogging;
+	}
+
+	public void setDebugLogging(boolean logging) {
+		this.debugLogging = logging;
+	}
+
 	public int getPurgeAfter() {
 		return this.purgeAfter;
 	}

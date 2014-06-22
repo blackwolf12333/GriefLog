@@ -26,6 +26,9 @@ general:
     # Do you want debug messages to show up in your server log? Leave this false unless told otherwise.
     debug: false
 
+    # Do you want those messages to be logged?
+    debug-logging: false
+
 # which events would you like to have logged?
 events:
     command: true
