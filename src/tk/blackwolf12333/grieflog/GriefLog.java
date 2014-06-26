@@ -61,8 +61,8 @@ public class GriefLog extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		log = new Debug(this.getLogger());
 		setupConfig();
+		log = new Debug(this.getLogger());
 	}
 
 	@Override
