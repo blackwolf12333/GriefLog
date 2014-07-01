@@ -37,6 +37,11 @@ public class Debug {
 	public void log(Object msg, boolean debug) {
 		if(ConfigHandler.values.getDebug() && debug) {
 			log.warning(msg.toString());
+		} else if(!ConfigHandler.values.getDebug() && debug) {
+			if(ConfigHandler.values.getDebugLogging()) { // log debug output but don't put it in console
+				log.getHandlers()[0].publish(new LogRecord(Level.WARNING, msg.toString()));
+			}
+			return; // do nothing if they don't want any debug output in their console
 		} else {
 			log.info(msg.toString());
 		}
