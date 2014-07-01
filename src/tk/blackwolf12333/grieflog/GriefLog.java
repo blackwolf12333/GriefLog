@@ -246,6 +246,10 @@ public class GriefLog extends JavaPlugin {
 			} else {
 				log.log(str, true);
 			}
+		} else if(msg instanceof Object[]) {
+			for(Object o : (Object[]) msg) {
+				log.log(o, true);
+			}
 		} else {
 			log.log(msg, true);
 		}
