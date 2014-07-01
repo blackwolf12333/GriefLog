@@ -40,7 +40,8 @@ public class GLog implements CommandExecutor {
 			if(sender instanceof Player) {
 				player = PlayerSession.getGLPlayer((Player)sender);
 			} else {
-				player = PlayerSession.getGLPlayer((ConsoleCommandSender)sender);
+				// TODO: ugly hack, fix it.
+				player = GriefLog.sessions.get(GriefLog.consoleUUID);
 			}
 			CommandHandler handler = new CommandHandler(player);
 			

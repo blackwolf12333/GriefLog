@@ -44,6 +44,7 @@ public class GriefLog extends JavaPlugin {
 	public static FileIO fileIO = new FileIO();
 	public static CSVIO csvIO;
 	public static HashMap<UUID, PlayerSession> sessions = new HashMap<UUID, PlayerSession>();
+	public static UUID consoleUUID = UUID.randomUUID();
 	public static UndoSerializer undoSerializer;
 	public static boolean enableRollback = true;
 	public static CompatibilityWrapper compatibility;
@@ -57,7 +58,6 @@ public class GriefLog extends JavaPlugin {
 	private InventoryListener iListener = new InventoryListener(this);
 	
 	private GLog glogCommand = new GLog(this);
-	private UUID consoleUUID = UUID.randomUUID();
 	
 	@Override
 	public void onLoad() {
