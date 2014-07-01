@@ -17,6 +17,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
+import tk.blackwolf12333.grieflog.utils.GriefLogException;
 
 public class SearchConversation implements ConversationAbandonedListener {
 
@@ -66,7 +67,12 @@ public class SearchConversation implements ConversationAbandonedListener {
 	}
 	
 	private ArgumentParser fillParser(ConversationAbandonedEvent e) {
-		ArgumentParser parser = new ArgumentParser(null);
+		ArgumentParser parser = null;
+		try {
+			parser = new ArgumentParser(null);
+		} catch(GriefLogException exception) {
+			exception.printStackTrace();
+		}
 		Object player = e.getContext().getSessionData("player");
 		Object event = e.getContext().getSessionData("event");
 		Object world = e.getContext().getSessionData("world");

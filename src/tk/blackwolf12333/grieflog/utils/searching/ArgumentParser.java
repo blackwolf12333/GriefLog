@@ -3,10 +3,12 @@ package tk.blackwolf12333.grieflog.utils.searching;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.lang.Exception;
 
 import org.bukkit.Bukkit;
 
 import tk.blackwolf12333.grieflog.utils.logging.Events;
+import tk.blackwolf12333.grieflog.utils.GriefLogException;
 
 public class ArgumentParser implements Serializable {
 
@@ -21,7 +23,7 @@ public class ArgumentParser implements Serializable {
 	public String time;
 	public boolean worldedit;
 	
-	public ArgumentParser(String[] args) {
+	public ArgumentParser(String[] args) throws GriefLogException {
 		if(args != null) {
 			ArrayList<String> arguments = new ArrayList<String>();
 			
@@ -34,7 +36,7 @@ public class ArgumentParser implements Serializable {
 		}
 	}
 	
-	public void parse(ArrayList<String> args) {
+	public void parse(ArrayList<String> args) throws GriefLogException {
 		try {
 			if(args.size() == 1) {
 				if(args.get(0).equalsIgnoreCase("we")) {
@@ -72,12 +74,13 @@ public class ArgumentParser implements Serializable {
 					parse5Arguments(args.get(0), args.get(1), args.get(2), args.get(3), args.get(5));
 				}
 			}
-		} catch(NullPointerException e) {
-			eventNullError = true;
-		} catch(ArrayIndexOutOfBoundsException e) {
-			argsNullError = true;
+		} catch(Exception e) {
+			String errorMessage = "Error parsing an argument of this command: ";
+			for(String s : args) {
+				errorMessage += s + " ";
+			}
+			throw new GriefLogException(errorMessage, e);
 		}
-		
 	}
 	
 	public void checkArgument(char identifier, String arg) {

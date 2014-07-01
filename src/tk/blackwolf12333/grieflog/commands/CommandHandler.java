@@ -20,6 +20,7 @@ import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.reports.Report;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.searching.PageManager;
+import tk.blackwolf12333.grieflog.utils.GriefLogException;
 
 public class CommandHandler {
 	
@@ -144,12 +145,17 @@ public class CommandHandler {
 				sender.print("error");
 				return true;
 			} else {
-				ArgumentParser parser = new ArgumentParser(null);
+				try {
+					ArgumentParser parser = new ArgumentParser(null);
 				
-				parser.event = Events.QUIT.getEventName();
-				parser.player = Bukkit.getOfflinePlayer(to).getPlayer().getUniqueId();
-				
-				new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), parser);
+					parser.event = Events.QUIT.getEventName();
+					parser.player = Bukkit.getOfflinePlayer(to).getPlayer().getUniqueId();
+					
+					new SearchTask(sender, new SearchCallback(sender, SearchCallback.Type.TPTO), parser);
+				} catch(GriefLogException e) {
+					sender.print(ChatColor.RED + "[GriefLog] An error occured parsing your command, please check it for any mistakes.");
+					return true;
+				}
 				return true;
 			}
 		} else {

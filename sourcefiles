@@ -63,6 +63,7 @@ src/tk/blackwolf12333/grieflog/utils/csv/CSVIO.java
 src/tk/blackwolf12333/grieflog/utils/csv/CSVDataParser.java
 src/tk/blackwolf12333/grieflog/utils/Debug.java
 src/tk/blackwolf12333/grieflog/utils/UndoSerializer.java
+src/tk/blackwolf12333/grieflog/utils/GriefLogException.java
 src/tk/blackwolf12333/grieflog/utils/BlockUtils.java
 src/tk/blackwolf12333/grieflog/utils/logging/Events.java
 src/tk/blackwolf12333/grieflog/utils/logging/GriefLogger.java

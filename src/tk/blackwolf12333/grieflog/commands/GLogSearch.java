@@ -8,6 +8,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.conversations.SearchConversation;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
+import tk.blackwolf12333.grieflog.utils.GriefLogException;
 
 public class GLogSearch {
 
@@ -28,13 +29,22 @@ public class GLogSearch {
 				return true;
 			} else {
 				if(args.length >= 2) {
-					ArgumentParser parser = new ArgumentParser(args);
-					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
+					try {
+						ArgumentParser parser = new ArgumentParser(args);
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
+					} catch(GriefLogException e) {
+						player.print(ChatColor.RED + "[GriefLog] An error occured parsing your command, please check it for any mistakes.");
+						return true;
+					}
 					return true;
 				} else {
-					ArgumentParser parser = new ArgumentParser(args);
-					
-					new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
+					try {
+						ArgumentParser parser = new ArgumentParser(args);
+						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.SEARCH), parser);
+					} catch(GriefLogException e) {
+						player.print(ChatColor.RED + "[GriefLog] An error occured parsing your command, please check it for any mistakes.");
+						return true;
+					}
 					return true;
 				}
 			}

@@ -8,6 +8,7 @@ import tk.blackwolf12333.grieflog.PlayerSession;
 import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.conversations.SearchConversation;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
+import tk.blackwolf12333.grieflog.utils.GriefLogException;
 
 public class GLogRollback {
 	
@@ -30,10 +31,13 @@ public class GLogRollback {
 				} else if((args[1].equalsIgnoreCase("we")) && (args.length == 2) && (player.getPlayer() != null)) {
 					return useConversations(player, true);
 				} else {
-					ArgumentParser parser = new ArgumentParser(args);
-					if(checkParserErrors(parser, player)) {
+					try {
+						ArgumentParser parser = new ArgumentParser(args);
 						addParserResultsToUndoConfig(parser);
 						new SearchTask(player, new SearchCallback(player, SearchCallback.Type.ROLLBACK), parser);
+					} catch(GriefLogException e) {
+						player.print(ChatColor.RED + "[GriefLog] An error occured parsing your command, please check it for any mistakes.");
+						return true;
 					}
 					
 					return true;
@@ -51,10 +55,6 @@ public class GLogRollback {
 	private boolean useConversations(PlayerSession player, boolean worldedit) {
 		new SearchConversation(plugin, player, true, worldedit);
 		return true;
-	}
-	
-	private boolean checkParserErrors(ArgumentParser parser, PlayerSession player) {
-		return true; //TODO: implement
 	}
 	
 	private void addParserResultsToUndoConfig(ArgumentParser parser) {
