@@ -142,7 +142,7 @@ public class SearchTask implements Runnable {
 	}
 	
 	private boolean doesComeThroughFilter(BaseData data) {
-		if(this.filters != null) {
+		if(this.filters != null && !this.filters.isEmpty()) {
 			for(Filter filter : filters) {
 				if(filter.doFilter(data)) {
 					continue;
