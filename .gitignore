@@ -2,7 +2,10 @@ out.jardesc
 .settings/
 .classpath
 .project
-/GriefLogTODO
-/GriefLogBukkitDevMainPage.html
+GriefLogTODO
+GriefLogBukkitDevMainPage.html
 target/
 GriefLog.jar
+bin/
+grieflog
+grieflog.sublime-workspace
