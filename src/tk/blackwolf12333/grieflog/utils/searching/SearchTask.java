@@ -78,6 +78,7 @@ public class SearchTask implements Runnable {
 			GriefLog.debug("Searching for: " + parser.time);
 			filters.add(new TimeFilter(Time.getTimeFrom(parser.time)));
 		}
+		GriefLog.debug(filters);
 		return filters;
 	}
 	
