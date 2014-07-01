@@ -20,6 +20,8 @@ public class GLogSearch {
 	}
 	
 	public boolean onCommand(PlayerSession player, String[] args) {
+		GriefLog.debug("search parameters:");
+		GriefLog.debug(args);
 		if(player.hasPermission("grieflog.search")) {
 			if(args.length == 1) {
 				new SearchConversation(plugin, player, false, false);
