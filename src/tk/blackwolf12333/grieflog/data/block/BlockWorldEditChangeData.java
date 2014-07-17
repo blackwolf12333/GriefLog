@@ -80,7 +80,7 @@ public class BlockWorldEditChangeData extends BaseBlockData {
 	
 	@Override
 	public String toString() {
-		if(time != null) { // this is only used after searching, I think
+		if(time != null) {
 			return this.time + " " + this.event + " By: " + this.playerName + " from: " + this.blockType + ":" + this.blockData + " to: " + this.changedTo + ":" + this.changedToData + " at: " + this.xyz + " in: " + this.worldName;
 		}
 		return " " + this.event + " By: " + this.playerName + ":" + playerUUID.toString() + " from: " + this.blockType + ":" + this.blockData + " to: " + this.changedTo + ":" + this.changedToData + " at: " + this.xyz + " in: " + this.worldName;
