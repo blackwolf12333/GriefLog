@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.data.block.BlockWorldEditChangeData;
@@ -16,6 +17,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
 
 public class GriefLogEditSession extends EditSession {
 
@@ -36,8 +38,12 @@ public class GriefLogEditSession extends EditSession {
 	
 	//@Override
 	public boolean rawSetBlock(Vector pt, BaseBlock block) {
+		Player p = null;
 		if (!(player.getWorld() instanceof BukkitWorld)) {
 			return super.rawSetBlock(pt, block);
+		}
+		if(player instanceof BukkitPlayer) {
+			p = ((BukkitPlayer)player).getPlayer();
 		}
 
 		Material typeBefore = Material.getMaterial(((BukkitWorld) player.getWorld()).getWorld().getBlockTypeIdAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()));
@@ -48,11 +54,7 @@ public class GriefLogEditSession extends EditSession {
 			Location location = new Location(((BukkitWorld) player.getWorld()).getWorld(), pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
 			Block affectedBlock = Bukkit.getWorld(player.getWorld().getName()).getBlockAt(location);
 			
-			if(affectedBlock.getType() == Material.AIR) {
-				new GriefLogger(new BlockWorldEditChangeData(affectedBlock, player.getName(), typeBefore.toString(), dataBefore, affectedBlock.getType().toString(), affectedBlock.getData()));
-			} else {
-				new GriefLogger(new BlockWorldEditChangeData(affectedBlock, player.getName(), affectedBlock.getType().toString(), affectedBlock.getData(), typeBefore.toString(), dataBefore));				
-			}
+			new GriefLogger(new BlockWorldEditChangeData(affectedBlock, player.getName(), p.getUniqueId(), typeBefore.toString(), dataBefore, affectedBlock.getType().toString(), affectedBlock.getData()));
 		}
 		return success;
 	}
