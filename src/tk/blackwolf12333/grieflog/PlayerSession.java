@@ -254,15 +254,7 @@ public class PlayerSession implements Conversable {
 	}
 	
 	public static PlayerSession getGLPlayer(Player p) {
-		return GriefLog.sessions.get(p.getName());
-	}
-	
-	public static PlayerSession getGLPlayer(ConsoleCommandSender sender) {
-		return GriefLog.sessions.get(sender.getName());
-	}
-	
-	public static PlayerSession getGLPlayer(String p) {
-		return GriefLog.sessions.get(p);
+		return GriefLog.sessions.get(p.getUniqueId());
 	}
 	
 	@Override
