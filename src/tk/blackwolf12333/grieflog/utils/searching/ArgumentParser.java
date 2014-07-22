@@ -87,7 +87,7 @@ public class ArgumentParser implements Serializable {
 	public void checkArgument(char identifier, String arg) {
 		switch(identifier) {
 		case 'p':
-			player = UUID.fromString(UUIDApi.getUUIDAsString(player.toString()));
+			player = UUID.fromString(UUIDApi.getUUIDAsString(arg));
 			break;
 		case 'e':
 			event = getEventFromAlias(arg);
