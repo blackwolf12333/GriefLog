@@ -37,7 +37,6 @@ src/tk/blackwolf12333/grieflog/data/player/PlayerChangedGamemodeData.java
 src/tk/blackwolf12333/grieflog/data/player/PlayerJoinData.java
 src/tk/blackwolf12333/grieflog/data/player/PlayerChangedWorldData.java
 src/tk/blackwolf12333/grieflog/data/BaseData.java
-src/tk/blackwolf12333/grieflog/data/BlockEditData.java
 src/tk/blackwolf12333/grieflog/data/PlayerData.java
 src/tk/blackwolf12333/grieflog/data/block/BaseBlockData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockIgniteData.java
