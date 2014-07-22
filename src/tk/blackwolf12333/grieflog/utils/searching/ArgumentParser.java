@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.GriefLogException;
+import tk.blackwolf12333.grieflog.utils.UUIDApi;
 
 public class ArgumentParser implements Serializable {
 
@@ -86,7 +87,7 @@ public class ArgumentParser implements Serializable {
 	public void checkArgument(char identifier, String arg) {
 		switch(identifier) {
 		case 'p':
-			player = Bukkit.getOfflinePlayer(arg).getPlayer().getUniqueId();
+			player = UUID.fromString(UUIDApi.getUUIDAsString(player.toString()));
 			break;
 		case 'e':
 			event = getEventFromAlias(arg);
