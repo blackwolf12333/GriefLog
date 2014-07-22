@@ -66,6 +66,7 @@ src/tk/blackwolf12333/grieflog/utils/UndoSerializer.java
 src/tk/blackwolf12333/grieflog/utils/GriefLogException.java
 src/tk/blackwolf12333/grieflog/utils/BlockUtils.java
 src/tk/blackwolf12333/grieflog/utils/logging/Events.java
+src/tk/blackwolf12333/grieflog/utils/logging/GriefLogger.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSessionFactory.java
 src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSession.java
 src/tk/blackwolf12333/grieflog/utils/logging/Time.java
@@ -92,9 +93,5 @@ src/tk/blackwolf12333/grieflog/commands/CommandHandler.java
 src/tk/blackwolf12333/grieflog/commands/GLog.java
 src/tk/blackwolf12333/grieflog/commands/GLogRollback.java
 src/tk/blackwolf12333/grieflog/JCSVLoader.java
-src/tk/blackwolf12333/grieflog/logging/GriefLogger.java
-src/tk/blackwolf12333/grieflog/logging/FlatfileLoggingBackend.java
-src/tk/blackwolf12333/grieflog/logging/LoggingBackend.java
-src/tk/blackwolf12333/grieflog/GLogCommand.java
 src/tk/blackwolf12333/grieflog/GriefLog.java
 src/tk/blackwolf12333/grieflog/callback/SearchCallback.java
