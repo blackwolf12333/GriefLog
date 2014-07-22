@@ -37,6 +37,8 @@ src/tk/blackwolf12333/grieflog/data/player/PlayerChangedGamemodeData.java
 src/tk/blackwolf12333/grieflog/data/player/PlayerJoinData.java
 src/tk/blackwolf12333/grieflog/data/player/PlayerChangedWorldData.java
 src/tk/blackwolf12333/grieflog/data/BaseData.java
+src/tk/blackwolf12333/grieflog/data/BlockEditData.java
+src/tk/blackwolf12333/grieflog/data/PlayerData.java
 src/tk/blackwolf12333/grieflog/data/block/BaseBlockData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockIgniteData.java
 src/tk/blackwolf12333/grieflog/data/block/BucketData.java
@@ -44,6 +46,7 @@ src/tk/blackwolf12333/grieflog/data/block/BlockBreakData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockBurnData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockWorldEditChangeData.java
 src/tk/blackwolf12333/grieflog/data/block/BlockPlaceData.java
+src/tk/blackwolf12333/grieflog/data/Data.java
 src/tk/blackwolf12333/grieflog/data/entity/EntityBreakDoorData.java
 src/tk/blackwolf12333/grieflog/data/entity/EntityExplodeData.java
 src/tk/blackwolf12333/grieflog/data/entity/EntityEndermanData.java
@@ -72,6 +75,7 @@ src/tk/blackwolf12333/grieflog/utils/logging/worldedit/GriefLogEditSession.java
 src/tk/blackwolf12333/grieflog/utils/logging/Time.java
 src/tk/blackwolf12333/grieflog/utils/FileIO.java
 src/tk/blackwolf12333/grieflog/utils/SerializedItem.java
+src/tk/blackwolf12333/grieflog/utils/UUIDApi.java
 src/tk/blackwolf12333/grieflog/utils/filters/Filter.java
 src/tk/blackwolf12333/grieflog/utils/filters/TimeFilter.java
 src/tk/blackwolf12333/grieflog/utils/filters/WorldFilter.java
@@ -92,5 +96,9 @@ src/tk/blackwolf12333/grieflog/commands/CommandHandler.java
 src/tk/blackwolf12333/grieflog/commands/GLog.java
 src/tk/blackwolf12333/grieflog/commands/GLogRollback.java
 src/tk/blackwolf12333/grieflog/JCSVLoader.java
+src/tk/blackwolf12333/grieflog/logging/GriefLogger.java
+src/tk/blackwolf12333/grieflog/logging/FlatfileLoggingBackend.java
+src/tk/blackwolf12333/grieflog/logging/LoggingBackend.java
+src/tk/blackwolf12333/grieflog/GLogCommand.java
 src/tk/blackwolf12333/grieflog/GriefLog.java
 src/tk/blackwolf12333/grieflog/callback/SearchCallback.java

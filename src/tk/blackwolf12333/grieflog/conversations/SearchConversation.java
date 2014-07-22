@@ -1,5 +1,7 @@
 package tk.blackwolf12333.grieflog.conversations;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -18,6 +20,7 @@ import tk.blackwolf12333.grieflog.callback.SearchCallback;
 import tk.blackwolf12333.grieflog.utils.logging.Events;
 import tk.blackwolf12333.grieflog.utils.searching.ArgumentParser;
 import tk.blackwolf12333.grieflog.utils.GriefLogException;
+import tk.blackwolf12333.grieflog.utils.UUIDApi;
 
 public class SearchConversation implements ConversationAbandonedListener {
 
@@ -79,7 +82,8 @@ public class SearchConversation implements ConversationAbandonedListener {
 		Object time = e.getContext().getSessionData("time");
 		
 		if(player != null) {
-			parser.player = Bukkit.getOfflinePlayer(player.toString()).getPlayer().getUniqueId();
+			parser.player = UUID.fromString(
+				UUIDApi.getUUIDAsString(player.toString()));
 		}
 		if(event != null) {
 			parser.event = event.toString();
