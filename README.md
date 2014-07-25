@@ -1,4 +1,3 @@
-
 # Why? #
 
 I initialy wrote this plugin as a way to see who broke or placed blocks on my own server,
@@ -49,7 +48,7 @@ that the SearchTask class can use. After the ArgumentParser is done we create a 
 the SearchTask class with the following arguments in it's constructor:
 * The PlayerSession who requests the search.
 * The SearchCallback, I'll be talking about that later on.
-* The ArgumentParser we just created.
+* The ArgumentParser we just created
 
 The SearchTask class also implements Runnable just like GriefLogger. It does some setting up and
 loops through all the files and searches.
@@ -57,3 +56,17 @@ The searching is done by reading the whole file to a String and splitting that S
 After that each line is parsed by BaseData to a Data instance that represents the event for that line.
 Than it checks if that line comes through all the filters and if so it is added to a list for the results
 of the search. When every file is done the results are sorted by time index and the callback is executed.
+
+### Callback ###
+
+There is only one callback class, SearchCallback. It has and internal enum that defines what type it can be. This can be one of the following:
+* SEARCH
+* TPTO
+* ROLLBACK
+* UNDO
+* CHEST_SEARCH
+
+When the callback is called it executes the start() function that checks what type this callback is and acts on that. For SEARCH that would be to display the search results to the user. For TPTO that would be to teleport the user to the location that the search ended up with. For ROLLBACK that would be to roll back the found events in the search results. For UNDO this would be to undo a rollback with the events found in the search results, I'll explain undo's later on. And for CHEST_SEARCH it will display the results for the search on a chest to the user with a difference view in an inventory view, it will show what items were taken in the upper half and the items that were added in the lower half.
+
+## Undo ##
+Undo is used when a rollback didn't have the desired effect and has to be undone. What is done for this is that the Undo class determines what the arguments of the faulty rollback were and tries to find the same events in the logs. Then it takes those events after being parsed to a BaseData child and calls the undo() function on them. This function will do the reverse of the rollback() function in that class. So for instance with a BlockBreakEvent it would instead of place the broken block back it would remove that block, to "redo" the BlockBreakEvent. But it will not fire a new BlockBreakEvent!
