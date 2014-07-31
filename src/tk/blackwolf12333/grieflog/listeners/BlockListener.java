@@ -80,7 +80,7 @@ public class BlockListener implements Listener {
 	private void handleBlockBreakAir(BlockBreakEvent event) {
 		if(event.getPlayer().getGameMode() != GameMode.CREATIVE) {
 			for(Player p : plugin.getServer().getOnlinePlayers()) {
-				if(GriefLog.sessions.get(p).hasPermission("grieflog.getwarning.onbreakair")) {
+				if(GriefLog.sessions.get(p.getUniqueId()).hasPermission("grieflog.getwarning.onbreakair")) {
 					p.sendMessage(ChatColor.DARK_RED + "[GriefLog] Player " + event.getPlayer().getName() + " might be a hacker, he tried to break air!");
 				} else {
 					continue;
