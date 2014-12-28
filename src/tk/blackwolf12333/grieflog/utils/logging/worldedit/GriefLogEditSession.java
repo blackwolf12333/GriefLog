@@ -36,6 +36,7 @@ public class GriefLogEditSession extends EditSession {
 	
 	//@Override
 	public boolean rawSetBlock(Vector pt, BaseBlock block) {
+		this.plugin.log.info("tes2t");
 		if (!(player.getWorld() instanceof BukkitWorld)) {
 			return super.rawSetBlock(pt, block);
 		}

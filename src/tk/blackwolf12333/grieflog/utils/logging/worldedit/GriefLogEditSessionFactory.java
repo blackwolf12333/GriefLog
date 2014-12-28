@@ -27,12 +27,13 @@ public class GriefLogEditSessionFactory extends EditSessionFactory {
 		return new GriefLogEditSession(world, maxBlocks, blockBag, player, plugin);
 	}
 	
-	public void initialize() {
+	public boolean initialize() {
 		try {
 			Class.forName("com.sk89q.worldedit.EditSessionFactory").getDeclaredMethod("getEditSession", LocalWorld.class, int.class, BlockBag.class, LocalPlayer.class);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			return false;
 		}
 		WorldEdit.getInstance().setEditSessionFactory(new GriefLogEditSessionFactory(plugin));
+		return true;
 	}
 }

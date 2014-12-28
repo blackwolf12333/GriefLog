@@ -154,6 +154,9 @@ public class GriefLog extends JavaPlugin {
 		Plugin worldEdit = this.getServer().getPluginManager().getPlugin("WorldEdit");
 		if(worldEdit != null) {
 			if(this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+				/*if(!(new GriefLogEditSessionFactory(this).initialize())) {
+					
+				}*/
 				if(worldEdit.getDescription().getVersion().startsWith("6.")) {
 					new WorldEditLoggingHook(this).hook();
 				} else {

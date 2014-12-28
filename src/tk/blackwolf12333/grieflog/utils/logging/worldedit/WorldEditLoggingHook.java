@@ -28,16 +28,18 @@ import org.bukkit.block.Sign;
 import java.util.UUID;
 
 public class WorldEditLoggingHook {
-    GriefLog plugin;
+    static GriefLog plugin;
 
     public WorldEditLoggingHook(GriefLog plugin) {
         this.plugin = plugin;
     }
 
     public void hook() {
+        plugin.log.info("test");
         WorldEdit.getInstance().getEventBus().register(new Object() {
             @Subscribe(priority = EventHandler.Priority.EARLY)
             public void wrapToDestroyEverything(final EditSessionEvent event) {
+                
                 final Actor actor = event.getActor();
                 if (actor == null || !(actor instanceof Player)) return;
                 final UUID playerUUID = Bukkit.getPlayer(actor.getName()).getUniqueId();
