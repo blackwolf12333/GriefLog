@@ -26,6 +26,7 @@ import tk.blackwolf12333.grieflog.data.block.BlockBreakData;
 import tk.blackwolf12333.grieflog.data.block.BlockIgniteData;
 import tk.blackwolf12333.grieflog.data.block.BlockPlaceData;
 import tk.blackwolf12333.grieflog.data.block.BlockBurnData;
+import tk.blackwolf12333.grieflog.utils.UUIDApi;
 import tk.blackwolf12333.grieflog.utils.InventoryStringDeSerializer;
 import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
@@ -43,33 +44,37 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
-		if(!event.isCancelled()) {
-			if(event.getBlock().getType() == Material.AIR) {
-				handleBlockBreakAir(event);
-				return;
-			} else if(event.getBlock().getType() == Material.CHEST) {
-				handleBreakChest(event);
-				return;
-			} else if(event.getBlock().getType() == Material.WOOD_DOOR || (event.getBlock().getType() == Material.IRON_DOOR)) {
-				handleBreakDoor(event);
-				return;
+		try {
+			if(!event.isCancelled()) {
+				if(event.getBlock().getType() == Material.AIR) {
+					handleBlockBreakAir(event);
+					return;
+				} else if(event.getBlock().getType() == Material.CHEST) {
+					handleBreakChest(event);
+					return;
+				} else if(event.getBlock().getType() == Material.WOOD_DOOR || (event.getBlock().getType() == Material.IRON_DOOR)) {
+					handleBreakDoor(event);
+					return;
+				}
+				
+				String namePlayer = event.getPlayer().getName();
+				UUID playerUUID = UUIDApi.getUUIDOf(event.getPlayer().getName());
+				Integer gm = event.getPlayer().getGameMode().getValue();
+				BlockBreakData data = new BlockBreakData(event.getBlock(), namePlayer, playerUUID, gm);
+				
+				new GriefLogger(data);
 			}
-			
-			String namePlayer = event.getPlayer().getName();
-			UUID playerUUID = event.getPlayer().getUniqueId();
-			Integer gm = event.getPlayer().getGameMode().getValue();
-			BlockBreakData data = new BlockBreakData(event.getBlock(), namePlayer, playerUUID, gm);
-			
-			new GriefLogger(data);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	private void handleBreakDoor(BlockBreakEvent event) {
+	private void handleBreakDoor(BlockBreakEvent event) throws Exception { // throws from UUIDApi
 		BlockFace[] faces = new BlockFace[] {BlockFace.DOWN, BlockFace.UP};
 		for(BlockFace face : faces) {
 			if((event.getBlock().getRelative(face).getType() == Material.WOOD_DOOR) || (event.getBlock().getRelative(face).getType() == Material.IRON_DOOR)) {
 				String namePlayer = event.getPlayer().getName();
-				UUID playerUUID = event.getPlayer().getUniqueId();
+				UUID playerUUID = UUIDApi.getUUIDOf(event.getPlayer().getName());
 				Integer gm = event.getPlayer().getGameMode().getValue();
 				BlockBreakData data = new BlockBreakData(event.getBlock().getRelative(face), namePlayer, playerUUID, gm);
 				new GriefLogger(data);
@@ -101,19 +106,23 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if((!event.isCancelled()) && !(event instanceof BlockMultiPlaceEvent)) {
-			//handleRedstoneOrTnt(event);
-			if(event.getBlock().getType() == Material.FIRE) {
-				//handlePlacedFire(event);
-				return;
+		try {
+			if((!event.isCancelled()) && !(event instanceof BlockMultiPlaceEvent)) {
+				//handleRedstoneOrTnt(event);
+				if(event.getBlock().getType() == Material.FIRE) {
+					//handlePlacedFire(event);
+					return;
+				}
+				
+				String namePlayer = event.getPlayer().getName();
+				UUID playerUUID = UUIDApi.getUUIDOf(event.getPlayer().getName());
+				Integer gm = event.getPlayer().getGameMode().getValue();
+				
+				BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
+				new GriefLogger(data);
 			}
-			
-			String namePlayer = event.getPlayer().getName();
-			UUID playerUUID = event.getPlayer().getUniqueId();
-			Integer gm = event.getPlayer().getGameMode().getValue();
-			
-			BlockPlaceData data = new BlockPlaceData(event.getBlock(), namePlayer, playerUUID, gm);
-			new GriefLogger(data);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -121,12 +130,16 @@ public class BlockListener implements Listener {
 	public void onBlockMultiPlace(BlockMultiPlaceEvent event) {
 		GriefLog.debug(event.getReplacedBlockStates());
 		GriefLog.debug(event.getReplacedBlockStates().get(0));
-		for(BlockState b : event.getReplacedBlockStates()) {
-			String playerName = event.getPlayer().getName();
-			UUID playerUUID = event.getPlayer().getUniqueId();
-			Integer gm = event.getPlayer().getGameMode().getValue();
-			BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
-			new GriefLogger(data);
+		try {
+			for(BlockState b : event.getReplacedBlockStates()) {
+				String playerName = event.getPlayer().getName();
+				UUID playerUUID = UUIDApi.getUUIDOf(event.getPlayer().getName());
+				Integer gm = event.getPlayer().getGameMode().getValue();
+				BlockPlaceData data = new BlockPlaceData(b.getBlock(), playerName, playerUUID, gm);
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -150,15 +163,19 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void handlePlacedFire(BlockPlaceEvent event) {
-		Block b = event.getBlockAgainst();
-		Tracker.playerIgnite.put(b, event.getPlayer().getName());
-		
-		String namePlayer = event.getPlayer().getName();
-		UUID playerUUID = event.getPlayer().getUniqueId();
-		Integer gm = event.getPlayer().getGameMode().getValue();
-		
-		BlockIgniteData data = new BlockIgniteData(b, IgniteCause.FLINT_AND_STEEL.toString(), namePlayer, playerUUID, gm);
-		new GriefLogger(data);
+		try {
+			Block b = event.getBlockAgainst();
+			Tracker.playerIgnite.put(b, event.getPlayer().getName());
+			
+			String namePlayer = event.getPlayer().getName();
+			UUID playerUUID = UUIDApi.getUUIDOf(event.getPlayer().getName());
+			Integer gm = event.getPlayer().getGameMode().getValue();
+			
+			BlockIgniteData data = new BlockIgniteData(b, IgniteCause.FLINT_AND_STEEL.toString(), namePlayer, playerUUID, gm);
+			new GriefLogger(data);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

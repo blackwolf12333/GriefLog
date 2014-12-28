@@ -25,6 +25,7 @@ import tk.blackwolf12333.grieflog.data.player.PlayerChangedWorldData;
 import tk.blackwolf12333.grieflog.data.player.PlayerCommandData;
 import tk.blackwolf12333.grieflog.data.player.PlayerJoinData;
 import tk.blackwolf12333.grieflog.data.player.PlayerQuitData;
+import tk.blackwolf12333.grieflog.utils.UUIDApi;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.filters.LocationFilter;
 import tk.blackwolf12333.grieflog.utils.filters.ChestAccessFilter;
@@ -40,29 +41,41 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		if (ConfigHandler.values.getGmChange()) {
-			PlayerChangedGamemodeData data = new PlayerChangedGamemodeData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getNewGameMode().getValue());
-			
-			new GriefLogger(data);
+		try {
+			if (ConfigHandler.values.getGmChange()) {
+				PlayerChangedGamemodeData data = new PlayerChangedGamemodeData(event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getNewGameMode().getValue());
+				
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-		if (ConfigHandler.values.getWorldChange()) {
-			PlayerChangedWorldData data = new PlayerChangedWorldData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getFrom().getName());
-			
-			new GriefLogger(data);
+		try {
+			if (ConfigHandler.values.getWorldChange()) {
+				PlayerChangedWorldData data = new PlayerChangedWorldData(event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getFrom().getName());
+				
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (ConfigHandler.values.getCommand()) {
-			if(ConfigHandler.values.getIgnoredCommands().contains(event.getMessage().split(" ")[0].trim())) return;
-			PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
-			
-			new GriefLogger(data);
+		try {
+			if (ConfigHandler.values.getCommand()) {
+				if(ConfigHandler.values.getIgnoredCommands().contains(event.getMessage().split(" ")[0].trim())) return;
+				PlayerCommandData data = new PlayerCommandData(event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), event.getMessage());
+				
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -74,15 +87,19 @@ public class PlayerListener implements Listener {
 			event.getPlayer().sendMessage("There are " + GriefLog.reporter.countReports() + " reports available!");
 		}
 		
-		if (ConfigHandler.values.getPlayerJoin()) {
-			String address = event.getPlayer().getAddress().getAddress().getHostAddress();
-			int x = p.getLocation().getBlockX();
-			int y = p.getLocation().getBlockY();
-			int z = p.getLocation().getBlockZ();
+		try {
+			if (ConfigHandler.values.getPlayerJoin()) {
+				String address = event.getPlayer().getAddress().getAddress().getHostAddress();
+				int x = p.getLocation().getBlockX();
+				int y = p.getLocation().getBlockY();
+				int z = p.getLocation().getBlockZ();
 
-			PlayerJoinData data = new PlayerJoinData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), address, x, y, z);
-			
-			new GriefLogger(data);
+				PlayerJoinData data = new PlayerJoinData(event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), address, x, y, z);
+				
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -90,13 +107,17 @@ public class PlayerListener implements Listener {
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
 		GriefLog.sessions.remove(event.getPlayer().getName());
 		
-		if(ConfigHandler.values.getPlayerQuit()) {
-			int x = event.getPlayer().getLocation().getBlockX();
-			int y = event.getPlayer().getLocation().getBlockY();
-			int z = event.getPlayer().getLocation().getBlockZ();
+		try {
+			if(ConfigHandler.values.getPlayerQuit()) {
+				int x = event.getPlayer().getLocation().getBlockX();
+				int y = event.getPlayer().getLocation().getBlockY();
+				int z = event.getPlayer().getLocation().getBlockZ();
 			
-			PlayerQuitData data = new PlayerQuitData(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), x, y, z);
-			new GriefLogger(data);
+				PlayerQuitData data = new PlayerQuitData(event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getPlayer().getWorld().getName(), x, y, z);
+				new GriefLogger(data);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 

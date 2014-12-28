@@ -82,8 +82,11 @@ public class SearchConversation implements ConversationAbandonedListener {
 		Object time = e.getContext().getSessionData("time");
 		
 		if(player != null) {
-			parser.player = UUID.fromString(
-				UUIDApi.getUUIDAsString(player.toString()));
+			try {
+				parser.player = UUIDApi.getUUIDOf(player.toString());
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		if(event != null) {
 			parser.event = event.toString();

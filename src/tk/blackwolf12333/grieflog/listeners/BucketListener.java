@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import tk.blackwolf12333.grieflog.GriefLog;
 import tk.blackwolf12333.grieflog.data.block.BucketData;
+import tk.blackwolf12333.grieflog.utils.UUIDApi;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.logging.GriefLogger;
 
@@ -21,28 +22,32 @@ public class BucketListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-		if(ConfigHandler.values.getAntilava()) {
-			if((event.getBucket().equals(Material.LAVA_BUCKET)) && (!event.getPlayer().isOp())) {
-				event.setCancelled(true);
-				return;
-			}
-		}
-		if(!event.isCancelled()) {
-			if (ConfigHandler.values.getBucketWater()) {
-				Material bucket = event.getBucket();
-				if (bucket == Material.WATER_BUCKET) {
-					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getBucket());
-					new GriefLogger(data);
+		try {
+			if(ConfigHandler.values.getAntilava()) {
+				if((event.getBucket().equals(Material.LAVA_BUCKET)) && (!event.getPlayer().isOp())) {
+					event.setCancelled(true);
+					return;
 				}
 			}
-			if (ConfigHandler.values.getBucketLava()) {
-				Material bucket = event.getBucket();
+			if(!event.isCancelled()) {
+				if (ConfigHandler.values.getBucketWater()) {
+					Material bucket = event.getBucket();
+					if (bucket == Material.WATER_BUCKET) {
+						BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getBucket());
+						new GriefLogger(data);
+					}
+				}
+				if (ConfigHandler.values.getBucketLava()) {
+					Material bucket = event.getBucket();
 
-				if (bucket == Material.LAVA_BUCKET) {
-					BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getGameMode().getValue(), event.getBucket());
-					new GriefLogger(data);
+					if (bucket == Material.LAVA_BUCKET) {
+						BucketData data = new BucketData(event.getBlockClicked().getRelative(event.getBlockFace()), event.getPlayer().getName(), UUIDApi.getUUIDOf(event.getPlayer().getName()), event.getPlayer().getGameMode().getValue(), event.getBucket());
+						new GriefLogger(data);
+					}
 				}
 			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
