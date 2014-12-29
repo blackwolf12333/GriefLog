@@ -158,9 +158,12 @@ public class GriefLog extends JavaPlugin {
 					
 				}*/
 				if(worldEdit.getDescription().getVersion().startsWith("6.")) {
+					log.info("Enabling WorldEdit 6.0 logging");
 					new WorldEditLoggingHook(this).hook();
 				} else {
-					new GriefLogEditSessionFactory(this).initialize();
+					log.info("Enabling WorldEdit <6.0 logging");
+					boolean x = new GriefLogEditSessionFactory(this).initialize();
+					System.out.println(x);
 				}
 			}
 		}
