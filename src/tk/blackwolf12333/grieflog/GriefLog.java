@@ -100,13 +100,11 @@ public class GriefLog extends JavaPlugin {
 		reporter = null;
 	}
 
-	//TODO: start logging by uuid instead of player name. playernames can change as of 1.8
 	@Override
 	public void onEnable() {
 		setupCompatibilityWrapper();
 		registerListeners();
 		setupLogging();
-		moveLogsIfNeeded();
 		enableWorldEditLogging();
 		getCommand("glog").setExecutor(glogCommand);
 		onReloadLoadPlayerSessions();
