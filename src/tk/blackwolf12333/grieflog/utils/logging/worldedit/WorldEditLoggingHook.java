@@ -35,7 +35,6 @@ public class WorldEditLoggingHook {
     }
 
     public void hook() {
-        plugin.log.info("test");
         WorldEdit.getInstance().getEventBus().register(new Object() {
             @Subscribe(priority = EventHandler.Priority.EARLY)
             public void wrapToDestroyEverything(final EditSessionEvent event) {

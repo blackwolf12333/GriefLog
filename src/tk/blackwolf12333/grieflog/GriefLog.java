@@ -32,7 +32,6 @@ import tk.blackwolf12333.grieflog.utils.config.ChestConfig;
 import tk.blackwolf12333.grieflog.utils.config.ConfigHandler;
 import tk.blackwolf12333.grieflog.utils.csv.CSVIO;
 import tk.blackwolf12333.grieflog.utils.logging.Time;
-import tk.blackwolf12333.grieflog.utils.logging.worldedit.GriefLogEditSessionFactory;
 import tk.blackwolf12333.grieflog.utils.logging.worldedit.WorldEditLoggingHook;
 import tk.blackwolf12333.grieflog.utils.reports.Reporter;
 
@@ -132,38 +131,15 @@ public class GriefLog extends JavaPlugin {
 		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new FilePurger(this), 0, 1000*60*60*12); // rerun every half day.
 	}
 
-	private void moveLogsIfNeeded() {
-		File oldDir = new File("logs/world/");
-		if(oldDir.exists()) {
-			oldDir = oldDir.getParentFile();
-			for(File f : oldDir.listFiles()) {
-				if(f.isDirectory()) {
-					for(File file : f.listFiles()) {
-						File newFile = new File(ConfigHandler.values.getLogsDir() + File.separatorChar + f.getName() + File.separatorChar + file.getName());
-						if(!newFile.getParentFile().exists()) {
-							newFile.getParentFile().mkdirs();
-						}
-						f.renameTo(newFile.getParentFile().getAbsoluteFile());
-					}
-				}
-			}
-		}
-	}
-
 	private void enableWorldEditLogging() {
 		Plugin worldEdit = this.getServer().getPluginManager().getPlugin("WorldEdit");
 		if(worldEdit != null) {
 			if(this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
-				/*if(!(new GriefLogEditSessionFactory(this).initialize())) {
-					
-				}*/
 				if(worldEdit.getDescription().getVersion().startsWith("6.")) {
 					log.info("Enabling WorldEdit 6.0 logging");
 					new WorldEditLoggingHook(this).hook();
 				} else {
-					log.info("Enabling WorldEdit <6.0 logging");
-					boolean x = new GriefLogEditSessionFactory(this).initialize();
-					System.out.println(x);
+					log.info("Can't enable WorldEdit logging, outdated version of WorldEdit!");
 				}
 			}
 		}
